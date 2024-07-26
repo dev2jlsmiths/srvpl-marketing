@@ -1,16 +1,23 @@
 // src/services/authService.js
-
 export const authService = {
   login: async (email, password) => {
-    // Example of an API call or mock service
-    if (email === "admin@example.com" && password === "admin") {
-      return { email, role: "admin", name: "Admin User" };
-    } else if (email === "user@example.com" && password === "user") {
-      return { email, role: "user", name: "Regular User" };
-    } else {
+    const response = await fetch("http://192.168.1.38:5000/v1/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
       throw new Error("Invalid credentials");
     }
-  },
 
-  // You can add other authentication-related methods here, e.g., logout, register, etc.
+    const data = await response.json();
+    return {
+      userId: data.userId,
+      accessToken: data.access_token,
+      roles: data.roles,
+    };
+  },
 };

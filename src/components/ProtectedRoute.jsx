@@ -1,21 +1,14 @@
 import React from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
+const ProtectedRoute = ({ element: Component, roles }) => {
   const { user } = useAuth();
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        user && roles.includes(user.role) ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/login" />
-        )
-      }
-    />
+  return user && roles.includes(user.role) ? (
+    Component
+  ) : (
+    <Navigate to="/login" />
   );
 };
 

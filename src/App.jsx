@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
@@ -11,20 +11,25 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Switch>
-          <Route path="/login" component={LoginPage} />
-          <ProtectedRoute
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
             path="/admin"
-            component={AdminPage}
-            roles={["admin"]}
+            element={
+              <ProtectedRoute element={<AdminPage />} roles={["admin"]} />
+            }
           />
-          <ProtectedRoute
+          <Route
             path="/user"
-            component={UserPage}
-            roles={["user", "admin"]}
+            element={
+              <ProtectedRoute
+                element={<UserPage />}
+                roles={["user", "admin"]}
+              />
+            }
           />
-          <Route path="/" component={HomePage} />
-        </Switch>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
       </Router>
     </AuthProvider>
   );

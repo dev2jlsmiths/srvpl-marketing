@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { authService } from "../services/authService"; // Import your auth service
+import { authService } from "../services/AuthService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,11 +16,11 @@ const LoginPage = () => {
       const user = await authService.login(email, password);
       login(user); // Set user in AuthContext
       if (user.role === "admin") {
-        history.push("/admin");
+        navigate("/admin"); // Use navigate instead of history.push
       } else if (user.role === "user") {
-        history.push("/user");
+        navigate("/user"); // Use navigate instead of history.push
       } else {
-        history.push("/");
+        navigate("/"); // Use navigate instead of history.push
       }
     } catch (err) {
       setError("Invalid email or password");

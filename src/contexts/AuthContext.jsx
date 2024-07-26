@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from "react";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // User object with role info

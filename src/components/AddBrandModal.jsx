@@ -3,12 +3,12 @@ import React, { useState } from "react";
 const BrandModal = ({ isOpen, onClose }) => {
   const [platforms, setPlatforms] = useState([
     {
-      id: Date.now(),
+      //   id: Date.now(),
       platform: "",
       account_id: "",
       password: "",
-      phone_number: "",
-      email: "",
+      phone_no: "",
+      backup_email: "",
     },
   ]);
   const [formData, setFormData] = useState({
@@ -57,8 +57,8 @@ const BrandModal = ({ isOpen, onClose }) => {
         platform: "",
         account_id: "",
         password: "",
-        phone_number: "",
-        email: "",
+        phone_no: "",
+        backup_email: "",
       },
     ]);
   };
@@ -76,12 +76,13 @@ const BrandModal = ({ isOpen, onClose }) => {
       brand_logo: formData.brandLogo,
       social_media: platforms,
     };
-
+    const accessToken = localStorage.getItem("access_token");
     // POST request to your API
     fetch("http://192.168.1.38:5000/v1/brand/profile/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(data),
     })
@@ -230,8 +231,8 @@ const BrandModal = ({ isOpen, onClose }) => {
                 </label>
                 <input
                   type="text"
-                  name="phone_number"
-                  value={platform.phone_number}
+                  name="phone_no"
+                  value={platform.phone_no}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Phone Number"
@@ -243,8 +244,8 @@ const BrandModal = ({ isOpen, onClose }) => {
                 </label>
                 <input
                   type="email"
-                  name="email"
-                  value={platform.email}
+                  name="backup_email"
+                  value={platform.backup_email}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Email"

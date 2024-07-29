@@ -6,6 +6,7 @@ import AdminPage from "./pages/AdminPage";
 import UserPage from "./pages/UserPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -16,19 +17,37 @@ function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute element={<AdminPage />} roles={["admin"]} />
+              <ProtectedRoute
+                element={
+                  <Layout>
+                    <AdminPage />
+                  </Layout>
+                }
+                roles={["admin"]}
+              />
             }
           />
           <Route
             path="/user"
             element={
               <ProtectedRoute
-                element={<UserPage />}
+                element={
+                  <Layout>
+                    <UserPage />
+                  </Layout>
+                }
                 roles={["user", "admin"]}
               />
             }
           />
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <HomePage />
+              </Layout>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>

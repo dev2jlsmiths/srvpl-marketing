@@ -1,15 +1,19 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../contexts/AuthContext";
 
-const ProtectedRoute = ({ element: Component, roles }) => {
-  const { user } = useAuth();
+const ProtectedRoute = ({ element, roles }) => {
+  const { user, loading } = useAuth();
 
-  return user && roles.includes(user.role) ? (
-    Component
-  ) : (
-    <Navigate to="/login" />
-  );
+  if (loading) {
+    return <div>Loading...</div>; // or a loading spinner
+  }
+
+  if (!user || (roles && !roles.includes(user.roles[0]))) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return element;
 };
 
 export default ProtectedRoute;

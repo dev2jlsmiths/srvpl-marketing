@@ -7,6 +7,7 @@ import UserPage from "./pages/UserPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+import BrandDetail from "./components/BrandDetail";
 
 function App() {
   return (
@@ -45,6 +46,14 @@ function App() {
             element={
               <Layout>
                 <HomePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/brand/:id"
+            element={
+              <Layout>
+                <BrandDetail />
               </Layout>
             }
           />

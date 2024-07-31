@@ -113,7 +113,7 @@ const Sidebar = () => {
             {brands.map((brand) => (
               <Link
                 key={brand._id}
-                to={`/account/${brand.brand_name}`} // Assuming dynamic links
+                to={`/brand/${brand._id}`} // Assuming dynamic links
                 className="block p-1 hover:bg-gray-200 rounded"
               >
                 {brand.brand_name}

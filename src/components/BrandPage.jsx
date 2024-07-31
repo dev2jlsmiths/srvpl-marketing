@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import BrandModal from "./AddBrandModal";
 import Card from "./BrandCard";
@@ -7,11 +8,10 @@ function BrandPage() {
   const [brands, setBrands] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Fetch brand data from API
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const accessToken = localStorage.getItem("access_token"); // Replace this with your method of fetching the access token
+        const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
           "http://192.168.1.38:5000/v1/brand/profile/get",
           {
@@ -20,14 +20,14 @@ function BrandPage() {
             },
           }
         );
-        setBrands(response.data.data); // Update the state with the API data
+        setBrands(response.data.data);
       } catch (error) {
         console.error("Error fetching brand data:", error);
       }
     };
 
     fetchBrands();
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   return (
     <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
@@ -69,9 +69,7 @@ function BrandPage() {
         </div>
       </header>
       <header className="flex justify-between items-center mb-8">
-        <h1 className="text-xl text-blue-500 font-semibold mb-6">
-          Brand Profile
-        </h1>
+        <h1 className="text-xl text-blue-500 font-semibold mb-6">Brands</h1>
         <input
           type="text"
           placeholder="Search"
@@ -87,10 +85,11 @@ function BrandPage() {
       <main>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {brands.map((brand) => (
-            <Card
-              key={brand._id}
-              brand={{ name: brand.brand_name, logo: brand.brand_logo }}
-            />
+            <Link key={brand._id} to={`/brand/${brand._id}`}>
+              <Card
+                brand={{ name: brand.brand_name, logo: brand.brand_logo }}
+              />
+            </Link>
           ))}
         </div>
       </main>

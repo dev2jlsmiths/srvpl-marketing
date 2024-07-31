@@ -1,0 +1,65 @@
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+function BrandDetail() {
+  const { id } = useParams();
+  const [brand, setBrand] = useState(null);
+
+  useEffect(() => {
+    const fetchBrandDetail = async () => {
+      try {
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://192.168.1.38:5000/v1/brand/profile/get/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setBrand(response.data.data);
+      } catch (error) {
+        console.error("Error fetching brand detail:", error);
+      }
+    };
+
+    fetchBrandDetail();
+  }, [id]);
+
+  if (!brand) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
+      <button
+        onClick={() => window.history.back()}
+        className="text-blue-500 mb-4"
+      >
+        ← Back
+      </button>
+      <h1 className="text-2xl font-semibold mb-6">{brand.brand_name}</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-4 border rounded-lg">
+          <h2 className="text-xs font-medium mb-2">Profile</h2>
+          {/* Display Timeline Data */}
+        </div>
+        <div className="bg-white p-4 border rounded-lg">
+          <h2 className="text-xs font-medium mb-2">Strategy</h2>
+          {/* Display Strategy Data */}
+        </div>
+        <div className="bg-white p-4 border rounded-lg">
+          <h2 className="text-xs font-medium mb-2">Marketing Collateral</h2>
+          {/* Display Marketing Collateral Data */}
+        </div>
+        <div className="bg-white p-4 border rounded-lg">
+          <h2 className="text-xs font-medium mb-2">Calendar</h2>
+          {/* Display Calendar Data */}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default BrandDetail;

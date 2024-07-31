@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const BrandModal = ({ isOpen, onClose }) => {
   const [platforms, setPlatforms] = useState([
     {
-      //   id: Date.now(),
+      id: Date.now(),
       platform: "",
       account_id: "",
       password: "",
@@ -17,6 +17,7 @@ const BrandModal = ({ isOpen, onClose }) => {
     websiteLink: "",
     brandLogo: "",
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,8 +68,36 @@ const BrandModal = ({ isOpen, onClose }) => {
     setPlatforms(platforms.filter((platform) => platform.id !== id));
   };
 
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.brandName) newErrors.brandName = "Brand Name is required";
+    if (!formData.brandCompanyName)
+      newErrors.brandCompanyName = "Brand Company Name is required";
+    if (!formData.websiteLink)
+      newErrors.websiteLink = "Website Link is required";
+    if (!formData.brandLogo) newErrors.brandLogo = "Logo is required";
+
+    platforms.forEach((platform, index) => {
+      if (!platform.platform)
+        newErrors[`platform_${index}`] = "Platform is required";
+      if (!platform.account_id)
+        newErrors[`account_id_${index}`] = "Account ID is required";
+      if (!platform.password)
+        newErrors[`password_${index}`] = "Password is required";
+      if (!platform.phone_no)
+        newErrors[`phone_no_${index}`] = "Phone Number is required";
+      if (!platform.backup_email)
+        newErrors[`backup_email_${index}`] = "Email is required";
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
     const data = {
       brand_name: formData.brandName,
       brand_company_name: formData.brandCompanyName,
@@ -77,7 +106,6 @@ const BrandModal = ({ isOpen, onClose }) => {
       social_media: platforms,
     };
     const accessToken = localStorage.getItem("access_token");
-    // POST request to your API
     fetch("http://192.168.1.38:5000/v1/brand/profile/add", {
       method: "POST",
       headers: {
@@ -137,6 +165,9 @@ const BrandModal = ({ isOpen, onClose }) => {
                 className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 placeholder="Brand Name"
               />
+              {errors.brandName && (
+                <p className="text-red-500 text-xs mt-1">{errors.brandName}</p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700">
@@ -150,6 +181,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                 className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 placeholder="Brand Company Name"
               />
+              {errors.brandCompanyName && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.brandCompanyName}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700">
@@ -163,6 +199,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                 className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                 placeholder="Website Link"
               />
+              {errors.websiteLink && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.websiteLink}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700">
@@ -178,10 +219,13 @@ const BrandModal = ({ isOpen, onClose }) => {
                   View Attachment
                 </a>
               )}
+              {errors.brandLogo && (
+                <p className="text-red-500 text-xs mt-1">{errors.brandLogo}</p>
+              )}
             </div>
           </div>
           <h3 className="text-lg font-medium mb-4">Credential</h3>
-          {platforms.map((platform) => (
+          {platforms.map((platform, index) => (
             <div
               key={platform.id}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 text-left gap-6 mb-6"
@@ -198,6 +242,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Platform"
                 />
+                {errors[`platform_${index}`] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[`platform_${index}`]}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
@@ -211,6 +260,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Account ID"
                 />
+                {errors[`account_id_${index}`] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[`account_id_${index}`]}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
@@ -224,6 +278,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Password"
                 />
+                {errors[`password_${index}`] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[`password_${index}`]}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
@@ -237,6 +296,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Phone Number"
                 />
+                {errors[`phone_no_${index}`] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[`phone_no_${index}`]}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
@@ -250,8 +314,12 @@ const BrandModal = ({ isOpen, onClose }) => {
                   className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
                   placeholder="Email"
                 />
+                {errors[`backup_email_${index}`] && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors[`backup_email_${index}`]}
+                  </p>
+                )}
               </div>
-
               <div className="flex items-end">
                 <button
                   type="button"

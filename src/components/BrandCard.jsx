@@ -5,7 +5,7 @@ const Card = ({ brand }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/brand/${brand.name}`);
+    navigate(`/brand/${brand.id}`);
   };
 
   return (

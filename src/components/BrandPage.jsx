@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import BrandModal from "./AddBrandModal";
 import Card from "./BrandCard";
@@ -32,32 +31,30 @@ function BrandPage() {
   return (
     <div className="min-h-screen bg-gray-200 min-w-screen text-xs">
       <header className="flex bg-white justify-end border-b pb-4 items-center">
-        <button className=" flex items-center gap-1 px-2 py-2 transition-colors duration-300">
+        <button className="flex items-center gap-1 px-2 py-2 transition-colors duration-300">
           Account
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="size-6"
+            className="size-6"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
             />
           </svg>
         </button>
       </header>
       <div className="bg-white min-h-screen pl-2 pt-2">
-        {" "}
         <header className="flex justify-between items-center pb-8">
-          <h1 className="text-xl text-blue-500 font-semibold pb-6">Brands</h1>
-
+          <h1 className="text-xl text-blue-500 font-semibold pb-6">Account</h1>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300"
+            className="bg-blue-500 text-white px-3 py-1 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300"
           >
             Add Brand Profile
           </button>
@@ -65,11 +62,14 @@ function BrandPage() {
         <main>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
             {brands.map((brand) => (
-              <Link key={brand._id} to={`/brand/${brand._id}`}>
-                <Card
-                  brand={{ name: brand.brand_name, logo: brand.brand_logo }}
-                />
-              </Link>
+              <Card
+                key={brand._id}
+                brand={{
+                  name: brand.brand_name,
+                  logo: brand.brand_logo,
+                  id: brand._id,
+                }}
+              />
             ))}
           </div>
         </main>

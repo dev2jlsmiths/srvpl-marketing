@@ -97,7 +97,6 @@ const EditProfile = () => {
       socialMedia: [
         ...prev.socialMedia,
         {
-          id: Date.now(),
           platform: "",
           account_id: "",
           password: "",
@@ -171,7 +170,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
+    <div className="min-h-screen min-w-screen text-xs pl-8 pt-4">
       <button onClick={() => navigate(-1)} className="text-blue-500 mb-4">
         ← Back
       </button>

@@ -40,12 +40,11 @@ function BrandDetail() {
       <h1 className="text-2xl font-semibold mb-6">{brand.brand_name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-4 border rounded-lg">
-          <h2 className="text-xs font-medium mb-2">Profile</h2>
           <button
             onClick={() => navigate(`/brand/edit/${id}`)}
-            className="text-blue-500 mb-2"
+            className="text-black hover:text-blue-500  mb-2"
           >
-            Edit Profile
+            Profile
           </button>
         </div>
         <div className="bg-white p-4 border rounded-lg">

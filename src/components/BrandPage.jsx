@@ -30,7 +30,7 @@ function BrandPage() {
   }, []);
 
   return (
-    <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
+    <div className="min-h-screen min-w-screen text-xs pl-8 pt-4">
       <header className="flex justify-between items-center mb-8">
         <div className="flex space-x-4">
           <div className="relative">
@@ -83,7 +83,7 @@ function BrandPage() {
         </button>
       </header>
       <main>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
           {brands.map((brand) => (
             <Link key={brand._id} to={`/brand/${brand._id}`}>
               <Card

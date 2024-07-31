@@ -1,19 +1,33 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import BrandModal from "./AddBrandModal";
 import Card from "./BrandCard";
 
-const brands = [
-  { name: "21GenX", logo: "https://via.placeholder.com/150" },
-  { name: "Novium", logo: "https://via.placeholder.com/150" },
-  { name: "BlackSmith", logo: "https://via.placeholder.com/150" },
-  { name: "Sinex", logo: "https://via.placeholder.com/150" },
-  { name: "Bombol", logo: "https://via.placeholder.com/150" },
-  { name: "Lofree", logo: "https://via.placeholder.com/150" },
-];
-
 function BrandPage() {
+  const [brands, setBrands] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch brand data from API
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const accessToken = localStorage.getItem("access_token"); // Replace this with your method of fetching the access token
+        const response = await axios.get(
+          "http://192.168.1.38:5000/v1/brand/profile/get",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setBrands(response.data.data); // Update the state with the API data
+      } catch (error) {
+        console.error("Error fetching brand data:", error);
+      }
+    };
+
+    fetchBrands();
+  }, []); // Empty dependency array means this effect runs once on mount
 
   return (
     <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
@@ -72,8 +86,11 @@ function BrandPage() {
       </header>
       <main>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {brands.map((brand, index) => (
-            <Card key={index} brand={brand} />
+          {brands.map((brand) => (
+            <Card
+              key={brand._id}
+              brand={{ name: brand.brand_name, logo: brand.brand_logo }}
+            />
           ))}
         </div>
       </main>

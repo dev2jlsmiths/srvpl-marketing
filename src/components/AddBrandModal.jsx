@@ -180,11 +180,11 @@ const BrandModal = ({ isOpen, onClose }) => {
               )}
             </div>
           </div>
-          <h3 className="text-lg font-medium mb-4">Social Media</h3>
+          <h3 className="text-lg font-medium mb-4">Credential</h3>
           {platforms.map((platform) => (
             <div
               key={platform.id}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 text-left gap-6 mb-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 text-left gap-6 mb-6"
             >
               <div>
                 <label className="block text-xs font-medium text-gray-700">
@@ -276,7 +276,7 @@ const BrandModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           ))}
-          <div className="text-right mb-4">
+          <div className="text-center mb-4">
             <button
               type="button"
               onClick={addPlatform}

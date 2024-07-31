@@ -30,9 +30,9 @@ function BrandPage() {
 
   return (
     <div className="min-h-screen bg-gray-200 min-w-screen text-xs">
-      <header className="flex bg-white justify-end border-b pb-4 items-center">
-        <button className="flex items-center gap-1 px-2 py-2 transition-colors duration-300">
-          Account
+      <header className="flex bg-white justify-end border-b pb-1 items-center">
+        <button className="flex items-center gap-1 px-2 py-0.5 transition-colors duration-300">
+          Settings
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

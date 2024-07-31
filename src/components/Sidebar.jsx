@@ -66,8 +66,9 @@ const Sidebar = () => {
 
   return (
     <div className="min-h-screen w-48 text-xs bg-white shadow-md">
-      <div className="p-4 border-b">
-        <img src={logo} alt="Logo" className="h-10 w-10 mx-auto" />
+      <div className="p-4 flex items-center justify-center gap-2 ">
+        <img src={logo} alt="Logo" className="h-6 w-6" />
+        <p className="font-semibold text-base">21Genx</p>
       </div>
       <div className="p-4">
         <button

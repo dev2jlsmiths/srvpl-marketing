@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import BrandDetail from "./components/BrandDetail";
+import EditProfile from "./components/EditProfile";
 
 function App() {
   return (
@@ -54,6 +55,14 @@ function App() {
             element={
               <Layout>
                 <BrandDetail />
+              </Layout>
+            }
+          />
+          <Route
+            path="/brand/edit/:id"
+            element={
+              <Layout>
+                <EditProfile />
               </Layout>
             }
           />

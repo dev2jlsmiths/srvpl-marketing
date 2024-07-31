@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function BrandDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [brand, setBrand] = useState(null);
 
   useEffect(() => {
@@ -33,17 +34,19 @@ function BrandDetail() {
 
   return (
     <div className="min-h-screen min-w-screen text-sm pl-8 pt-4">
-      <button
-        onClick={() => window.history.back()}
-        className="text-blue-500 mb-4"
-      >
+      <button onClick={() => navigate("/")} className="text-blue-500 mb-4">
         ← Back
       </button>
       <h1 className="text-2xl font-semibold mb-6">{brand.brand_name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-4 border rounded-lg">
           <h2 className="text-xs font-medium mb-2">Profile</h2>
-          {/* Display Timeline Data */}
+          <button
+            onClick={() => navigate(`/brand/edit/${id}`)}
+            className="text-blue-500 mb-2"
+          >
+            Edit Profile
+          </button>
         </div>
         <div className="bg-white p-4 border rounded-lg">
           <h2 className="text-xs font-medium mb-2">Strategy</h2>

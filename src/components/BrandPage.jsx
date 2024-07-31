@@ -30,47 +30,50 @@ function BrandPage() {
   }, []);
 
   return (
-    <div className="min-h-screen min-w-screen text-xs pl-8 pt-2">
-      <header className="flex justify-between items-center mb-4">
-        <div className="flex space-x-4"></div>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <button className="flex items-center space-x-2">
-              <span className="text-gray-700">Account</span>
-              <img
-                src="https://via.placeholder.com/40"
-                alt="Profile"
-                className="rounded-full w-10 h-10"
-              />
-            </button>
-          </div>
-        </div>
-      </header>
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-xl text-blue-500 font-semibold mb-6">Brands</h1>
-        <input
-          type="text"
-          placeholder="Search"
-          className="border rounded-md px-4 py-2 w-1/3"
-        />
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300"
-        >
-          Add Brand Profile
+    <div className="min-h-screen bg-gray-200 min-w-screen text-xs">
+      <header className="flex bg-white justify-end border-b pb-4 items-center">
+        <button className=" flex items-center gap-1 px-2 py-2 transition-colors duration-300">
+          Account
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            />
+          </svg>
         </button>
       </header>
-      <main>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
-          {brands.map((brand) => (
-            <Link key={brand._id} to={`/brand/${brand._id}`}>
-              <Card
-                brand={{ name: brand.brand_name, logo: brand.brand_logo }}
-              />
-            </Link>
-          ))}
-        </div>
-      </main>
+      <div className="bg-white min-h-screen pl-2 pt-2">
+        {" "}
+        <header className="flex justify-between items-center pb-8">
+          <h1 className="text-xl text-blue-500 font-semibold pb-6">Brands</h1>
+
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300"
+          >
+            Add Brand Profile
+          </button>
+        </header>
+        <main>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-6">
+            {brands.map((brand) => (
+              <Link key={brand._id} to={`/brand/${brand._id}`}>
+                <Card
+                  brand={{ name: brand.brand_name, logo: brand.brand_logo }}
+                />
+              </Link>
+            ))}
+          </div>
+        </main>
+      </div>
       <BrandModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

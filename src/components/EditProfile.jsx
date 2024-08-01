@@ -366,7 +366,7 @@ const EditProfile = () => {
             </div>
           </div>
         ))}
-        <div className="text-center mb-4">
+        <div className="text-right mb-4">
           <button
             type="button"
             onClick={addSocialMedia}
@@ -375,7 +375,7 @@ const EditProfile = () => {
             Add Platform
           </button>
         </div>
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-center mt-6">
           <button
             type="button"
             onClick={() => navigate(-1)}

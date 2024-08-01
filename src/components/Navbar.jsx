@@ -23,7 +23,7 @@ const Navbar = () => {
             viewBox="0 0 24 24"
             strokeWidth="1.5"
             stroke="currentColor"
-            className="absolute right-2 top-1 w-4 h-4 text-gray-500"
+            className="absolute right-2 top-2 w-4 h-4 text-gray-500"
           >
             <path
               strokeLinecap="round"

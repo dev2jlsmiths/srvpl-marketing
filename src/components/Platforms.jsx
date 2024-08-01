@@ -4,11 +4,12 @@ import Dropzone from "react-dropzone";
 
 const Platforms = () => {
   const [platforms, setPlatforms] = useState([]);
+  const [contentTypes, setContentTypes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [platformName, setPlatformName] = useState("");
   const [platformLogo, setPlatformLogo] = useState(null);
   const [platformLink, setPlatformLink] = useState("");
-  const [contentTypes, setContentTypes] = useState([
+  const [platformContentTypes, setPlatformContentTypes] = useState([
     { type: "", length: "", width: "" },
   ]);
   const accessToken = localStorage.getItem("access_token");
@@ -30,20 +31,35 @@ const Platforms = () => {
       }
     };
 
+    const fetchContentTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://192.168.1.38:5000/v1/platform/type/get?page=1&limit=10",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setContentTypes(response.data.data);
+      } catch (error) {
+        console.error("Error fetching content types:", error);
+      }
+    };
+
     fetchPlatforms();
+    fetchContentTypes();
   }, [accessToken]);
 
   const handleAddPlatform = async () => {
-    const contentTypesWithSize = contentTypes.map((contentType) => ({
-      type: contentType.type,
-      size: `${contentType.length} x ${contentType.width}`,
-    }));
-
     const platformData = {
       platform_name: platformName,
       platform_logo: platformLogo,
       platform_link: platformLink,
-      content_type: contentTypesWithSize,
+      content_type: platformContentTypes.map((contentType) => ({
+        type: contentType.type,
+        size: `${contentType.length} x ${contentType.width}`,
+      })),
     };
 
     try {
@@ -61,7 +77,7 @@ const Platforms = () => {
       setPlatformName("");
       setPlatformLogo(null);
       setPlatformLink("");
-      setContentTypes([{ type: "", length: "", width: "" }]);
+      setPlatformContentTypes([{ type: "", length: "", width: "" }]);
       const response = await axios.get(
         "http://192.168.1.38:5000/v1/platform/get",
         {
@@ -77,13 +93,16 @@ const Platforms = () => {
   };
 
   const handleContentTypeChange = (index, field, value) => {
-    const newContentTypes = [...contentTypes];
+    const newContentTypes = [...platformContentTypes];
     newContentTypes[index][field] = value;
-    setContentTypes(newContentTypes);
+    setPlatformContentTypes(newContentTypes);
   };
 
   const handleAddContentType = () => {
-    setContentTypes([...contentTypes, { type: "", length: "", width: "" }]);
+    setPlatformContentTypes([
+      ...platformContentTypes,
+      { type: "", length: "", width: "" },
+    ]);
   };
 
   const handleFileUpload = (files) => {
@@ -183,7 +202,7 @@ const Platforms = () => {
                 </Dropzone>
               </div>
             </div>
-            {contentTypes.map((contentType, index) => (
+            {platformContentTypes.map((contentType, index) => (
               <div key={index} className="flex items-center mb-4">
                 <select
                   className="w-full border border-gray-300 p-2 rounded mr-2"
@@ -193,8 +212,11 @@ const Platforms = () => {
                   }
                 >
                   <option value="">Select type</option>
-                  <option value="type1">Type 1</option>
-                  <option value="type2">Type 2</option>
+                  {contentTypes.map((type) => (
+                    <option key={type._id} value={type._id}>
+                      {type.content_type}
+                    </option>
+                  ))}
                 </select>
                 <input
                   type="text"

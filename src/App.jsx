@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
 import BrandDetail from "./components/BrandDetail";
 import EditProfile from "./components/EditProfile";
+import Settings from "./components/Settings";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
             element={
               <Layout>
                 <EditProfile />
+              </Layout>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Layout>
+                <Settings />
               </Layout>
             }
           />

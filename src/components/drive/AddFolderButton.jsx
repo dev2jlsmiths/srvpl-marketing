@@ -15,7 +15,7 @@ const AddFolderButton = ({ parentFolderId, brandId, onFolderAdded }) => {
       <AddFolderModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        parentFolderId={parentFolderId}
+        parentFolderId={parentFolderId || null} // Pass null if not provided
         brandId={brandId}
         onFolderAdded={onFolderAdded}
       />

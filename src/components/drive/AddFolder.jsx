@@ -1,22 +1,30 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const AddFolder = () => {
   const [folderName, setFolderName] = useState("");
   const navigate = useNavigate();
+  const { id: brandId } = useParams(); // Retrieve brand_id from URL parameters
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const accessToken = localStorage.getItem("access_token");
       const response = await axios.post(
         "http://192.168.1.38:5000/v1/collateral/folder/add",
         {
           name: folderName,
+          brand_id: brandId, // Include brand_id in the request payload
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Add Authorization header if needed
+          },
         }
       );
       console.log("Folder added:", response.data);
-      navigate("/originalcollateral/:id");
+      navigate(`/originalcollateral/${brandId}`); // Navigate to the updated list of folders
     } catch (error) {
       console.error("Error adding folder:", error);
     }

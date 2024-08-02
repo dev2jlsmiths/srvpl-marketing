@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const AddFolderModal = ({
-  isOpen,
-  onClose,
-  parentFolderId,
-  brandId,
-  onFolderAdded,
-}) => {
+const AddFolderModal = ({ isOpen, onClose, parentFolderId, onFolderAdded }) => {
+  // const { brandId } = useParams(); // Get brandId from URL params
   const [folderName, setFolderName] = useState("");
+  const { id: brandId } = useParams();
 
   const handleAddFolder = async () => {
+    if (!folderName.trim() || !brandId) {
+      console.error("Both folder name and brand ID are required.");
+      return;
+    }
+
+    // Prepare the request body
+    const body = {
+      name: folderName,
+      brand_id: brandId, // Ensure brand_id is included
+      parentFolderId: parentFolderId || null, // Use parentFolderId to nest
+    };
+
+    console.log("Adding folder with data:", body); // Log payload for debugging
+
     try {
       const accessToken = localStorage.getItem("access_token");
-      const body = {
-        name: folderName,
-        brand_id: brandId,
-        parentFolderId: parentFolderId || null, // Send parentFolderId only if it exists
-      };
+      if (!accessToken) {
+        console.error("Access token is missing.");
+        return;
+      }
+
       const response = await axios.post(
         "http://192.168.1.38:5000/v1/collateral/folder/add",
         body,
@@ -27,6 +38,8 @@ const AddFolderModal = ({
           },
         }
       );
+
+      console.log("Folder added:", response.data); // Log API response for debugging
       onFolderAdded(response.data);
       onClose();
     } catch (error) {

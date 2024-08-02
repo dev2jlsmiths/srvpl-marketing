@@ -11,42 +11,12 @@ import BrandDetail from "./components/BrandDetail";
 import EditProfile from "./components/EditProfile";
 import Settings from "./components/Settings";
 import Profile from "./components/Profile";
-import OriginalCollateral from "./components/OriginalColleteral";
-import FileDetails from "./components/FileDetails";
-import AddFolder from "./components/AddFolder";
-import AddCollateral from "./components/AddCollateral";
-import FolderView from "./components/FolderView";
-
-const initialData = [
-  {
-    id: "root",
-    name: "Root Folder",
-    subfolders: [],
-    files: [],
-  },
-];
+import OriginalCollateral from "./components/drive/OriginalColleteral";
+import AddFolder from "./components/drive/AddFolder";
+import AddCollateral from "./components/drive/AddCollateral";
+import FolderView from "./components/drive/FolderView";
 
 function App() {
-  const [folders, setFolders] = useState(initialData);
-  const addFolder = (parentId, newFolder) => {
-    setFolders((prevFolders) => {
-      const addFolderRecursively = (folders) => {
-        return folders.map((folder) => {
-          if (folder.id === parentId) {
-            return {
-              ...folder,
-              subfolders: [...folder.subfolders, newFolder],
-            };
-          }
-          return {
-            ...folder,
-            subfolders: addFolderRecursively(folder.subfolders),
-          };
-        });
-      };
-      return addFolderRecursively(prevFolders);
-    });
-  };
   return (
     <AuthProvider>
       <Router>

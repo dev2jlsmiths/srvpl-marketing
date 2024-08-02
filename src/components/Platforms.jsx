@@ -229,7 +229,7 @@ const Platforms = () => {
                 type="text"
                 value={platformName}
                 onChange={(e) => setPlatformName(e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded"
+                className="w-full border border-gray-300 p-1 rounded"
               />
             </div>
             <div className="mb-4">
@@ -240,12 +240,12 @@ const Platforms = () => {
                 type="text"
                 value={platformLink}
                 onChange={(e) => setPlatformLink(e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded"
+                className="w-full border border-gray-300 p-1 rounded"
               />
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Logo</label>
-              <div className="border border-dashed border-gray-400 rounded-md p-4 text-center">
+              <div className="border border-dashed border-gray-400 rounded-md p-2 text-center">
                 {platformLogo ? (
                   <img
                     src={platformLogo}
@@ -273,7 +273,7 @@ const Platforms = () => {
             {platformContentTypes.map((contentType, index) => (
               <div key={index} className="flex items-center mb-4">
                 <select
-                  className="w-full border border-gray-300 p-2 rounded mr-2"
+                  className="w-full border border-gray-300 p-1 rounded mr-2"
                   value={contentType.type}
                   onChange={(e) =>
                     handleContentTypeChange(index, "type", e.target.value)
@@ -292,7 +292,7 @@ const Platforms = () => {
                   onChange={(e) =>
                     handleContentTypeChange(index, "length", e.target.value)
                   }
-                  className="w-full border border-gray-300 p-2 rounded"
+                  className="w-full border border-gray-300 p-1 rounded"
                   placeholder="Length"
                 />
                 <span className="mx-1">x</span>
@@ -302,18 +302,20 @@ const Platforms = () => {
                   onChange={(e) =>
                     handleContentTypeChange(index, "width", e.target.value)
                   }
-                  className="w-full border border-gray-300 p-2 rounded"
+                  className="w-full border border-gray-300 p-1 rounded"
                   placeholder="Width"
                 />
               </div>
             ))}
-            <button
-              onClick={handleAddContentType}
-              className="px-2 py-1 text-right bg-blue-500 text-white rounded mb-4"
-            >
-              +
-            </button>
             <div className="flex justify-end">
+              <button
+                onClick={handleAddContentType}
+                className="px-2 py-1 text-right bg-blue-800 text-white rounded mb-4"
+              >
+                +
+              </button>
+            </div>
+            <div className="flex justify-center">
               <button
                 onClick={() => setShowModal(false)}
                 className="px-4 py-1 bg-gray-300 text-gray-800 rounded mr-2"

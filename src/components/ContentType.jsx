@@ -140,9 +140,6 @@ const ContentType = () => {
             </div>
           )}
         </div>
-        <div className="absolute top-0 right-0 w-1 h-full bg-gray-300 rounded-l">
-          <div className="relative h-24 bg-gray-400 rounded-tl"></div>
-        </div>
       </div>
 
       {modalOpen && (

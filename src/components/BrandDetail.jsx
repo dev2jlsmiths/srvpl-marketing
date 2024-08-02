@@ -42,7 +42,7 @@ function BrandDetail() {
         <div className="bg-white p-4 border rounded-lg">
           <button
             onClick={() => navigate(`/brand/edit/${id}`)}
-            className="text-black hover:text-blue-500  mb-2"
+            className="text-black hover:text-blue-500 mb-2"
           >
             Profile
           </button>
@@ -51,7 +51,10 @@ function BrandDetail() {
           <h2 className="text-xs font-medium mb-2">Strategy</h2>
           {/* Display Strategy Data */}
         </div>
-        <div className="bg-white p-4 border rounded-lg">
+        <div
+          className="bg-white p-4 border rounded-lg cursor-pointer"
+          onClick={() => navigate(`/originalcollateral/${id}`)}
+        >
           <h2 className="text-xs font-medium mb-2">Marketing Collateral</h2>
           {/* Display Marketing Collateral Data */}
         </div>

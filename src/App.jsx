@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import HomePage from "./pages/HomePage";
@@ -11,8 +11,42 @@ import BrandDetail from "./components/BrandDetail";
 import EditProfile from "./components/EditProfile";
 import Settings from "./components/Settings";
 import Profile from "./components/Profile";
+import OriginalCollateral from "./components/OriginalColleteral";
+import FileDetails from "./components/FileDetails";
+import AddFolder from "./components/AddFolder";
+import AddCollateral from "./components/AddCollateral";
+import FolderView from "./components/FolderView";
+
+const initialData = [
+  {
+    id: "root",
+    name: "Root Folder",
+    subfolders: [],
+    files: [],
+  },
+];
 
 function App() {
+  const [folders, setFolders] = useState(initialData);
+  const addFolder = (parentId, newFolder) => {
+    setFolders((prevFolders) => {
+      const addFolderRecursively = (folders) => {
+        return folders.map((folder) => {
+          if (folder.id === parentId) {
+            return {
+              ...folder,
+              subfolders: [...folder.subfolders, newFolder],
+            };
+          }
+          return {
+            ...folder,
+            subfolders: addFolderRecursively(folder.subfolders),
+          };
+        });
+      };
+      return addFolderRecursively(prevFolders);
+    });
+  };
   return (
     <AuthProvider>
       <Router>
@@ -84,6 +118,47 @@ function App() {
               </Layout>
             }
           />
+          \
+          <Route
+            path="/originalcollateral/:id"
+            element={
+              <Layout>
+                <OriginalCollateral />
+              </Layout>
+            }
+          />
+          <Route
+            path="/item/:id"
+            element={
+              <Layout>
+                <FolderView />
+              </Layout>
+            }
+          />
+          <Route
+            path="/add-collateral"
+            element={
+              <Layout>
+                <AddCollateral />
+              </Layout>
+            }
+          />
+          <Route
+            path="/add-folder"
+            element={
+              <Layout>
+                <AddFolder />
+              </Layout>
+            }
+          />
+          {/* <Route
+            path="/"
+            element={
+              <Layout>
+                <Folder folder={folders[0]} onAddFolder={addFolder} />
+              </Layout>
+            }
+          /> */}
         </Routes>
       </Router>
     </AuthProvider>

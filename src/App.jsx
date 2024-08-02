@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import BrandDetail from "./components/BrandDetail";
 import EditProfile from "./components/EditProfile";
 import Settings from "./components/Settings";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -72,6 +73,14 @@ function App() {
             element={
               <Layout>
                 <Settings />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Layout>
+                <Profile />
               </Layout>
             }
           />

@@ -5,6 +5,8 @@ const ContentType = () => {
   const [contentTypes, setContentTypes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [newType, setNewType] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [currentTypeId, setCurrentTypeId] = useState(null);
   const accessToken = localStorage.getItem("access_token");
 
   useEffect(() => {
@@ -28,11 +30,16 @@ const ContentType = () => {
   }, [accessToken]);
 
   const handleAddTypeClick = () => {
+    setEditMode(false);
+    setNewType("");
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
+    setEditMode(false);
+    setNewType("");
+    setCurrentTypeId(null);
   };
 
   const handleInputChange = (e) => {
@@ -42,15 +49,27 @@ const ContentType = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://192.168.1.38:5000/v1/platform/type/add",
-        { content_type: newType },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      if (editMode && currentTypeId) {
+        await axios.put(
+          `http://192.168.1.38:5000/v1/platform/type/edit/${currentTypeId}`,
+          { content_type: newType },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          "http://192.168.1.38:5000/v1/platform/type/add",
+          { content_type: newType },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      }
       setNewType("");
       setModalOpen(false);
       // Refresh the content types list
@@ -64,8 +83,15 @@ const ContentType = () => {
       );
       setContentTypes(response.data.data);
     } catch (error) {
-      console.error("Error adding content type:", error);
+      console.error("Error adding/updating content type:", error);
     }
+  };
+
+  const handleEditClick = (type) => {
+    setEditMode(true);
+    setCurrentTypeId(type._id);
+    setNewType(type.content_type);
+    setModalOpen(true);
   };
 
   return (
@@ -92,16 +118,17 @@ const ContentType = () => {
                   {type?.content_type}
                 </div>
                 <svg
+                  onClick={() => handleEditClick(type)}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
-                  className="w-4 h-4"
+                  className="w-4 h-4 cursor-pointer"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
                   />
                 </svg>
@@ -121,13 +148,15 @@ const ContentType = () => {
       {modalOpen && (
         <div className="fixed text-xs z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
-            <h2 className="text-lg font-semibold mb-4">Add New Content Type</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {editMode ? "Edit Content Type" : "Add New Content Type"}
+            </h2>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
                 value={newType}
                 onChange={handleInputChange}
-                placeholder="Enter new type"
+                placeholder="Enter content type"
                 className="border border-gray-300 rounded-md px-2 py-1 w-full mb-4"
               />
               <div className="flex justify-end gap-2">
@@ -142,7 +171,7 @@ const ContentType = () => {
                   type="submit"
                   className="px-2 py-1 bg-blue-700 text-white rounded-md"
                 >
-                  Add Type
+                  {editMode ? "Update Type" : "Add Type"}
                 </button>
               </div>
             </form>

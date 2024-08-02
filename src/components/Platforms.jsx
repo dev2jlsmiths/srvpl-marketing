@@ -12,6 +12,8 @@ const Platforms = () => {
   const [platformContentTypes, setPlatformContentTypes] = useState([
     { type: "", length: "", width: "" },
   ]);
+  const [editMode, setEditMode] = useState(false);
+  const [currentPlatformId, setCurrentPlatformId] = useState(null);
   const accessToken = localStorage.getItem("access_token");
 
   useEffect(() => {
@@ -63,21 +65,31 @@ const Platforms = () => {
     };
 
     try {
-      await axios.post(
-        "http://192.168.1.38:5000/v1/platform/add",
-        platformData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      if (editMode) {
+        await axios.put(
+          `http://192.168.1.38:5000/v1/platform/edit/${currentPlatformId}`,
+          platformData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } else {
+        await axios.post(
+          "http://192.168.1.38:5000/v1/platform/add",
+          platformData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
       setShowModal(false);
-      setPlatformName("");
-      setPlatformLogo(null);
-      setPlatformLink("");
-      setPlatformContentTypes([{ type: "", length: "", width: "" }]);
+      resetForm();
       const response = await axios.get(
         "http://192.168.1.38:5000/v1/platform/get",
         {
@@ -90,6 +102,30 @@ const Platforms = () => {
     } catch (error) {
       console.error("Error adding platform:", error);
     }
+  };
+
+  const handleEditPlatform = (platform) => {
+    setEditMode(true);
+    setCurrentPlatformId(platform._id);
+    setPlatformName(platform.platform_name);
+    setPlatformLogo(platform.platform_logo);
+    setPlatformLink(platform.platform_link);
+    setPlatformContentTypes(
+      platform.content_type.map((contentType) => {
+        const [length, width] = contentType.size.split(" x ");
+        return { type: contentType.type, length, width };
+      })
+    );
+    setShowModal(true);
+  };
+
+  const resetForm = () => {
+    setPlatformName("");
+    setPlatformLogo(null);
+    setPlatformLink("");
+    setPlatformContentTypes([{ type: "", length: "", width: "" }]);
+    setEditMode(false);
+    setCurrentPlatformId(null);
   };
 
   const handleContentTypeChange = (index, field, value) => {
@@ -120,47 +156,71 @@ const Platforms = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="font-semibold text-sm text-gray-800">Platforms</div>
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
             className="px-1 py-1 bg-gray-100 text-gray-800 rounded-md"
           >
             + Add Platform
           </button>
         </div>
         <div className="bg-gray-200 p-2 flex justify-between items-center text-xs text-gray-600 mb-2">
-          <div className="w-1/4 text-center">LOGO</div>
-          <div className="w-1/2 text-left">NAME</div>
-          <div className="w-1/4 text-center">LINK</div>
+          <div className="w-1/4 text-left">LOGO</div>
+          <div className="w-1/4 text-left">NAME</div>
+          <div className="w-1/2 text-left">LINK</div>
+          <div className="w-1/4 text-center">ACTIONS</div>
         </div>
         {platforms.map((platform) => (
           <div
             key={platform._id}
-            className="flex items-center justify-between border-b border-gray-300 py-2 px-2"
+            className="flex items-center justify-between border-b border-gray-300 py-1 px-2"
           >
             <img
               className="w-8 h-8 object-cover"
               src={platform.platform_logo}
               alt={`${platform.platform_name} Logo`}
             />
-            <div className="text-xs text-gray-800 flex-1 text-center">
+            <div className="text-xs pl-8 text-gray-800 flex-1 text-left">
               {platform.platform_name}
             </div>
-            <a
-              href={platform.platform_link}
-              className="text-xs text-blue-600 underline"
+            <div className="w-1/2 text-left">
+              <a
+                href={platform.platform_link}
+                className="text-xs text-blue-600 underline break-words"
+              >
+                {platform.platform_link}
+              </a>
+            </div>
+            <button
+              onClick={() => handleEditPlatform(platform)}
+              className="px-2 py-1 rounded ml-2"
             >
-              {platform.platform_link}
-            </a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+            </button>
           </div>
         ))}
-        <div className="absolute right-0 top-0 w-2 h-full bg-gray-300">
-          <div className="relative h-24 bg-gray-400 rounded" />
-        </div>
       </div>
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-1/3">
-            <h2 className="text-lg font-semibold mb-4">Add New Platform</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              {editMode ? "Edit Platform" : "Add New Platform"}
+            </h2>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">
                 Platform Name
@@ -186,7 +246,15 @@ const Platforms = () => {
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Logo</label>
               <div className="border border-dashed border-gray-400 rounded-md p-4 text-center">
-                <div className="text-gray-600">Upload Logo</div>
+                {platformLogo ? (
+                  <img
+                    src={platformLogo}
+                    alt="Platform Logo"
+                    className="mb-4 mx-auto h-20 w-20 object-cover"
+                  />
+                ) : (
+                  <div className="text-gray-600">Upload Logo</div>
+                )}
                 <Dropzone onDrop={handleFileUpload}>
                   {({ getRootProps, getInputProps }) => (
                     <section>
@@ -241,22 +309,22 @@ const Platforms = () => {
             ))}
             <button
               onClick={handleAddContentType}
-              className="px-2 py-1 bg-blue-500 text-white rounded mb-4"
+              className="px-2 py-1 text-right bg-blue-500 text-white rounded mb-4"
             >
-              + Add More
+              +
             </button>
             <div className="flex justify-end">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded mr-2"
+                className="px-4 py-1 bg-gray-300 text-gray-800 rounded mr-2"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddPlatform}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+                className="px-4 py-1 bg-blue-500 text-white rounded"
               >
-                Add Platform
+                {editMode ? "Update Platform" : "Add Platform"}
               </button>
             </div>
           </div>

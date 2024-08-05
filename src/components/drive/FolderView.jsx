@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import Folder from "./Folder";
 import AddFolderButton from "./AddFolderButton";
+import Folder from "./Folder";
 
 const FolderView = () => {
   const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
 
-  const fetchFolders = async () => {
+  const fetchFolders = async (parentId) => {
     try {
       const response = await axios.get(
         `http://192.168.1.38:8000/v1/collateral/folder/get/${parentId}`,
@@ -27,13 +27,7 @@ const FolderView = () => {
   useEffect(() => {
     const loadFolders = async () => {
       const fetchedFolders = await fetchFolders(parentId);
-      const foldersWithSubfolders = await Promise.all(
-        fetchedFolders.map(async (folder) => {
-          const subfolders = await fetchFolders(folder._id);
-          return { ...folder, subfolders };
-        })
-      );
-      setFolders(foldersWithSubfolders);
+      setFolders(fetchedFolders);
     };
     loadFolders();
   }, [parentId, brandId]);
@@ -48,37 +42,51 @@ const FolderView = () => {
   }, [folders, parentId]);
 
   const handleFolderAdded = (newFolder) => {
-    const updatedFolders = folders.map((folder) => {
-      if (folder._id === currentFolder._id) {
-        return { ...folder, subfolders: [...folder.subfolders, newFolder] };
-      }
-      return folder;
-    });
+    const updatedFolders = [...folders, newFolder];
     setFolders(updatedFolders);
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-bold">
-        {currentFolder ? `Folder: ${currentFolder.name}` : "Loading Folder..."}
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentFolder && currentFolder.subfolders.length > 0
-          ? currentFolder.subfolders.map((subfolder) => (
-              <Folder
-                key={subfolder._id}
-                folder={subfolder}
-                onFolderAdded={handleFolderAdded}
-              />
-            ))
-          : currentFolder && <div>No subfolders available.</div>}
+    <main className="max-w-full flex">
+      <div className="min-h-screen text-xs w-full p-2">
+        <header className="flex justify-between items-center mb-8">
+          <h1 className="text-xl text-left text-blue-400 font-semibold mb-6">
+            {currentFolder
+              ? `Folder: ${currentFolder.name}`
+              : "Loading Folder..."}
+          </h1>
+          <div className="flex items-center space-x-4">
+            <AddFolderButton
+              parentFolderId={parentId}
+              brandId={brandId}
+              onFolderAdded={handleFolderAdded}
+            />
+          </div>
+        </header>
+        <div className="bg-white p-1 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 gap-4">
+            {folders.map((folder) => (
+              <div
+                key={folder._id}
+                className="flex flex-col items-center justify-center rounded-lg bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
+              >
+                <Link
+                  to={`/folder/${folder._id}`}
+                  className="flex flex-col items-center justify-center"
+                >
+                  <img
+                    src="https://i.redd.it/cglk1r8sbyf71.png" // Placeholder image
+                    alt={folder.name}
+                    className="h-16 w-16 mb-4"
+                  />
+                  <h3 className="font-semibold">{folder.name}</h3>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <AddFolderButton
-        parentFolderId={parentId}
-        brandId={brandId}
-        onFolderAdded={handleFolderAdded}
-      />
-    </div>
+    </main>
   );
 };
 

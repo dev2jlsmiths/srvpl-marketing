@@ -5,7 +5,7 @@ import AddFolderButton from "./AddFolderButton";
 import AddCollateralButton from "./AddCollateralButton";
 
 const OriginalCollateral = () => {
-  const { id: brandId } = useParams(); // Retrieve brandId from URL parameters
+  const { brandId } = useParams(); // Retrieve brandId from URL parameters
   const [items, setItems] = useState([]);
 
   useEffect(() => {

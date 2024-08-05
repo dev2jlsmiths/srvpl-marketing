@@ -90,7 +90,7 @@ function App() {
           />
           \
           <Route
-            path="/originalcollateral/:id"
+            path="/originalcollateral/:brandId"
             element={
               <Layout>
                 <OriginalCollateral />
@@ -98,7 +98,7 @@ function App() {
             }
           />
           <Route
-            path="/item/:barndId/:id"
+            path="/item/:brandId/:parentId"
             element={
               <Layout>
                 <FolderView />

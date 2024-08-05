@@ -5,17 +5,17 @@ import { useParams } from "react-router-dom";
 const AddFolderModal = ({
   isOpen,
   onClose,
-  parentFolderId,
-  brandId,
+
   onFolderAdded,
 }) => {
   const [folderName, setFolderName] = useState("");
-
+  const params = useParams();
+  console.log("params", params);
   const handleAddFolder = async () => {
     const body = {
       name: folderName,
-      brand_id: brandId,
-      parentFolderId: parentFolderId || null,
+      brand_id: params.brandId,
+      parentFolderId: params.parentId || undefined,
     };
 
     try {

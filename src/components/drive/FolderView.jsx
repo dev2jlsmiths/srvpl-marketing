@@ -4,12 +4,12 @@ import axios from "axios";
 import Folder from "./Folder";
 import AddFolderButton from "./AddFolderButton";
 
-const FolderView = ({ brandId }) => {
-  const { id: parentId } = useParams(); // Retrieve parentId from URL parameters
+const FolderView = () => {
+  const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
 
-  const fetchFolders = async (parentId) => {
+  const fetchFolders = async () => {
     try {
       const response = await axios.get(
         `http://192.168.1.38:8000/v1/collateral/folder/get/${parentId}`,

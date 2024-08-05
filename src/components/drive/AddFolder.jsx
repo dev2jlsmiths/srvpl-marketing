@@ -5,7 +5,7 @@ import axios from "axios";
 const AddFolder = () => {
   const [folderName, setFolderName] = useState("");
   const navigate = useNavigate();
-  const { id: brandId } = useParams(); // Retrieve brand_id from URL parameters
+  const { brandId, parentFolderId } = useParams(); // Retrieve brandId and parentFolderId from URL parameters
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +16,7 @@ const AddFolder = () => {
         {
           name: folderName,
           brand_id: brandId, // Include brand_id in the request payload
+          parentFolderId: parentFolderId || null, // Include parentFolderId if provided
         },
         {
           headers: {

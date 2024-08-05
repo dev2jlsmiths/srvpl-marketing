@@ -5,7 +5,7 @@ import AddFolderButton from "./AddFolderButton";
 import AddCollateralButton from "./AddCollateralButton";
 
 const OriginalCollateral = () => {
-  const { id } = useParams(); // Brand ID
+  const { brandId: brandId } = useParams(); // Retrieve brandId from URL parameters
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const OriginalCollateral = () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:8000/v1/collateral/folder/get?brand_id=${id}`,
+          `http://192.168.1.38:8000/v1/collateral/folder/get?brand_id=${brandId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -27,7 +27,7 @@ const OriginalCollateral = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [brandId]);
 
   const handleFolderAdded = (newFolder) => {
     setItems([...items, newFolder]);
@@ -44,7 +44,7 @@ const OriginalCollateral = () => {
             <AddCollateralButton />
             <AddFolderButton
               parentFolderId={null}
-              brandId={id}
+              brandId={brandId}
               onFolderAdded={handleFolderAdded}
             />
           </div>
@@ -57,7 +57,7 @@ const OriginalCollateral = () => {
                 className="flex flex-col items-center justify-center rounded-lg  bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
               >
                 <Link
-                  to={`/item/${id}/${item._id}`}
+                  to={`/item/${brandId}/${item._id}`}
                   className="flex flex-col items-center justify-center"
                 >
                   <img

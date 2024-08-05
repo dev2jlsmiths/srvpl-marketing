@@ -2,22 +2,24 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const AddFolderModal = ({ isOpen, onClose, parentFolderId, onFolderAdded }) => {
+const AddFolderModal = ({
+  isOpen,
+  onClose,
+  parentFolderId,
+  brandId,
+  onFolderAdded,
+}) => {
   const [folderName, setFolderName] = useState("");
-  const { id } = useParams();
-  const { parentId } = useParams();
-  console.log("brandid", id);
-  console.log("parentId", parentId);
 
   const handleAddFolder = async () => {
-    if (!folderName.trim() || !id) {
-      console.error("Both folder name and brand ID are required.");
-      return;
-    }
+    // if (!folderName.trim() || !brandId) {
+    //   console.error("Both folder name and brand ID are required.");
+    //   return;
+    // }
 
     const body = {
       name: folderName,
-      brand_id: id,
+      brand_id: brandId,
       parentFolderId: parentFolderId || null,
     };
 

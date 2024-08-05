@@ -5,7 +5,7 @@ import Folder from "./Folder";
 import AddFolderButton from "./AddFolderButton";
 
 const FolderView = ({ brandId }) => {
-  const { id: parentId } = useParams();
+  const { id: parentId } = useParams(); // Retrieve parentId from URL parameters
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
 

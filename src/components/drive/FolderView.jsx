@@ -71,7 +71,7 @@ const FolderView = () => {
                 className="flex flex-col items-center justify-center rounded-lg bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
               >
                 <Link
-                  to={`/folder/${folder._id}`}
+                  to={`/item/${brandId}/${folder._id}`}
                   className="flex flex-col items-center justify-center"
                 >
                   <img

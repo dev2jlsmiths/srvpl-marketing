@@ -51,9 +51,7 @@ const FolderView = () => {
       <div className="min-h-screen text-xs w-full p-2">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-xl text-left text-blue-400 font-semibold mb-6">
-            {currentFolder
-              ? `Folder: ${currentFolder.name}`
-              : "Loading Folder..."}
+            Original Collateral
           </h1>
           <div className="flex items-center space-x-4">
             <AddFolderButton

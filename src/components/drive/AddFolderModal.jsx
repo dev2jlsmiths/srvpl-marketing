@@ -58,13 +58,13 @@ const AddFolderModal = ({
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="mr-2 px-4 py-2 bg-gray-300 rounded"
+            className="mr-2 px-4 py-1 bg-gray-300 rounded"
           >
             Cancel
           </button>
           <button
             onClick={handleAddFolder}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-4 py-1 bg-blue-500 text-white rounded"
           >
             Add
           </button>

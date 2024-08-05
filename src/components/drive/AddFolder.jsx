@@ -12,7 +12,7 @@ const AddFolder = () => {
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.post(
-        "http://192.168.1.38:5000/v1/collateral/folder/add",
+        "http://192.168.1.38:8000/v1/collateral/folder/add",
         {
           name: folderName,
           brand_id: brandId, // Include brand_id in the request payload

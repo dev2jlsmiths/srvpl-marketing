@@ -20,7 +20,7 @@ const Platforms = () => {
     const fetchPlatforms = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:5000/v1/platform/get",
+          "http://192.168.1.38:8000/v1/platform/get",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -36,7 +36,7 @@ const Platforms = () => {
     const fetchContentTypes = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:5000/v1/platform/type/get?page=1&limit=10",
+          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -67,7 +67,7 @@ const Platforms = () => {
     try {
       if (editMode) {
         await axios.put(
-          `http://192.168.1.38:5000/v1/platform/edit/${currentPlatformId}`,
+          `http://192.168.1.38:8000/v1/platform/edit/${currentPlatformId}`,
           platformData,
           {
             headers: {
@@ -78,7 +78,7 @@ const Platforms = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:5000/v1/platform/add",
+          "http://192.168.1.38:8000/v1/platform/add",
           platformData,
           {
             headers: {
@@ -91,7 +91,7 @@ const Platforms = () => {
       setShowModal(false);
       resetForm();
       const response = await axios.get(
-        "http://192.168.1.38:5000/v1/platform/get",
+        "http://192.168.1.38:8000/v1/platform/get",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

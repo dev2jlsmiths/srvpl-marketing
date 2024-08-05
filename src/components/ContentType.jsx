@@ -13,7 +13,7 @@ const ContentType = () => {
     const fetchContentTypes = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:5000/v1/platform/type/get?page=1&limit=10",
+          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -51,7 +51,7 @@ const ContentType = () => {
     try {
       if (editMode && currentTypeId) {
         await axios.put(
-          `http://192.168.1.38:5000/v1/platform/type/edit/${currentTypeId}`,
+          `http://192.168.1.38:8000/v1/platform/type/edit/${currentTypeId}`,
           { content_type: newType },
           {
             headers: {
@@ -61,7 +61,7 @@ const ContentType = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:5000/v1/platform/type/add",
+          "http://192.168.1.38:8000/v1/platform/type/add",
           { content_type: newType },
           {
             headers: {
@@ -74,7 +74,7 @@ const ContentType = () => {
       setModalOpen(false);
       // Refresh the content types list
       const response = await axios.get(
-        "http://192.168.1.38:5000/v1/platform/type/get?page=1&limit=10",
+        "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

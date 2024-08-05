@@ -35,7 +35,7 @@ const Sidebar = () => {
 
       try {
         const response = await fetch(
-          "http://192.168.1.38:5000/v1/brand/profile/get?fields=brand_name&limit=100",
+          "http://192.168.1.38:8000/v1/brand/profile/get?fields=brand_name&limit=100",
           {
             method: "GET",
             headers: {

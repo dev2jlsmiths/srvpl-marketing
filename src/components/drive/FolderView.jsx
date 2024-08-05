@@ -12,7 +12,7 @@ const FolderView = () => {
   const fetchFolders = async (parentId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.38:5000/v1/collateral/folder/get/${parentId}`,
+        `http://192.168.1.38:8000/v1/collateral/folder/get/${parentId}`,
         {
           params: { brand_id: "66ac7c570b8427167081ad9c" },
         }
@@ -47,10 +47,6 @@ const FolderView = () => {
     }
   }, [folders, id]);
 
-  if (!currentFolder) {
-    return <div>Loading...</div>;
-  }
-
   const handleFolderAdded = (newFolder) => {
     const updatedFolders = folders.map((folder) => {
       if (folder._id === currentFolder._id) {
@@ -61,17 +57,25 @@ const FolderView = () => {
     setFolders(updatedFolders);
   };
 
+  // if (currentFolder === null) {
+  //   return <div>Loading...</div>;
+  // }
+
   return (
     <div>
-      <h2 className="text-xl font-bold">Folder: {currentFolder.name}</h2>
+      <h2 className="text-xl font-bold">
+        {currentFolder ? `Folder: ${currentFolder.name}` : "Loading Folder..."}
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {currentFolder.subfolders.map((subfolder) => (
-          <Folder
-            key={subfolder._id}
-            folder={subfolder}
-            onFolderAdded={handleFolderAdded}
-          />
-        ))}
+        {currentFolder && currentFolder.subfolders.length > 0
+          ? currentFolder.subfolders.map((subfolder) => (
+              <Folder
+                key={subfolder._id}
+                folder={subfolder}
+                onFolderAdded={handleFolderAdded}
+              />
+            ))
+          : currentFolder && <div>No subfolders available.</div>}
       </div>
       <AddFolderButton parentFolderId={id} onFolderAdded={handleFolderAdded} />
     </div>

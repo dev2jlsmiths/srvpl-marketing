@@ -30,7 +30,7 @@ const AddFolderModal = ({ isOpen, onClose, parentFolderId, onFolderAdded }) => {
       }
 
       const response = await axios.post(
-        "http://192.168.1.38:5000/v1/collateral/folder/add",
+        "http://192.168.1.38:8000/v1/collateral/folder/add",
         body,
         {
           headers: {

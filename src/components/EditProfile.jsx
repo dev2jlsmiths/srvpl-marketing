@@ -28,7 +28,7 @@ const EditProfile = () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:5000/v1/brand/profile/get/${id}`,
+          `http://192.168.1.38:8000/v1/brand/profile/get/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -154,7 +154,7 @@ const EditProfile = () => {
         social_media: profileData.socialMedia,
       };
       await axios.put(
-        `http://192.168.1.38:5000/v1/brand/profile/edit/${id}`,
+        `http://192.168.1.38:8000/v1/brand/profile/edit/${id}`,
         data,
         {
           headers: {

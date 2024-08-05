@@ -13,7 +13,7 @@ const OriginalCollateral = () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:5000/v1/collateral/folder/get?brand_id=${id}`,
+          `http://192.168.1.38:8000/v1/collateral/folder/get?brand_id=${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

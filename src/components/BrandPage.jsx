@@ -18,7 +18,7 @@ function BrandPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          "http://192.168.1.38:5000/v1/brand/profile/get",
+          "http://192.168.1.38:8000/v1/brand/profile/get",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

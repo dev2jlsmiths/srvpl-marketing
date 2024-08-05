@@ -29,7 +29,7 @@ const FolderView = () => {
   const fetchFiles = async (parentId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.38:8000/v1/collateral/files/get?folder_id=${parentId}`,
+        `http://192.168.1.38:8000/v1/collateral/file/get?folder_id=${parentId}`,
         {
           params: { brand_id: brandId },
         }
@@ -125,7 +125,7 @@ const FolderView = () => {
             {files.map((file) => (
               <div
                 key={file._id}
-                className="flex flex-col items-center justify-center rounded-lg bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
+                className="flex flex-col items-center justify-center rounded-lg bg-white cursor-pointer"
               >
                 <a href={file.path} target="_blank" rel="noopener noreferrer">
                   <img
@@ -133,7 +133,7 @@ const FolderView = () => {
                     alt={file.name}
                     className="h-16 w-16 mb-4"
                   />
-                  <h3 className="font-semibold">{file.name}</h3>
+                  {/* <h3 className="font-semibold">{file.name}</h3> */}
                 </a>
               </div>
             ))}

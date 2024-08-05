@@ -12,11 +12,6 @@ const AddFolderModal = ({
   const [folderName, setFolderName] = useState("");
 
   const handleAddFolder = async () => {
-    // if (!folderName.trim() || !brandId) {
-    //   console.error("Both folder name and brand ID are required.");
-    //   return;
-    // }
-
     const body = {
       name: folderName,
       brand_id: brandId,

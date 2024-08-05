@@ -9,6 +9,7 @@ const FolderView = () => {
   const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const fetchFolders = async (parentId) => {
     try {
@@ -25,12 +26,29 @@ const FolderView = () => {
     }
   };
 
+  const fetchFiles = async (parentId) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.38:8000/v1/collateral/files/get?folder_id=${parentId}`,
+        {
+          params: { brand_id: brandId },
+        }
+      );
+      return response.data.files;
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      return [];
+    }
+  };
+
   useEffect(() => {
-    const loadFolders = async () => {
+    const loadFoldersAndFiles = async () => {
       const fetchedFolders = await fetchFolders(parentId);
+      const fetchedFiles = await fetchFiles(parentId);
       setFolders(fetchedFolders);
+      setFiles(fetchedFiles);
     };
-    loadFolders();
+    loadFoldersAndFiles();
   }, [parentId, brandId]);
 
   useEffect(() => {
@@ -53,7 +71,8 @@ const FolderView = () => {
   };
 
   const handleCollateralAdded = (newCollateral) => {
-    // Update the current folder's files if necessary
+    const updatedFiles = [...files, newCollateral];
+    setFiles(updatedFiles);
   };
 
   const renderPath = (path) => {
@@ -101,6 +120,21 @@ const FolderView = () => {
                   />
                   <h3 className="font-semibold">{folder.name}</h3>
                 </Link>
+              </div>
+            ))}
+            {files.map((file) => (
+              <div
+                key={file._id}
+                className="flex flex-col items-center justify-center rounded-lg bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
+              >
+                <a href={file.path} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={file.path} // Assuming the file path is a URL to the image
+                    alt={file.name}
+                    className="h-16 w-16 mb-4"
+                  />
+                  <h3 className="font-semibold">{file.name}</h3>
+                </a>
               </div>
             ))}
           </div>

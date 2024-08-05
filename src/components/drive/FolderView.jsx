@@ -36,7 +36,12 @@ const FolderView = () => {
     if (folders.length > 0) {
       const folder = folders.find((folder) => folder._id === parentId);
       setCurrentFolder(
-        folder || { name: "Default Folder", subfolders: [], files: [] }
+        folder || {
+          name: "Default Folder",
+          path: "",
+          subfolders: [],
+          files: [],
+        }
       );
     }
   }, [folders, parentId]);
@@ -46,12 +51,23 @@ const FolderView = () => {
     setFolders(updatedFolders);
   };
 
+  const renderPath = (path) => {
+    const pathParts = path.split("/");
+    // Removing the first part if it's an ID
+    if (/^[a-f0-9]{24}$/.test(pathParts[0])) {
+      pathParts.shift();
+    }
+    return pathParts.join("/");
+  };
+
   return (
     <main className="max-w-full flex">
       <div className="min-h-screen text-xs w-full p-2">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-xl text-left text-blue-400 font-semibold mb-6">
-            Original Collateral
+          <h1 className="text-xs text-left text-blue-400 font-semibold mb-6">
+            {currentFolder
+              ? ` ${renderPath(currentFolder.path)}`
+              : "Loading Folder..."}
           </h1>
           <div className="flex items-center space-x-4">
             <AddFolderButton

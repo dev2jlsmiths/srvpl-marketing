@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import AddFolderButton from "./AddFolderButton";
 import Folder from "./Folder";
+import AddCollateralButton from "./AddCollateralButton";
 
 const FolderView = () => {
   const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
@@ -51,6 +52,10 @@ const FolderView = () => {
     setFolders(updatedFolders);
   };
 
+  const handleCollateralAdded = (newCollateral) => {
+    // Update the current folder's files if necessary
+  };
+
   const renderPath = (path) => {
     const pathParts = path.split("/");
     // Removing the first part if it's an ID
@@ -70,6 +75,7 @@ const FolderView = () => {
               : "Loading Folder..."}
           </h1>
           <div className="flex items-center space-x-4">
+            <AddCollateralButton onCollateralAdded={handleCollateralAdded} />
             <AddFolderButton
               parentFolderId={parentId}
               brandId={brandId}

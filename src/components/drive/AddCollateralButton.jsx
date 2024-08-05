@@ -1,13 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import AddCollateralModal from "./AddCollateralModal";
 
-const AddCollateralButton = () => (
-  <Link
-    to="/add-collateral"
-    className="bg-blue-500 text-white px-4 py-2 rounded-full"
-  >
-    + Add Collateral
-  </Link>
-);
+const AddCollateralButton = ({ onCollateralAdded }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded-full"
+      >
+        + Add Collateral
+      </button>
+      <AddCollateralModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCollateralAdded={onCollateralAdded}
+      />
+    </>
+  );
+};
 
 export default AddCollateralButton;

@@ -13,7 +13,7 @@ import Settings from "./components/Settings";
 import Profile from "./components/Profile";
 import OriginalCollateral from "./components/drive/OriginalColleteral";
 import AddFolder from "./components/drive/AddFolder";
-import AddCollateral from "./components/drive/AddCollateral";
+import AddCollateral from "./components/drive/AddCollateralModal";
 import FolderView from "./components/drive/FolderView";
 
 function App() {

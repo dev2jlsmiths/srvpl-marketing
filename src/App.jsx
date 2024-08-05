@@ -98,7 +98,7 @@ function App() {
             }
           />
           <Route
-            path="/item/:id"
+            path="/item/:barndId/:id"
             element={
               <Layout>
                 <FolderView />

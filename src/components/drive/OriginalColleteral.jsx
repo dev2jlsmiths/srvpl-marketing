@@ -57,7 +57,7 @@ const OriginalCollateral = () => {
                 className="flex flex-col items-center justify-center rounded-lg  bg-white hover:shadow-md transition-shadow duration-300 cursor-pointer"
               >
                 <Link
-                  to={`/item/${item._id}`}
+                  to={`/item/${id}/${item._id}`}
                   className="flex flex-col items-center justify-center"
                 >
                   <img

@@ -4,8 +4,8 @@ import axios from "axios";
 import Folder from "./Folder";
 import AddFolderButton from "./AddFolderButton";
 
-const FolderView = () => {
-  const { id } = useParams();
+const FolderView = ({ brandId }) => {
+  const { id: parentId } = useParams();
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
 
@@ -14,7 +14,7 @@ const FolderView = () => {
       const response = await axios.get(
         `http://192.168.1.38:8000/v1/collateral/folder/get/${parentId}`,
         {
-          params: { brand_id: "66ac7c570b8427167081ad9c" },
+          params: { brand_id: brandId },
         }
       );
       return response.data;
@@ -26,7 +26,7 @@ const FolderView = () => {
 
   useEffect(() => {
     const loadFolders = async () => {
-      const fetchedFolders = await fetchFolders(id);
+      const fetchedFolders = await fetchFolders(parentId);
       const foldersWithSubfolders = await Promise.all(
         fetchedFolders.map(async (folder) => {
           const subfolders = await fetchFolders(folder._id);
@@ -36,16 +36,16 @@ const FolderView = () => {
       setFolders(foldersWithSubfolders);
     };
     loadFolders();
-  }, [id]);
+  }, [parentId, brandId]);
 
   useEffect(() => {
     if (folders.length > 0) {
-      const folder = folders.find((folder) => folder._id === id);
+      const folder = folders.find((folder) => folder._id === parentId);
       setCurrentFolder(
         folder || { name: "Default Folder", subfolders: [], files: [] }
       );
     }
-  }, [folders, id]);
+  }, [folders, parentId]);
 
   const handleFolderAdded = (newFolder) => {
     const updatedFolders = folders.map((folder) => {
@@ -56,10 +56,6 @@ const FolderView = () => {
     });
     setFolders(updatedFolders);
   };
-
-  // if (currentFolder === null) {
-  //   return <div>Loading...</div>;
-  // }
 
   return (
     <div>
@@ -77,7 +73,11 @@ const FolderView = () => {
             ))
           : currentFolder && <div>No subfolders available.</div>}
       </div>
-      <AddFolderButton parentFolderId={id} onFolderAdded={handleFolderAdded} />
+      <AddFolderButton
+        parentFolderId={parentId}
+        brandId={brandId}
+        onFolderAdded={handleFolderAdded}
+      />
     </div>
   );
 };

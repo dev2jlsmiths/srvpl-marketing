@@ -3,24 +3,23 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const AddFolderModal = ({ isOpen, onClose, parentFolderId, onFolderAdded }) => {
-  // const { brandId } = useParams(); // Get brandId from URL params
   const [folderName, setFolderName] = useState("");
-  const { id: brandId } = useParams();
+  const { id } = useParams();
+  const { parentId } = useParams();
+  console.log("brandid", id);
+  console.log("parentId", parentId);
 
   const handleAddFolder = async () => {
-    if (!folderName.trim() || !brandId) {
+    if (!folderName.trim() || !id) {
       console.error("Both folder name and brand ID are required.");
       return;
     }
 
-    // Prepare the request body
     const body = {
       name: folderName,
-      brand_id: brandId, // Ensure brand_id is included
-      parentFolderId: parentFolderId || null, // Use parentFolderId to nest
+      brand_id: id,
+      parentFolderId: parentFolderId || null,
     };
-
-    console.log("Adding folder with data:", body); // Log payload for debugging
 
     try {
       const accessToken = localStorage.getItem("access_token");
@@ -39,7 +38,6 @@ const AddFolderModal = ({ isOpen, onClose, parentFolderId, onFolderAdded }) => {
         }
       );
 
-      console.log("Folder added:", response.data); // Log API response for debugging
       onFolderAdded(response.data);
       onClose();
     } catch (error) {

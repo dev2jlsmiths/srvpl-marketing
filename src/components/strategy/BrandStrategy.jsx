@@ -3,118 +3,179 @@ import { PlusCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DateAddModal from "./DateAddModal";
 import FileUploadModal from "./FileUploadModal";
+import { useParams } from "react-router-dom";
 
 const BrandStrategy = () => {
-  const [platforms, setPlatforms] = useState([]);
-  const [focus, setFocus] = useState([]);
-  const token = localStorage.getItem("access_token");
-  const [focusGroups, setFocusGroups] = useState([
-    { percentage: "", focusType: "Awareness" },
-  ]);
-  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [fileUploadModal, setFileUploadModal] = useState(false)
-
-  const handleAddModal = () => {
-    setShowModal(true);
-    
-  };
-  const handleFileUploadModal = () => {
-    setFileUploadModal(true)
-  }
-  const handleClose = () => {
-    setShowModal(false);
-    setFileUploadModal(false)
-  };
-
-  const handleAddGroup = () => {
-    setFocusGroups([
-      ...focusGroups,
+    const { brand_id } = useParams(); // Fetch brand_id from URL
+    const [platforms, setPlatforms] = useState([]);
+    const [focus, setFocus] = useState([]);
+    const token = localStorage.getItem("access_token");
+    const [focusGroups, setFocusGroups] = useState([
       { percentage: "", focusType: "Awareness" },
     ]);
-  };
-
-  const months = [
-    { value: 1, label: "January" },
-    { value: 2, label: "February" },
-    { value: 3, label: "March" },
-    { value: 4, label: "April" },
-    { value: 5, label: "May" },
-    { value: 6, label: "June" },
-    { value: 7, label: "July" },
-    { value: 8, label: "August" },
-    { value: 9, label: "September" },
-    { value: 10, label: "October" },
-    { value: 11, label: "November" },
-    { value: 12, label: "December" },
-  ];
-
-  const years = Array.from(
-    { length: 10 },
-    (_, i) => new Date().getFullYear() - i
-  );
-
-  const handleInputChange = (index, field, value) => {
-    const updatedGroups = focusGroups.map((group, i) =>
-      i === index ? { ...group, [field]: value } : group
+    const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [fileUploadModal, setFileUploadModal] = useState(false);
+    const [productToFocus, setProductToFocus] = useState("");
+    const [tags, setTags] = useState("");
+    const [budget, setBudget] = useState("");
+    const [campaigns, setCampaigns] = useState("");
+    const [remarks, setRemarks] = useState("");
+    const [importantDates, setImportantDates] = useState([]);
+  
+    const handleAddModal = () => {
+      setShowModal(true);
+    };
+    const handleFileUploadModal = () => {
+      setFileUploadModal(true);
+    };
+    const handleClose = () => {
+      setShowModal(false);
+      setFileUploadModal(false);
+    };
+  
+    const handleAddGroup = () => {
+      setFocusGroups([
+        ...focusGroups,
+        { percentage: "", focusType: "Awareness" },
+      ]);
+    };
+  
+    const months = [
+      { value: 1, label: "January" },
+      { value: 2, label: "February" },
+      { value: 3, label: "March" },
+      { value: 4, label: "April" },
+      { value: 5, label: "May" },
+      { value: 6, label: "June" },
+      { value: 7, label: "July" },
+      { value: 8, label: "August" },
+      { value: 9, label: "September" },
+      { value: 10, label: "October" },
+      { value: 11, label: "November" },
+      { value: 12, label: "December" },
+    ];
+  
+    const years = Array.from(
+      { length: 10 },
+      (_, i) => new Date().getFullYear() - i
     );
-    setFocusGroups(updatedGroups);
-  };
-
-  const handlePlatformChange = (platform) => {
-    setSelectedPlatforms((prevSelected) =>
-      prevSelected.includes(platform)
-        ? prevSelected.filter((p) => p !== platform)
-        : [...prevSelected, platform]
-    );
-  };
-
-  useEffect(() => {
-    // Fetch platforms from the API
-    const fetchPlatforms = async () => {
+  
+    const handleInputChange = (index, field, value) => {
+      const updatedGroups = focusGroups.map((group, i) =>
+        i === index ? { ...group, [field]: value } : group
+      );
+      setFocusGroups(updatedGroups);
+    };
+  
+    const handlePlatformChange = (platform) => {
+      setSelectedPlatforms((prevSelected) =>
+        prevSelected.includes(platform)
+          ? prevSelected.filter((p) => p !== platform)
+          : [...prevSelected, platform]
+      );
+    };
+  
+    useEffect(() => {
+      // Fetch platforms from the API
+      const fetchPlatforms = async () => {
+        try {
+          const response = await fetch(
+            `http://192.168.1.38:8000/v1/platform/get`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await response.json();
+          setPlatforms(data.data); // Assuming the response data is an array of platforms
+        } catch (error) {
+          console.error("Error fetching platforms:", error);
+        }
+      };
+  
+      fetchPlatforms();
+    }, []);
+  
+    useEffect(() => {
+      const fetchFocus = async () => {
+        try {
+          const response = await fetch(
+            `http://192.168.1.38:8000/v1/platform/focus/get?page=1&limit=100`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const data = await response.json();
+          setFocus(data.data); // Assuming the response data is an array of focus items
+        } catch (error) {
+          console.error("Error fetching focus:", error);
+        }
+      };
+  
+      fetchFocus();
+    }, [token]);
+  
+    const handleSubmit = async () => {
+      const formData = new FormData();
+      formData.append("brand_id", brand_id); // Use the brand_id from URL
+      formData.append("month", `${selectedYear}-${selectedMonth}-01T00:00:00.000Z`);
+      
+      const formattedFocusGroups = focusGroups.map((group) => ({
+        focus_id: group.focusType,
+        percent: group.percentage,
+      }));
+      
+      formData.append("focus", JSON.stringify(formattedFocusGroups));
+      formData.append("producToFocus", productToFocus);
+  
+      const formattedPlatforms = selectedPlatforms.map((platform) => ({
+        focus_id: platform,
+        time_interval: "Weekly", // Adjust this as needed
+        percent: "30", // Adjust this as needed
+      }));
+      
+      formData.append("social_post", JSON.stringify(formattedPlatforms));
+      formData.append("blog_post", JSON.stringify([{ time_interval: "Monthly", number: "4" }]));
+      formData.append("email_marketing", JSON.stringify([{ time_interval: "Weekly", number: "2" }]));
+      formData.append("sms_marketing", JSON.stringify([{ time_interval: "Daily", number: "5" }]));
+      formData.append("new_sletter", JSON.stringify([{ time_interval: "Monthly", number: "1" }]));
+      formData.append("tags", tags);
+  
+      const formattedDates = importantDates.map((date) => ({
+        date: date.date,
+        name: date.name,
+        description: date.description,
+      }));
+  
+      formData.append("important_date", JSON.stringify(formattedDates));
+      formData.append("budget", budget);
+      formData.append("campaigns", campaigns);
+      formData.append("remark", remarks);
+  
       try {
-        const response = await fetch(
-          `http://192.168.1.38:8000/v1/platform/get`,
+        const response = await axios.post(
+          "http://192.168.1.38:8000/v1/Strategy/add",
+          formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
-        const data = await response.json();
-        setPlatforms(data.data); // Assuming the response data is an array of platforms
+        console.log(response.data);
+        // Handle successful submission
       } catch (error) {
-        console.error("Error fetching platforms:", error);
+        console.error("Error submitting form:", error);
+        // Handle error
       }
     };
-
-    fetchPlatforms();
-  }, []);
-
-  useEffect(() => {
-    const fetchFocus = async () => {
-      try {
-        const response = await fetch(
-          `http://192.168.1.38:8000/v1/platform/focus/get?page=1&limit=100`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const data = await response.json();
-        setFocus(data.data); // Assuming the response data is an array of focus items
-      } catch (error) {
-        console.error("Error fetching focus:", error);
-      }
-    };
-
-    fetchFocus();
-  }, [token]);
-
-  console.log("Fetch focus>>", selectedPlatforms);
 
   return (
     <div>
@@ -369,7 +430,7 @@ const BrandStrategy = () => {
           <div className="bg-white p-2">
             <h2 className="text-lg font-bold mb-4 uppercase">Important Date</h2>
             <div className="flex">
-              <div className="w-1/3 border bg-blue-100 p-4 rounded">
+              {/* <div className="w-1/3 border bg-blue-100 p-4 rounded">
                 <div className="flex items-center mb-4">
                   <div className="mr-3">
                     <svg
@@ -398,7 +459,7 @@ const BrandStrategy = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <button
                 className="mt-4 text-blue-600 hover:underline flex justify-end items-end"
                 onClick={handleAddModal}
@@ -455,6 +516,8 @@ const BrandStrategy = () => {
             type="text"
             className="border p-1 w-1/6 mt-2 bg-gray-50 rounded"
             placeholder="0000"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
           />
           <p className="text-sm font-semibold">INR/Monthly</p>
         </div>
@@ -465,6 +528,8 @@ const BrandStrategy = () => {
             <textarea
               className="w-full bg-gray-50 p-3 rounded"
               placeholder="Type Here"
+              value={campaigns}
+              onChange={(e) => setCampaigns(e.target.value)}
             />
           </div>
           <div className="bg-white p-2 ">
@@ -472,12 +537,14 @@ const BrandStrategy = () => {
             <textarea
               className="w-full bg-gray-50 p-3"
               placeholder="Type Here"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
             />
           </div>
         </div>
       </div>
       <div className="">
-        <button className="bg-blue-500 text-xs text-white px-4 py-2">
+        <button className="bg-blue-500 text-xs text-white px-4 py-2" onClick={handleSubmit}>
           Submit
         </button>
       </div>

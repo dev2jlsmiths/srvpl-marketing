@@ -151,7 +151,7 @@ const Platforms = () => {
   };
 
   return (
-    <div className="w-96 h-72 text-xs bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-[22rem] h-72 text-xs bg-white rounded-xl overflow-hidden border border-gray-300 relative">
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="font-semibold text-sm text-gray-800">Platforms</div>
@@ -184,7 +184,7 @@ const Platforms = () => {
             <div className="text-xs pl-8 text-gray-800 flex-1 text-left">
               {platform.platform_name}
             </div>
-            <div className="w-1/2 text-left">
+            <div className="w-1/2 pl-1 text-left">
               <a
                 href={platform.platform_link}
                 className="text-xs text-blue-600 underline break-words"
@@ -216,7 +216,7 @@ const Platforms = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-1/3">
             <h2 className="text-lg font-semibold mb-4">
               {editMode ? "Edit Platform" : "Add New Platform"}

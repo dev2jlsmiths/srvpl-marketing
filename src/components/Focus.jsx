@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Department = () => {
+const Focus = () => {
   const [contentTypes, setContentTypes] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [newType, setNewType] = useState("");
@@ -99,7 +99,7 @@ const Department = () => {
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-md text-gray-800">
-          Department
+          Focus
         </div>
         <button
           className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
@@ -143,7 +143,7 @@ const Department = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed text-xs z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed text-xs z-20 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
               {editMode ? "Edit Content Type" : "Add New Content Type"}
@@ -179,4 +179,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default Focus;

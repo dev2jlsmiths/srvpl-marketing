@@ -95,7 +95,7 @@ const ContentType = () => {
   };
 
   return (
-    <div className="w-72 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-56 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-md text-gray-800">
@@ -143,7 +143,7 @@ const ContentType = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed text-xs z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed text-xs z-20 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
               {editMode ? "Edit Content Type" : "Add New Content Type"}

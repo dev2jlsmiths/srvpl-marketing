@@ -2,6 +2,7 @@ import React from "react";
 import ContentType from "./ContentType";
 import Platforms from "./Platforms";
 import Department from "./Department";
+import Focus from "./Focus";
 
 const Settings = () => {
   return (
@@ -9,6 +10,7 @@ const Settings = () => {
       <ContentType />
       <Platforms />
       <Department />
+      <Focus />
     </div>
   );
 };

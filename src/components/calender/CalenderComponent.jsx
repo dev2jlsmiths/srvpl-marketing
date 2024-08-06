@@ -8,7 +8,7 @@ import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
-import "./CalenderComponent.css"; // Import custom CSS for additional styling
+import "./CalenderComponent.css";
 
 const locales = {
   "en-US": enUS,
@@ -130,10 +130,10 @@ const CalendarComponent = () => {
           selected={miniDate}
           onChange={(date) => setMiniDate(date)}
           inline
-          className="custom-datepicker"
+          className="custom-datepicker text-xs"
         />
       </div>
-      <div className="w-3/4 p-4">
+      <div className="w-3/4 p-1">
         <h2 className="text-2xl font-semibold mb-6">Calendar</h2>
         <BigCalendar
           localizer={localizer}

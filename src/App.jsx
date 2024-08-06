@@ -92,7 +92,7 @@ function App() {
           />
 
           <Route
-            path="/strategy"
+            path="/strategy/:id"
             element={
               <Layout>
                 <BrandStrategy />

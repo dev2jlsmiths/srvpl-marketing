@@ -15,6 +15,7 @@ import OriginalCollateral from "./components/drive/OriginalColleteral";
 import AddFolder from "./components/drive/AddFolder";
 import AddCollateral from "./components/drive/AddCollateralModal";
 import FolderView from "./components/drive/FolderView";
+import CalendarComponent from "./components/calender/CalenderComponent";
 
 function App() {
   return (
@@ -121,14 +122,7 @@ function App() {
               </Layout>
             }
           />
-          {/* <Route
-            path="/"
-            element={
-              <Layout>
-                <Folder folder={folders[0]} onAddFolder={addFolder} />
-              </Layout>
-            }
-          /> */}
+          <Route path="/calender" element={<CalendarComponent />} />
         </Routes>
       </Router>
     </AuthProvider>

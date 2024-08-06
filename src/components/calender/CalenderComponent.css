@@ -1,0 +1,64 @@
+/* Custom Calendar Styles */
+.custom-calendar .rbc-toolbar {
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem;
+    background-color: white;
+}
+
+.custom-calendar .rbc-btn-group button {
+    font-size: 12px;
+    margin: 0 0.25rem;
+    padding: 0.25rem 0.50rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+    background-color: white;
+    transition: background-color 0.2s;
+}
+
+.custom-calendar .rbc-btn-group button:hover {
+    background-color: #f3f4f6;
+}
+
+.custom-calendar .rbc-btn-group button.rbc-active {
+    background-color: #e5e7eb;
+}
+
+.custom-calendar .rbc-header {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-calendar .rbc-date-cell {
+    padding: 0.25rem;
+    text-align: right;
+    /* Align date to the right */
+}
+
+.custom-calendar .rbc-event {
+    background-color: var(--color);
+    border-radius: 0.25rem;
+    padding: 0.15rem 0.25rem;
+    color: black;
+}
+
+.custom-calendar .rbc-day-bg {
+    border: 1px solid #e5e7eb;
+}
+
+.custom-calendar .rbc-month-view {
+    border-spacing: 1px;
+}
+
+.custom-calendar .rbc-month-row {
+    border: 1px solid #e5e7eb;
+}
+
+.custom-calendar .rbc-show-more {
+    background-color: #e5e7eb;
+    padding: 0.15rem 0.25rem;
+    border-radius: 0.25rem;
+}

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import DatePicker from "react-datepicker";
+import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./CalendarComponent.css"; // Import custom CSS for additional styling
+import "react-datepicker/dist/react-datepicker.css";
+import "./CalenderComponent.css"; // Import custom CSS for additional styling
 
 const locales = {
   "en-US": enUS,
@@ -30,16 +32,16 @@ const CalendarComponent = () => {
       color: "#FFEBCC", // Pastel shade
     },
   ]);
-
   const [title, setTitle] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [eventRows, setEventRows] = useState([
     { work: "", kind: "", type: "", description: "" },
   ]);
+  const [miniDate, setMiniDate] = useState(new Date());
 
   const handleSelectSlot = ({ start, end }) => {
     setTitle("");
@@ -84,8 +86,8 @@ const CalendarComponent = () => {
 
   const resetModal = () => {
     setTitle("");
-    setStart("");
-    setEnd("");
+    setStart(new Date());
+    setEnd(new Date());
     setShowModal(false);
     setIsEditing(false);
     setEventId(null);
@@ -122,125 +124,135 @@ const CalendarComponent = () => {
   };
 
   return (
-    <div className="p-4 w-full rounded-lg shadow-lg text-xs bg-white">
-      <h2 className="text-xl font-semibold mb-4">Calendar</h2>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500 }}
-        selectable
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
-        className="custom-calendar" // Add custom class for styling
-        eventPropGetter={(event) => ({
-          style: {
-            backgroundColor: event.color,
-          },
-        })}
-      />
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-lg w-2/3 z-10">
-            <h3 className="text-lg font-semibold mb-6 text-center">
-              {isEditing ? "Edit Event" : "Add Post"}
-            </h3>
-            {eventRows.map((row, index) => (
-              <div className="grid grid-cols-3 gap-4 mb-4" key={index}>
-                <div className="col-span-1">
-                  <label className="block mb-2">Scheduled Time:</label>
-                  <input
-                    type="datetime-local"
-                    className="border p-1 rounded w-full"
-                    value={format(start, "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setStart(new Date(e.target.value))}
-                  />
-                </div>
-                <div className="col-span-2 flex items-end">
-                  <div className="w-full">
-                    <label className="block mb-2">Work:</label>
-                    <select
-                      className="border p-1 rounded w-full"
-                      value={row.work}
-                      onChange={(e) =>
-                        handleEventRowChange(index, "work", e.target.value)
-                      }
-                    >
-                      <option>Option 1</option>
-                      <option>Option 2</option>
-                    </select>
+    <div className="p-6 w-full rounded-lg shadow-lg bg-white flex">
+      <div className="w-1/4 p-4 border-r border-gray-200">
+        <DatePicker
+          selected={miniDate}
+          onChange={(date) => setMiniDate(date)}
+          inline
+          className="custom-datepicker"
+        />
+      </div>
+      <div className="w-3/4 p-4">
+        <h2 className="text-2xl font-semibold mb-6">Calendar</h2>
+        <BigCalendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 500 }}
+          selectable
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
+          className="custom-calendar" // Add custom class for styling
+          eventPropGetter={(event) => ({
+            style: {
+              backgroundColor: event.color,
+            },
+          })}
+        />
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 z-10">
+              <h3 className="text-xl font-semibold mb-6 text-center">
+                {isEditing ? "Edit Event" : "Add Event"}
+              </h3>
+              {eventRows.map((row, index) => (
+                <div className="grid grid-cols-3 gap-4 mb-4" key={index}>
+                  <div className="col-span-1">
+                    <label className="block mb-2">Scheduled Time:</label>
+                    <input
+                      type="datetime-local"
+                      className="border p-2 rounded w-full"
+                      value={format(start, "yyyy-MM-dd'T'HH:mm")}
+                      onChange={(e) => setStart(new Date(e.target.value))}
+                    />
                   </div>
-                  <div className="w-full mx-2">
-                    <label className="block mb-2">Kind:</label>
-                    <select
-                      className="border p-1 rounded w-full"
-                      value={row.kind}
-                      onChange={(e) =>
-                        handleEventRowChange(index, "kind", e.target.value)
-                      }
-                    >
-                      <option>Option 1</option>
-                      <option>Option 2</option>
-                    </select>
+                  <div className="col-span-2 flex items-end">
+                    <div className="w-full">
+                      <label className="block mb-2">Work:</label>
+                      <select
+                        className="border p-2 rounded w-full"
+                        value={row.work}
+                        onChange={(e) =>
+                          handleEventRowChange(index, "work", e.target.value)
+                        }
+                      >
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                      </select>
+                    </div>
+                    <div className="w-full mx-2">
+                      <label className="block mb-2">Kind:</label>
+                      <select
+                        className="border p-2 rounded w-full"
+                        value={row.kind}
+                        onChange={(e) =>
+                          handleEventRowChange(index, "kind", e.target.value)
+                        }
+                      >
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                      </select>
+                    </div>
+                    <div className="w-full">
+                      <label className="block mb-2">Type:</label>
+                      <select
+                        className="border p-2 rounded w-full"
+                        value={row.type}
+                        onChange={(e) =>
+                          handleEventRowChange(index, "type", e.target.value)
+                        }
+                      >
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                      </select>
+                    </div>
+                    {index === eventRows.length - 1 && (
+                      <button
+                        type="button"
+                        className="bg-blue-500 text-white p-2 rounded ml-2"
+                        onClick={addEventRow}
+                      >
+                        +
+                      </button>
+                    )}
                   </div>
-                  <div className="w-full">
-                    <label className="block mb-2">Type:</label>
-                    <select
-                      className="border p-1 rounded w-full"
-                      value={row.type}
+                  <div className="col-span-3">
+                    <label className="block mb-2">Description:</label>
+                    <textarea
+                      className="border p-2 rounded w-full"
+                      rows="3"
+                      value={row.description}
                       onChange={(e) =>
-                        handleEventRowChange(index, "type", e.target.value)
+                        handleEventRowChange(
+                          index,
+                          "description",
+                          e.target.value
+                        )
                       }
-                    >
-                      <option>Option 1</option>
-                      <option>Option 2</option>
-                    </select>
+                    ></textarea>
                   </div>
-                  {index === eventRows.length - 1 && (
-                    <button
-                      type="button"
-                      className="bg-blue-500 text-white p-1 rounded ml-2"
-                      onClick={addEventRow}
-                    >
-                      +
-                    </button>
-                  )}
                 </div>
-                <div className="col-span-3">
-                  <label className="block mb-2">Description:</label>
-                  <textarea
-                    className="border p-1 rounded w-full"
-                    rows="3"
-                    value={row.description}
-                    onChange={(e) =>
-                      handleEventRowChange(index, "description", e.target.value)
-                    }
-                  ></textarea>
-                </div>
+              ))}
+              <div className="flex justify-end space-x-2">
+                <button
+                  className="bg-gray-500 text-white p-2 rounded"
+                  onClick={resetModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-500 text-white p-2 rounded"
+                  onClick={isEditing ? handleEditEvent : handleAddEvent}
+                >
+                  {isEditing ? "Edit Event" : "Add Event"}
+                </button>
               </div>
-            ))}
-            <div className="flex justify-end space-x-2">
-              <button
-                className="bg-gray-500 text-white p-1 rounded"
-                onClick={resetModal}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white p-1 rounded"
-                onClick={isEditing ? handleEditEvent : handleAddEvent}
-              >
-                {isEditing ? "Edit Event" : "Assign work"}
-              </button>
             </div>
           </div>
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-0"
-            onClick={resetModal}
-          ></div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

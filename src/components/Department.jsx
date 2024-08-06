@@ -2,57 +2,57 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Department = () => {
-  const [contentTypes, setContentTypes] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [newType, setNewType] = useState("");
+  const [newDept, setNewDept] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [currentTypeId, setCurrentTypeId] = useState(null);
+  const [currentDeptId, setCurrentDeptId] = useState(null);
   const accessToken = localStorage.getItem("access_token");
 
   useEffect(() => {
-    const fetchContentTypes = async () => {
+    const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
+          "http://192.168.1.38:8000/v1/platform/department/get?page=1&limit=10",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
-        setContentTypes(response.data.data);
+        setDepartments(response.data.data);
       } catch (error) {
-        console.error("Error fetching content types:", error);
+        console.error("Error fetching departments:", error);
       }
     };
 
-    fetchContentTypes();
+    fetchDepartments();
   }, [accessToken]);
 
-  const handleAddTypeClick = () => {
+  const handleAddDeptClick = () => {
     setEditMode(false);
-    setNewType("");
+    setNewDept("");
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
     setEditMode(false);
-    setNewType("");
-    setCurrentTypeId(null);
+    setNewDept("");
+    setCurrentDeptId(null);
   };
 
   const handleInputChange = (e) => {
-    setNewType(e.target.value);
+    setNewDept(e.target.value);
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (editMode && currentTypeId) {
+      if (editMode && currentDeptId) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/type/edit/${currentTypeId}`,
-          { content_type: newType },
+          `http://192.168.1.38:8000/v1/platform/department/edit/${currentDeptId}`,
+          { department_name: newDept },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -61,8 +61,8 @@ const Department = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:8000/v1/platform/type/add",
-          { content_type: newType },
+          "http://192.168.1.38:8000/v1/platform/department/add",
+          { department_name: newDept },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -70,27 +70,27 @@ const Department = () => {
           }
         );
       }
-      setNewType("");
+      setNewDept("");
       setModalOpen(false);
-      // Refresh the content types list
+      // Refresh the departments list
       const response = await axios.get(
-        "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
+        "http://192.168.1.38:8000/v1/platform/department/get?page=1&limit=10",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      setContentTypes(response.data.data);
+      setDepartments(response.data.data);
     } catch (error) {
-      console.error("Error adding/updating content type:", error);
+      console.error("Error adding/updating department:", error);
     }
   };
 
-  const handleEditClick = (type) => {
+  const handleEditClick = (dept) => {
     setEditMode(true);
-    setCurrentTypeId(type._id);
-    setNewType(type.content_type);
+    setCurrentDeptId(dept._id);
+    setNewDept(dept.department_name);
     setModalOpen(true);
   };
 
@@ -103,22 +103,22 @@ const Department = () => {
         </div>
         <button
           className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
-          onClick={handleAddTypeClick}
+          onClick={handleAddDeptClick}
         >
-          + Add Type
+          + Add Dept
         </button>
         <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
-          {contentTypes.length > 0 ? (
-            contentTypes.map((type) => (
+          {departments.length > 0 ? (
+            departments.map((dept) => (
               <div
-                key={type._id}
+                key={dept._id}
                 className="flex items-center justify-between gap-2 px-3 py-1 border-b border-gray-300"
               >
                 <div className="text-dark-gray text-sm">
-                  {type?.content_type}
+                  {dept?.department_name}
                 </div>
                 <svg
-                  onClick={() => handleEditClick(type)}
+                  onClick={() => handleEditClick(dept)}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -136,7 +136,7 @@ const Department = () => {
             ))
           ) : (
             <div className="text-center text-gray-500">
-              No content types available.
+              No departments available.
             </div>
           )}
         </div>
@@ -146,14 +146,14 @@ const Department = () => {
         <div className="fixed text-xs z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
-              {editMode ? "Edit Content Type" : "Add New Content Type"}
+              {editMode ? "Edit Department" : "Add New Department"}
             </h2>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
-                value={newType}
+                value={newDept}
                 onChange={handleInputChange}
-                placeholder="Enter content type"
+                placeholder="Enter department name"
                 className="border border-gray-300 rounded-md px-2 py-1 w-full mb-4"
               />
               <div className="flex justify-end gap-2">
@@ -168,7 +168,7 @@ const Department = () => {
                   type="submit"
                   className="px-2 py-1 bg-blue-700 text-white rounded-md"
                 >
-                  {editMode ? "Update Type" : "Add Type"}
+                  {editMode ? "Update Dept" : "Add Dept"}
                 </button>
               </div>
             </form>

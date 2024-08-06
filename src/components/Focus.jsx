@@ -7,25 +7,32 @@ const Focus = () => {
   const [newType, setNewType] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [currentTypeId, setCurrentTypeId] = useState(null);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
   const accessToken = localStorage.getItem("access_token");
 
-  useEffect(() => {
-    const fetchContentTypes = async () => {
-      try {
-        const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setContentTypes(response.data.data);
-      } catch (error) {
-        console.error("Error fetching content types:", error);
-      }
-    };
+  const fetchContentTypes = async (page = 1, limit = 10) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.1.38:8000/v1/platform/focus/get?page=${page}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setContentTypes(response.data.data);
+      setPagination(response.data.pagination);
+    } catch (error) {
+      console.error("Error fetching content types:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchContentTypes();
   }, [accessToken]);
 
@@ -51,8 +58,8 @@ const Focus = () => {
     try {
       if (editMode && currentTypeId) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/type/edit/${currentTypeId}`,
-          { content_type: newType },
+          `http://192.168.1.38:8000/v1/platform/focus/edit/${currentTypeId}`,
+          { focus_name: newType },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -61,8 +68,8 @@ const Focus = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:8000/v1/platform/type/add",
-          { content_type: newType },
+          "http://192.168.1.38:8000/v1/platform/focus/add",
+          { focus_name: newType },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -73,15 +80,7 @@ const Focus = () => {
       setNewType("");
       setModalOpen(false);
       // Refresh the content types list
-      const response = await axios.get(
-        "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setContentTypes(response.data.data);
+      fetchContentTypes(pagination.page, pagination.limit);
     } catch (error) {
       console.error("Error adding/updating content type:", error);
     }
@@ -90,7 +89,7 @@ const Focus = () => {
   const handleEditClick = (type) => {
     setEditMode(true);
     setCurrentTypeId(type._id);
-    setNewType(type.content_type);
+    setNewType(type.focus_name);
     setModalOpen(true);
   };
 
@@ -105,7 +104,7 @@ const Focus = () => {
           className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
           onClick={handleAddTypeClick}
         >
-          + Add Type
+          + Add Focus
         </button>
         <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
           {contentTypes.length > 0 ? (
@@ -114,9 +113,7 @@ const Focus = () => {
                 key={type._id}
                 className="flex items-center justify-between gap-2 px-3 py-1 border-b border-gray-300"
               >
-                <div className="text-dark-gray text-sm">
-                  {type?.content_type}
-                </div>
+                <div className="text-dark-gray text-sm">{type?.focus_name}</div>
                 <svg
                   onClick={() => handleEditClick(type)}
                   xmlns="http://www.w3.org/2000/svg"
@@ -135,9 +132,7 @@ const Focus = () => {
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-500">
-              No content types available.
-            </div>
+            <div className="text-center text-gray-500">No Focus available.</div>
           )}
         </div>
       </div>
@@ -146,14 +141,14 @@ const Focus = () => {
         <div className="fixed text-xs z-20 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
-              {editMode ? "Edit Content Type" : "Add New Content Type"}
+              {editMode ? "Edit Focus Type" : "Add Focus Type"}
             </h2>
             <form onSubmit={handleFormSubmit}>
               <input
                 type="text"
                 value={newType}
                 onChange={handleInputChange}
-                placeholder="Enter content type"
+                placeholder="Enter Focus type"
                 className="border border-gray-300 rounded-md px-2 py-1 w-full mb-4"
               />
               <div className="flex justify-end gap-2">

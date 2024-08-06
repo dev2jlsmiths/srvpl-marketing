@@ -8,9 +8,9 @@ const Settings = () => {
   return (
     <div className="flex gap-2">
       <ContentType />
-      <Platforms />
       <Department />
       <Focus />
+      <Platforms />
     </div>
   );
 };

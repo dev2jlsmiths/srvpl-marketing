@@ -47,7 +47,8 @@ function BrandDetail() {
             Profile
           </button>
         </div>
-        <div className="bg-white p-4 border rounded-lg">
+        <div className="bg-white p-4 border rounded-lg"
+        onClick={() => navigate(`/strategy`)}>
           <h2 className="text-xs font-medium mb-2">Strategy</h2>
           {/* Display Strategy Data */}
         </div>

@@ -15,6 +15,8 @@ import OriginalCollateral from "./components/drive/OriginalColleteral";
 import AddFolder from "./components/drive/AddFolder";
 import AddCollateral from "./components/drive/AddCollateralModal";
 import FolderView from "./components/drive/FolderView";
+import BrandStrategy from "./components/strategy/BrandStrategy";
+import Calendar from "./components/Calendar";
 
 function App() {
   return (
@@ -88,7 +90,24 @@ function App() {
               </Layout>
             }
           />
-          \
+
+          <Route
+            path="/strategy"
+            element={
+              <Layout>
+                <BrandStrategy />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/calendar"
+            element={
+              <Layout>
+                <Calendar />
+              </Layout>
+            }
+          />
           <Route
             path="/originalcollateral/:brandId"
             element={

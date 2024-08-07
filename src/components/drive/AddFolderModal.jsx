@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const AddFolderModal = ({
   isOpen,
@@ -26,7 +27,7 @@ const AddFolderModal = ({
       }
 
       const response = await axios.post(
-        "http://192.168.1.38:8000/v1/collateral/folder/add",
+        `${apiUrl}/v1/collateral/folder/add`,
         body,
         {
           headers: {

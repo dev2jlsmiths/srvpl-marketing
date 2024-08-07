@@ -4,6 +4,7 @@ import axios from "axios";
 import AddFolderButton from "./AddFolderButton";
 import Folder from "./Folder";
 import AddCollateralButton from "./AddCollateralButton";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const FolderView = () => {
   const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
@@ -14,7 +15,7 @@ const FolderView = () => {
   const fetchFolders = async (parentId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.38:8000/v1/collateral/folder/get/${parentId}`,
+        `${apiUrl}/v1/collateral/folder/get/${parentId}`,
         {
           params: { brand_id: brandId },
         }
@@ -29,7 +30,7 @@ const FolderView = () => {
   const fetchFiles = async (parentId) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.38:8000/v1/collateral/file/get?folder_id=${parentId}`,
+        `${apiUrl}/v1/collateral/file/get?folder_id=${parentId}`,
         {
           params: { brand_id: brandId },
         }

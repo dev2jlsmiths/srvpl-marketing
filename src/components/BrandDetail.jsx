@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function BrandDetail() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const [brand, setBrand] = useState(null);
@@ -12,7 +13,7 @@ function BrandDetail() {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:8000/v1/brand/profile/get/${id}`,
+          `${apiUrl}/v1/brand/profile/get/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

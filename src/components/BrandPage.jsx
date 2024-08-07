@@ -4,6 +4,7 @@ import BrandModal from "./AddBrandModal";
 import Card from "./BrandCard";
 
 function BrandPage() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [brands, setBrands] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -17,14 +18,11 @@ function BrandPage() {
     const fetchBrands = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(
-          "http://192.168.1.38:8000/v1/brand/profile/get",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/v1/brand/profile/get`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         setBrands(response.data.data);
       } catch (error) {
         console.error("Error fetching brand data:", error);

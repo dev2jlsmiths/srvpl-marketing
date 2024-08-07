@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../public/logo.svg";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Assume you have a way to retrieve your access token, e.g., from local storage
 const getAccessToken = () => {
@@ -35,7 +36,7 @@ const Sidebar = () => {
 
       try {
         const response = await fetch(
-          "http://192.168.1.38:8000/v1/brand/profile/get?fields=brand_name&limit=100",
+          `${apiUrl}/v1/brand/profile/get?fields=brand_name&limit=100`,
           {
             method: "GET",
             headers: {

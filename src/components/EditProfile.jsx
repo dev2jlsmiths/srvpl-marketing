@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const EditProfile = () => {
   const { id } = useParams();
@@ -28,7 +29,7 @@ const EditProfile = () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:8000/v1/brand/profile/get/${id}`,
+          `${apiUrl}/v1/brand/profile/get/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -153,16 +154,12 @@ const EditProfile = () => {
         brand_logo: profileData.brandLogo,
         social_media: profileData.socialMedia,
       };
-      await axios.put(
-        `http://192.168.1.38:8000/v1/brand/profile/edit/${id}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await axios.put(`${apiUrl}/v1/brand/profile/edit/${id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       navigate(`/brand/${id}`); // Navigate back to the brand detail page after successful update
     } catch (error) {
       console.error("Error updating profile:", error);

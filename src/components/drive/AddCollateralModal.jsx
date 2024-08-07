@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { useParams } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const AddCollateralModal = ({ isOpen, onClose, onCollateralAdded }) => {
   const [file, setFile] = useState(null);
@@ -27,7 +28,7 @@ const AddCollateralModal = ({ isOpen, onClose, onCollateralAdded }) => {
 
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.post(
-        "http://192.168.1.38:8000/v1/collateral/file/upload",
+        `${apiUrl}/v1/collateral/file/upload`,
         formData,
         {
           headers: {

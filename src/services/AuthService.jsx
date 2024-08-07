@@ -1,7 +1,9 @@
 // src/services/authService.js
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const authService = {
   login: async (email, password) => {
-    const response = await fetch("http://192.168.1.38:8000/v1/auth/login", {
+    const response = await fetch(`${apiUrl}/v1/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

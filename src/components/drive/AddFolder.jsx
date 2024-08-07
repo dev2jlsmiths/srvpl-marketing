@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const AddFolder = () => {
   const [folderName, setFolderName] = useState("");
@@ -12,7 +13,7 @@ const AddFolder = () => {
     try {
       const accessToken = localStorage.getItem("access_token");
       const response = await axios.post(
-        "http://192.168.1.38:8000/v1/collateral/folder/add",
+        `${apiUrl}/v1/collateral/folder/add`,
         {
           name: folderName,
           brand_id: brandId, // Include brand_id in the request payload

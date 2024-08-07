@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 const BrandModal = ({ isOpen, onClose }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [platforms, setPlatforms] = useState([
     {
       id: Date.now(),
@@ -106,7 +107,7 @@ const BrandModal = ({ isOpen, onClose }) => {
       social_media: platforms,
     };
     const accessToken = localStorage.getItem("access_token");
-    fetch("http://192.168.1.38:8000/v1/brand/profile/add", {
+    fetch(`${apiUrl}/v1/brand/profile/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

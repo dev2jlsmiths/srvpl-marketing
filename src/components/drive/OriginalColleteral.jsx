@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import AddFolderButton from "./AddFolderButton";
 import AddCollateralButton from "./AddCollateralButton";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const OriginalCollateral = () => {
   const { brandId } = useParams(); // Retrieve brandId from URL parameters
@@ -13,7 +14,7 @@ const OriginalCollateral = () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         const response = await axios.get(
-          `http://192.168.1.38:8000/v1/collateral/folder/get?brand_id=${brandId}`,
+          `${apiUrl}/v1/collateral/folder/get?brand_id=${brandId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

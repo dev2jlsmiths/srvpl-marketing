@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Department = () => {
   const [departments, setDepartments] = useState([]);
@@ -13,7 +14,7 @@ const Department = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/department/get?page=1&limit=10",
+          `${apiUrl}/v1/platform/department/get?page=1&limit=10`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -51,7 +52,7 @@ const Department = () => {
     try {
       if (editMode && currentDeptId) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/department/edit/${currentDeptId}`,
+          `${apiUrl}/v1/platform/department/edit/${currentDeptId}`,
           { department_name: newDept },
           {
             headers: {
@@ -61,7 +62,7 @@ const Department = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:8000/v1/platform/department/add",
+          `${apiUrl}/v1/platform/department/add`,
           { department_name: newDept },
           {
             headers: {
@@ -74,7 +75,7 @@ const Department = () => {
       setModalOpen(false);
       // Refresh the departments list
       const response = await axios.get(
-        "http://192.168.1.38:8000/v1/platform/department/get?page=1&limit=10",
+        `${apiUrl}/v1/platform/department/get?page=1&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

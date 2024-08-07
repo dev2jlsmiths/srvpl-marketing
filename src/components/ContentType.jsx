@@ -96,7 +96,7 @@ const ContentType = () => {
   };
 
   return (
-    <div className="w-56 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-56 h-72 bg-white overflow-y-scroll scroll-smooth no-scrollbar rounded-xl overflow-hidden border border-gray-300 relative">
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">
@@ -108,7 +108,7 @@ const ContentType = () => {
         >
           + Add Type
         </button>
-        <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
+        <div className="flex flex-col  gap-1 absolute top-16 left-0 w-full px-4">
           {contentTypes.length > 0 ? (
             contentTypes.map((type) => (
               <div

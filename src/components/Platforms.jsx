@@ -142,7 +142,7 @@ const Platforms = () => {
   };
 
   return (
-    <div className="w-[22rem] h-72 text-xs bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-[22rem] h-72 text-xs bg-white rounded-xl overflow-y-scroll scroll-smooth no-scrollbar border border-gray-300 relative">
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="font-semibold text-sm text-gray-800">Platforms</div>

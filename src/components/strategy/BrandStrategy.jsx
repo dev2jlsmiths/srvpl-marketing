@@ -34,7 +34,7 @@ const BrandStrategy = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [tags, setTags] = useState("");
   const [fileUri, setFileUri] = useState("");
-  console.log("Url>>",url)
+  console.log("Url>>", url);
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -63,8 +63,6 @@ const BrandStrategy = () => {
 
   const timeIntervals = ["Daily", "Weekly", "Monthly"];
 
-  
-
   useEffect(() => {
     const fetchData = async () => {
       const formattedMonth =
@@ -75,7 +73,7 @@ const BrandStrategy = () => {
       try {
         // Construct the URL with the parameters
         const apiurl = `${url}/v1/Strategy/get/${id}/${formattedDate}`;
-        console.log("ApiUrl >>>",apiurl)
+        console.log("ApiUrl >>>", apiurl);
 
         // Make the GET request
         const response = await axios.get(apiurl, {
@@ -335,7 +333,7 @@ const BrandStrategy = () => {
   };
   console.log("Formdata???>>>", formData);
   return (
-    <div>
+    <div className="text-xs">
       <form onSubmit={handleSubmit}>
         <div className="p-4 bg-gray-50">
           <div className="mb-6">
@@ -372,7 +370,7 @@ const BrandStrategy = () => {
               </div>
             </div>
             <div className="bg-white p-2">
-              <h2 className="text-sm font-bold mb-4 uppercase">Platform</h2>
+              <h2 className="text-xs font-bold mb-4 uppercase">Platform</h2>
               <div className="flex space-x-4">
                 {platforms.map((platform) => (
                   <label
@@ -404,7 +402,7 @@ const BrandStrategy = () => {
 
           <div className="mb-6">
             <div className="bg-white p-2">
-              <h2 className="text-sm font-bold mb-4 uppercase">Focus</h2>
+              <h2 className="text-xs font-bold mb-4 uppercase">Focus</h2>
               <div className="flex flex-row space-x-0">
                 {formData.focus.map((group, index) => (
                   <div key={index} className="flex items-center space-x-2 mb-2">
@@ -455,13 +453,13 @@ const BrandStrategy = () => {
                     className="flex items-center space-x-4"
                   >
                     <img src={post.platform_logo} className="w-6 h-6" alt="" />
-                    <span className="text-sm">{post.platform_name}</span>
+                    <span className="text-xs">{post.platform_name}</span>
                     <div className="flex justify-center items-center gap-x-2">
-                      <label className="text-sm" htmlFor="">
+                      <label className="text-xs" htmlFor="">
                         Time interval
                       </label>
                       <select
-                        className="border bg-gray-50 rounded text-sm p-1"
+                        className="border bg-gray-50 rounded text-xs p-1"
                         value={post.time_interval}
                         onChange={(e) =>
                           handleTimeIntervalChange(
@@ -476,7 +474,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex justify-center items-center gap-x-4">
-                      <label className="text-center text-sm" htmlFor="">
+                      <label className="text-center text-xs" htmlFor="">
                         Number of Posts
                       </label>
                       <input
@@ -497,7 +495,7 @@ const BrandStrategy = () => {
           <div className="mb-6">
             <div className="bg-white p-2 ">
               <div className="flex justify-center items-center bg-white p-2 mt-2 ">
-                <label className="text-sm w-1/6 uppercase font-semibold">
+                <label className="text-xs w-1/6 uppercase font-semibold">
                   Products to Focus
                 </label>
                 <input
@@ -512,7 +510,9 @@ const BrandStrategy = () => {
 
             <div className="mb-6">
               <div className="bg-white  mt-2">
-                <h2 className="text-sm font-bold mb-2 uppercase border-b p-2">Blog Post</h2>
+                <h2 className="text-xs font-bold mb-2 uppercase border-b p-2">
+                  Blog Post
+                </h2>
                 <div className="flex flex-wrap p-2">
                   {formData.blog_post.map((blog, index) => (
                     <div
@@ -520,7 +520,7 @@ const BrandStrategy = () => {
                       className="flex items-center space-x-8 mb-2"
                     >
                       <div className="flex items-center gap-x-2">
-                        <span className="text-sm">Time Interval</span>
+                        <span className="text-xs">Time Interval</span>
                         <select
                           className="border p-1 rounded bg-gray-50"
                           value={blog.time_interval}
@@ -539,7 +539,7 @@ const BrandStrategy = () => {
                         </select>
                       </div>
                       <div className="flex items-center gap-x-2">
-                        <span className="text-sm ">Number of Blogs</span>
+                        <span className="text-xs ">Number of Blogs</span>
                         <input
                           type="number"
                           className="border w-1/6 p-1 rounded bg-gray-50 "
@@ -562,14 +562,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold border-b p-2 uppercase">
+              <h2 className="text-xs font-bold border-b p-2 uppercase">
                 Email Marketing
               </h2>
               <div className="flex flex-wrap p-2">
                 {formData.email_marketing.map((email, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={email.time_interval}
@@ -588,7 +588,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of email</span>
+                      <span className="text-xs">Number of email</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -610,14 +610,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold border-b p-2 uppercase">
+              <h2 className="text-xs font-bold border-b p-2 uppercase">
                 SMS Marketing
               </h2>
               <div className="flex flex-wrap p-2">
                 {formData.sms_marketing.map((sms, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={sms.time_interval}
@@ -636,7 +636,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of sms</span>
+                      <span className="text-xs">Number of sms</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -658,12 +658,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold p-2  border-b uppercase">Newsletters</h2>
+              <h2 className="text-xs font-bold p-2  border-b uppercase">
+                Newsletters
+              </h2>
               <div className="flex flex-wrap p-2">
                 {formData.new_sletter.map((newsletter, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={newsletter.time_interval}
@@ -682,7 +684,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of Newsletter</span>
+                      <span className="text-xs">Number of Newsletter</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -704,7 +706,7 @@ const BrandStrategy = () => {
             </div>
 
             <div className="flex items-center bg-white p-2 mt-2">
-              <label className="text-sm w-1/6 uppercase font-semibold">
+              <label className="text-xs w-1/6 uppercase font-semibold">
                 This month #Tags
               </label>
               <input
@@ -717,7 +719,7 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white p-2 mt-2">
-              <h2 className="text-sm font-bold mb-2 uppercase">
+              <h2 className="text-xs font-bold mb-2 uppercase">
                 Important Dates
               </h2>
               <div className="flex flex-wrap space-x-3">
@@ -769,108 +771,109 @@ const BrandStrategy = () => {
           </div>
 
           <div className="mb-6 flex flex-col  ">
-          <div className="flex justify-between">
-              <label className="block text-sm uppercase font-medium text-gray-700">
+            <div className="flex justify-between">
+              <label className="block text-xs uppercase font-medium text-gray-700">
                 Documents
               </label>
             </div>
             <div className="flex gap-x-4">
-        
-            <div
-              {...getRootProps()}
-              className="w-1/3 border-2 border-dashed border-gray-300 p-8 text-center rounded-lg flex flex-col items-center justify-center h-48"
-            >
-              <input {...getInputProps()} />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-10"
+              <div
+                {...getRootProps()}
+                className="w-1/3 border-2 border-dashed border-gray-300 p-8 text-center rounded-lg flex flex-col items-center justify-center h-48"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                <input {...getInputProps()} />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-10"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                  />
+                </svg>
+                {file ? (
+                  <p>{file.name}</p>
+                ) : (
+                  <p className="text-gray-500">
+                    Drag 'n' drop a file here, or click to select a file
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4">
+                <h1 className="text-xs font-semibold">Preview :</h1>
+                {formData.documents.length > 0
+                  ? formData.documents.map((file, index) => {
+                      const isImage = file;
+                      return (
+                        <div key={index} className="mt-2">
+                          {isImage ? (
+                            <img
+                              src={file}
+                              alt={file.name}
+                              className="mt-1 max-h-32"
+                            />
+                          ) : (
+                            <a
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 mt-1"
+                            >
+                              View File
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })
+                  : null}
+              </div>
+            </div>
+            <div className="mb-6">
+              <div className="flex items-center gap-x-2 bg-white p-2 mt-2">
+                <label className="text-xs  uppercase font-semibold">
+                  Budget
+                </label>
+                <input
+                  type="text"
+                  className="border w-1/6 p-1 rounded bg-gray-50"
+                  placeholder="Enter Budget"
+                  value={formData.budget}
+                  onChange={(e) => handleInputChange(e, "budget")}
                 />
-              </svg>
-              {file ? (
-              <p>{file.name}</p>
-            ) : (
-              <p className="text-gray-500">
-                Drag 'n' drop a file here, or click to select a file
-              </p>
-            )}
+                <span className="text-xs font-semibold">INR/Month</span>
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-x-4">
-              <h1 className="text-sm font-semibold">Preview :</h1>
-              {formData.documents.length > 0 ? (
-                formData.documents.map((file, index) => {
-                  const isImage = file;
-                  return (
-                    <div key={index} className="mt-2">
-                      {isImage ? (
-                        <img
-                          src={file}
-                          alt={file.name}
-                          className="mt-1 max-h-32"
-                        />
-                      ) : (
-                        <a
-                          href={file}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 mt-1"
-                        >
-                          View File
-                        </a>
-                      )}
-                    </div>
-                  );
-                })
-              ) : null}
+            <div className="mb-6">
+              <div className="flex flex-col  bg-white p-2 mt-2">
+                <label className="text-xs w-1/6 uppercase font-semibold">
+                  Campaigns
+                </label>
+                <textarea
+                  type="text"
+                  className="border w-full p-1 rounded bg-gray-50"
+                  placeholder="Enter Campaigns"
+                  value={formData.campaigns}
+                  onChange={(e) => handleInputChange(e, "campaigns")}
+                />
+              </div>
+              <div className="flex flex-col bg-white p-2 ">
+                <label className="text-xs w-1/6 uppercase font-semibold">
+                  Remarks
+                </label>
+                <textarea
+                  type="text"
+                  className="border w-full p-1 rounded bg-gray-50"
+                  placeholder="Enter Remarks"
+                  value={formData.remark}
+                  onChange={(e) => handleInputChange(e, "remark")}
+                />
+              </div>
             </div>
-          </div>
-          <div className="mb-6">
-            <div className="flex items-center gap-x-2 bg-white p-2 mt-2">
-              <label className="text-sm  uppercase font-semibold">Budget</label>
-              <input
-                type="text"
-                className="border w-1/6 p-1 rounded bg-gray-50"
-                placeholder="Enter Budget"
-                value={formData.budget}
-                onChange={(e) => handleInputChange(e, "budget")}
-              />
-              <span className="text-sm font-semibold">INR/Month</span>
-            </div>
-          </div>
-          <div className="mb-6">
-            <div className="flex flex-col  bg-white p-2 mt-2">
-              <label className="text-sm w-1/6 uppercase font-semibold">
-                Campaigns
-              </label>
-              <textarea
-                type="text"
-                className="border w-full p-1 rounded bg-gray-50"
-                placeholder="Enter Campaigns"
-                value={formData.campaigns}
-                onChange={(e) => handleInputChange(e, "campaigns")}
-              />
-            </div>
-            <div className="flex flex-col bg-white p-2 ">
-              <label className="text-sm w-1/6 uppercase font-semibold">
-                Remarks
-              </label>
-              <textarea
-                type="text"
-                className="border w-full p-1 rounded bg-gray-50"
-                placeholder="Enter Remarks"
-                value={formData.remark}
-                onChange={(e) => handleInputChange(e, "remark")}
-              />
-            </div>
-          </div>
           </div>
         </div>
         <div className="flex justify-center">

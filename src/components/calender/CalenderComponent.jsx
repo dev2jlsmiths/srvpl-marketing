@@ -15,6 +15,7 @@ import "./CalenderComponent.css"; // Import the custom styles
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Modal from "./Modal"; // Import your custom modal component
+import NewEventModal from "./NewEventModal"; // Import the new event modal component
 import Sidebar from "./Sidebar"; // Import your sidebar component
 import CustomToolbar from "./CustomToolbar"; // Import the custom toolbar
 
@@ -32,17 +33,19 @@ const localizer = dateFnsLocalizer({
 
 const CalendarComponent = () => {
   const [events, setEvents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(startOfToday());
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
-    setShowModal(true);
+    setShowEditModal(true);
   };
 
   const handleModalClose = () => {
-    setShowModal(false);
+    setShowEditModal(false);
+    setShowNewEventModal(false);
     setSelectedEvent(null);
   };
 
@@ -76,7 +79,7 @@ const CalendarComponent = () => {
       end,
       color: "#FFEBCC",
     });
-    setShowModal(true);
+    setShowNewEventModal(true);
   };
 
   const moveEvent = ({ event, start, end }) => {
@@ -133,7 +136,7 @@ const CalendarComponent = () => {
               events={events}
               startAccessor="start"
               endAccessor="end"
-              style={{ height: "100%" }}
+              style={{ height: "98%" }}
               className="custom-calendar"
               components={{
                 toolbar: CustomToolbar,
@@ -162,8 +165,15 @@ const CalendarComponent = () => {
         </div>
       </div>
 
+      <NewEventModal
+        show={showNewEventModal}
+        onClose={handleModalClose}
+        onSave={handleSaveEvent}
+        onChange={handleEventChange}
+        event={selectedEvent}
+      />
       <Modal
-        show={showModal}
+        show={showEditModal}
         onClose={handleModalClose}
         onSave={handleSaveEvent}
         onDelete={handleDeleteEvent}

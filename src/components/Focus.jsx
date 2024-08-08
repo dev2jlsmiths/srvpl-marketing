@@ -11,7 +11,7 @@ const Focus = () => {
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
-    limit: 10,
+    limit: 100,
     totalPages: 1,
   });
   const accessToken = localStorage.getItem("access_token");

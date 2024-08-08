@@ -14,7 +14,7 @@ const Department = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/v1/platform/department/get?page=1&limit=10`,
+          `${apiUrl}/v1/platform/department/get?page=1&limit=100`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,

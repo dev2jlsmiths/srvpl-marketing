@@ -1,40 +1,8 @@
 import React from "react";
 
 const CustomToolbar = ({ label, onNavigate, onView }) => {
-  const goToBack = () => {
-    onNavigate("PREV");
-  };
-
-  const goToNext = () => {
-    onNavigate("NEXT");
-  };
-
-  const goToCurrent = () => {
-    onNavigate("TODAY");
-  };
-
   return (
     <div className="rbc-toolbar flex justify-between items-center">
-      <div className="rbc-btn-group">
-        <button
-          onClick={goToBack}
-          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
-        >
-          Back
-        </button>
-        <button
-          onClick={goToCurrent}
-          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-2"
-        >
-          Today
-        </button>
-        <button
-          onClick={goToNext}
-          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
-        >
-          Next
-        </button>
-      </div>
       <span className="rbc-toolbar-label">{label}</span>
       <div className="rbc-btn-group">
         <button

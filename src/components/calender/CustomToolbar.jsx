@@ -2,19 +2,19 @@ import React from "react";
 
 const CustomToolbar = ({ label, onNavigate, onView }) => {
   return (
-    <div className="rbc-toolbar flex justify-between items-center">
+    <div className="rbc-toolbar">
       <span className="rbc-toolbar-label">{label}</span>
-      <div className="rbc-btn-group flex">
-        <button onClick={() => onView("month")} className="button mx-1">
+      <div className="rbc-btn-group">
+        <button onClick={() => onView("month")} className="button">
           Month
         </button>
-        <button onClick={() => onView("week")} className="button mx-1">
+        <button onClick={() => onView("week")} className="button">
           Week
         </button>
-        <button onClick={() => onView("day")} className="button mx-1">
+        <button onClick={() => onView("day")} className="button">
           Day
         </button>
-        <button onClick={() => onView("agenda")} className="button mx-1">
+        <button onClick={() => onView("agenda")} className="button">
           Agenda
         </button>
       </div>

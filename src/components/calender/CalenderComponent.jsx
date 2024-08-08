@@ -108,7 +108,7 @@ const CalendarComponent = () => {
       <div className="flex h-screen">
         <Sidebar onDateClick={handleDateClick} />
         <div className="flex-1 p-4">
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between ">
             <button onClick={handleTodayClick} className="button">
               Today
             </button>

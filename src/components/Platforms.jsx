@@ -75,7 +75,7 @@ const Platforms = () => {
           }
         );
       } else {
-        await axios.post("${apiUrl}/v1/platform/add", platformData, {
+        await axios.post(`${apiUrl}/v1/platform/add`, platformData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",

@@ -34,7 +34,7 @@ const BrandStrategy = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [tags, setTags] = useState("");
   const [fileUri, setFileUri] = useState("");
-  console.log("Url>>",url)
+  console.log("Url>>", url);
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -63,8 +63,6 @@ const BrandStrategy = () => {
 
   const timeIntervals = ["Daily", "Weekly", "Monthly"];
 
-  
-
   useEffect(() => {
     const fetchData = async () => {
       const formattedMonth =
@@ -75,7 +73,7 @@ const BrandStrategy = () => {
       try {
         // Construct the URL with the parameters
         const apiurl = `${url}/v1/Strategy/get/${id}/${formattedDate}`;
-        console.log("ApiUrl >>>",apiurl)
+        console.log("ApiUrl >>>", apiurl);
 
         // Make the GET request
         const response = await axios.get(apiurl, {
@@ -333,7 +331,7 @@ const BrandStrategy = () => {
       // Handle error
     }
   };
-  console.log("Formdata???>>>", formData);
+  // console.log("Formdata???>>>", formData);
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -343,7 +341,7 @@ const BrandStrategy = () => {
               <h1 className="text-center font-semibold">Strategy</h1>
               <div className="mb-6 flex space-x-2">
                 <select
-                  className="border p-2 rounded bg-gray-50"
+                  className="border p-1 rounded bg-gray-50 text-xs"
                   value={selectedMonth}
                   onChange={handleMonthChange}
                 >
@@ -356,7 +354,7 @@ const BrandStrategy = () => {
                   ))}
                 </select>
                 <select
-                  className="border p-2 rounded bg-gray-50"
+                  className="border p-1 rounded bg-gray-50 text-xs"
                   value={selectedYear}
                   onChange={handleYearChange}
                 >
@@ -405,12 +403,12 @@ const BrandStrategy = () => {
           <div className="mb-6">
             <div className="bg-white p-2">
               <h2 className="text-sm font-bold mb-4 uppercase">Focus</h2>
-              <div className="flex flex-row space-x-0">
+              <div className="flex flex-wrap space-x-8">
                 {formData.focus.map((group, index) => (
                   <div key={index} className="flex items-center space-x-2 mb-2">
                     <input
                       type="number"
-                      className="border w-[12%] p-1 rounded bg-gray-50"
+                      className="border w-12 p-1 rounded bg-gray-50"
                       placeholder="Percentage"
                       value={group.percent}
                       onChange={(e) =>
@@ -419,8 +417,7 @@ const BrandStrategy = () => {
                     />
                     <span>%</span>
                     <select
-                      key={index}
-                      className="border p-1 rounded bg-gray-50"
+                      className="border p-1 rounded bg-gray-50 w-40"
                       value={group.focus_id}
                       onChange={(e) =>
                         handleFocus(index, "focus_id", e.target.value)
@@ -433,11 +430,11 @@ const BrandStrategy = () => {
                         </option>
                       ))}
                     </select>
-
                     <PlusCircle
                       onClick={handleAddGroup}
                       height="18"
                       width="18"
+                      className="cursor-pointer"
                     />
                   </div>
                 ))}
@@ -512,7 +509,9 @@ const BrandStrategy = () => {
 
             <div className="mb-6">
               <div className="bg-white  mt-2">
-                <h2 className="text-sm font-bold mb-2 uppercase border-b p-2">Blog Post</h2>
+                <h2 className="text-sm font-bold mb-2 uppercase border-b p-2">
+                  Blog Post
+                </h2>
                 <div className="flex flex-wrap p-2">
                   {formData.blog_post.map((blog, index) => (
                     <div
@@ -658,7 +657,9 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold p-2  border-b uppercase">Newsletters</h2>
+              <h2 className="text-sm font-bold p-2  border-b uppercase">
+                Newsletters
+              </h2>
               <div className="flex flex-wrap p-2">
                 {formData.new_sletter.map((newsletter, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
@@ -748,7 +749,7 @@ const BrandStrategy = () => {
                       </div>
                       <textarea
                         type="text"
-                        className="border w-full p-1 rounded bg-gray-50"
+                        className="border w-full p-1 rounded bg-gray-50 h-24 resize-none"
                         placeholder="Description"
                         value={date.description}
                         re
@@ -769,108 +770,115 @@ const BrandStrategy = () => {
           </div>
 
           <div className="mb-6 flex flex-col  ">
-          <div className="flex justify-between">
+            <div className="flex justify-between">
               <label className="block text-sm uppercase font-medium text-gray-700">
                 Documents
               </label>
             </div>
             <div className="flex gap-x-4">
-        
-            <div
-              {...getRootProps()}
-              className="w-1/3 border-2 border-dashed border-gray-300 p-8 text-center rounded-lg flex flex-col items-center justify-center h-48"
-            >
-              <input {...getInputProps()} />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-10"
+              <div
+                {...getRootProps()}
+                className="w-1/3 border-2 border-dashed border-gray-300 p-8 text-center rounded-lg flex flex-col items-center justify-center h-48"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                <input {...getInputProps()} />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-10"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                  />
+                </svg>
+                {file ? (
+                  <p>{file.name}</p>
+                ) : (
+                  <p className="text-gray-500">
+                    Drag 'n' drop a file here, or click to select a file
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4">
+                <h1 className="text-sm font-semibold">Preview :</h1>
+                {formData.documents.length > 0
+                  ? formData.documents.map((file, index) => {
+                      const isImage = file;
+                      return (
+                        <div key={index} className="mt-2">
+                          {isImage ? (
+                            <a
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={file}
+                                alt={file.name}
+                                className="mt-1 max-h-32"
+                              />
+                            </a>
+                          ) : (
+                            <a
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 mt-1"
+                            >
+                              View File
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })
+                  : null}
+              </div>
+            </div>
+            <div className="mb-6">
+              <div className="flex items-center gap-x-2 bg-white p-2 mt-2">
+                <label className="text-sm  uppercase font-semibold">
+                  Budget
+                </label>
+                <input
+                  type="text"
+                  className="border w-1/6 p-1 rounded bg-gray-50"
+                  placeholder="Enter Budget"
+                  value={formData.budget}
+                  onChange={(e) => handleInputChange(e, "budget")}
                 />
-              </svg>
-              {file ? (
-              <p>{file.name}</p>
-            ) : (
-              <p className="text-gray-500">
-                Drag 'n' drop a file here, or click to select a file
-              </p>
-            )}
+                <span className="text-sm font-semibold">INR/Month</span>
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-x-4">
-              <h1 className="text-sm font-semibold">Preview :</h1>
-              {formData.documents.length > 0 ? (
-                formData.documents.map((file, index) => {
-                  const isImage = file;
-                  return (
-                    <div key={index} className="mt-2">
-                      {isImage ? (
-                        <img
-                          src={file}
-                          alt={file.name}
-                          className="mt-1 max-h-32"
-                        />
-                      ) : (
-                        <a
-                          href={file}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 mt-1"
-                        >
-                          View File
-                        </a>
-                      )}
-                    </div>
-                  );
-                })
-              ) : null}
+            <div className="mb-6">
+              <div className="flex flex-col  bg-white p-2 mt-2">
+                <label className="text-sm w-1/6 uppercase font-semibold">
+                  Campaigns
+                </label>
+                <textarea
+                  type="text"
+                  className="border w-full p-1 rounded bg-gray-50 h-32 resize-none"
+                  placeholder="Enter Campaigns"
+                  value={formData.campaigns}
+                  onChange={(e) => handleInputChange(e, "campaigns")}
+                />
+              </div>
+              <div className="flex flex-col bg-white p-2 ">
+                <label className="text-sm w-1/6 uppercase font-semibold">
+                  Remarks
+                </label>
+                <textarea
+                  type="text"
+                  className="border w-full p-1 rounded h-32 resize-none bg-gray-50"
+                  placeholder="Enter Remarks"
+                  value={formData.remark}
+                  onChange={(e) => handleInputChange(e, "remark")}
+                />
+              </div>
             </div>
-          </div>
-          <div className="mb-6">
-            <div className="flex items-center gap-x-2 bg-white p-2 mt-2">
-              <label className="text-sm  uppercase font-semibold">Budget</label>
-              <input
-                type="text"
-                className="border w-1/6 p-1 rounded bg-gray-50"
-                placeholder="Enter Budget"
-                value={formData.budget}
-                onChange={(e) => handleInputChange(e, "budget")}
-              />
-              <span className="text-sm font-semibold">INR/Month</span>
-            </div>
-          </div>
-          <div className="mb-6">
-            <div className="flex flex-col  bg-white p-2 mt-2">
-              <label className="text-sm w-1/6 uppercase font-semibold">
-                Campaigns
-              </label>
-              <textarea
-                type="text"
-                className="border w-full p-1 rounded bg-gray-50"
-                placeholder="Enter Campaigns"
-                value={formData.campaigns}
-                onChange={(e) => handleInputChange(e, "campaigns")}
-              />
-            </div>
-            <div className="flex flex-col bg-white p-2 ">
-              <label className="text-sm w-1/6 uppercase font-semibold">
-                Remarks
-              </label>
-              <textarea
-                type="text"
-                className="border w-full p-1 rounded bg-gray-50"
-                placeholder="Enter Remarks"
-                value={formData.remark}
-                onChange={(e) => handleInputChange(e, "remark")}
-              />
-            </div>
-          </div>
           </div>
         </div>
         <div className="flex justify-center">

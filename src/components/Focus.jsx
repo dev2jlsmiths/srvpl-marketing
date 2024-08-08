@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Focus = () => {
   const [contentTypes, setContentTypes] = useState([]);
@@ -18,7 +19,7 @@ const Focus = () => {
   const fetchContentTypes = async (page = 1, limit = 10) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.38:8000/v1/platform/focus/get?page=${page}&limit=${limit}`,
+        `${apiUrl}/v1/platform/focus/get?page=${page}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -58,7 +59,7 @@ const Focus = () => {
     try {
       if (editMode && currentTypeId) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/focus/edit/${currentTypeId}`,
+          `${apiUrl}/v1/platform/focus/edit/${currentTypeId}`,
           { focus_name: newType },
           {
             headers: {
@@ -68,7 +69,7 @@ const Focus = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:8000/v1/platform/focus/add",
+          `${apiUrl}/v1/platform/focus/add`,
           { focus_name: newType },
           {
             headers: {
@@ -94,7 +95,7 @@ const Focus = () => {
   };
 
   return (
-    <div className="w-56 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-56 h-72 bg-white rounded-xl overflow-y-scroll scroll-smooth no-scrollbar border border-gray-300 relative">
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Dropzone from "react-dropzone";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Platforms = () => {
   const [platforms, setPlatforms] = useState([]);
@@ -19,14 +20,11 @@ const Platforms = () => {
   useEffect(() => {
     const fetchPlatforms = async () => {
       try {
-        const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/get",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}/v1/platform/get`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         setPlatforms(response.data.data);
       } catch (error) {
         console.error("Error fetching platforms:", error);
@@ -36,7 +34,7 @@ const Platforms = () => {
     const fetchContentTypes = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
+          `${apiUrl}/v1/platform/type/get?page=1&limit=10`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -67,7 +65,7 @@ const Platforms = () => {
     try {
       if (editMode) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/edit/${currentPlatformId}`,
+          `${apiUrl}/v1/platform/edit/${currentPlatformId}`,
           platformData,
           {
             headers: {
@@ -77,27 +75,20 @@ const Platforms = () => {
           }
         );
       } else {
-        await axios.post(
-          "http://192.168.1.38:8000/v1/platform/add",
-          platformData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await axios.post("${apiUrl}/v1/platform/add", platformData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
       }
       setShowModal(false);
       resetForm();
-      const response = await axios.get(
-        "http://192.168.1.38:8000/v1/platform/get",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await axios.get(`${apiUrl}/v1/platform/get`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       setPlatforms(response.data.data);
     } catch (error) {
       console.error("Error adding platform:", error);
@@ -151,7 +142,7 @@ const Platforms = () => {
   };
 
   return (
-    <div className="w-[22rem] h-72 text-xs bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-[22rem] h-72 text-xs bg-white rounded-xl overflow-y-scroll scroll-smooth no-scrollbar border border-gray-300 relative">
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="font-semibold text-sm text-gray-800">Platforms</div>

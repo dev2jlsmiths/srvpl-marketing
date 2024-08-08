@@ -15,10 +15,14 @@ import OriginalCollateral from "./components/drive/OriginalColleteral";
 import AddFolder from "./components/drive/AddFolder";
 import AddCollateral from "./components/drive/AddCollateralModal";
 import FolderView from "./components/drive/FolderView";
+
 import BrandStrategy from "./components/strategy/BrandStrategy";
 import Calendar from "./components/Calendar";
 import { Toaster } from "react-hot-toast";
 import AddStrategy from "./components/strategy/AddStrategy";
+
+
+import CalendarComponent from "./components/calender/CalenderComponent";
 
 
 function App() {
@@ -152,6 +156,7 @@ function App() {
             }
           />
 
+
           {/* <Route
             path="/"
             element={
@@ -160,6 +165,9 @@ function App() {
               </Layout>
             }
           /> */}
+
+          <Route path="/calender" element={<CalendarComponent />} />
+
         </Routes>
       </Router>
     </AuthProvider>

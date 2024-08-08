@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const ContentType = () => {
   const [contentTypes, setContentTypes] = useState([]);
@@ -13,7 +14,7 @@ const ContentType = () => {
     const fetchContentTypes = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
+          `${apiUrl}/v1/platform/type/get?page=1&limit=10`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -51,7 +52,7 @@ const ContentType = () => {
     try {
       if (editMode && currentTypeId) {
         await axios.put(
-          `http://192.168.1.38:8000/v1/platform/type/edit/${currentTypeId}`,
+          `${apiUrl}/v1/platform/type/edit/${currentTypeId}`,
           { content_type: newType },
           {
             headers: {
@@ -61,7 +62,7 @@ const ContentType = () => {
         );
       } else {
         await axios.post(
-          "http://192.168.1.38:8000/v1/platform/type/add",
+          `${apiUrl}/v1/platform/type/add`,
           { content_type: newType },
           {
             headers: {
@@ -74,7 +75,7 @@ const ContentType = () => {
       setModalOpen(false);
       // Refresh the content types list
       const response = await axios.get(
-        "http://192.168.1.38:8000/v1/platform/type/get?page=1&limit=10",
+        `${apiUrl}/v1/platform/type/get?page=1&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -95,7 +96,7 @@ const ContentType = () => {
   };
 
   return (
-    <div className="w-56 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-56 h-72 bg-white overflow-y-scroll scroll-smooth no-scrollbar rounded-xl overflow-hidden border border-gray-300 relative">
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">
@@ -107,7 +108,7 @@ const ContentType = () => {
         >
           + Add Type
         </button>
-        <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
+        <div className="flex flex-col  gap-1 absolute top-16 left-0 w-full px-4">
           {contentTypes.length > 0 ? (
             contentTypes.map((type) => (
               <div

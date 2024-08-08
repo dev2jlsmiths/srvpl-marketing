@@ -109,23 +109,14 @@ const CalendarComponent = () => {
         <Sidebar onDateClick={handleDateClick} />
         <div className="flex-1 p-4">
           <div className="flex justify-between mb-4">
-            <button
-              onClick={handleTodayClick}
-              className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
-            >
+            <button onClick={handleTodayClick} className="button">
               Today
             </button>
-            <div>
-              <button
-                onClick={handleBackClick}
-                className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mr-2"
-              >
+            <div className="flex">
+              <button onClick={handleBackClick} className="button mr-2">
                 Back
               </button>
-              <button
-                onClick={handleNextClick}
-                className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
-              >
+              <button onClick={handleNextClick} className="button">
                 Next
               </button>
             </div>

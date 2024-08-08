@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+const url = import.meta.env.VITE_API_URL;
 
 const BrandStrategy = () => {
   const { id } = useParams(); // Fetch brand_id from URL
@@ -33,6 +34,7 @@ const BrandStrategy = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [tags, setTags] = useState("");
   const [fileUri, setFileUri] = useState("");
+  console.log("Url>>",url)
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -61,7 +63,7 @@ const BrandStrategy = () => {
 
   const timeIntervals = ["Daily", "Weekly", "Monthly"];
 
-  const url = import.meta.env.VITE_END_POINT_API;
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +75,7 @@ const BrandStrategy = () => {
       try {
         // Construct the URL with the parameters
         const apiurl = `${url}/v1/Strategy/get/${id}/${formattedDate}`;
+        console.log("ApiUrl >>>",apiurl)
 
         // Make the GET request
         const response = await axios.get(apiurl, {
@@ -402,12 +405,12 @@ const BrandStrategy = () => {
           <div className="mb-6">
             <div className="bg-white p-2">
               <h2 className="text-sm font-bold mb-4 uppercase">Focus</h2>
-              <div>
+              <div className="flex flex-row space-x-0">
                 {formData.focus.map((group, index) => (
                   <div key={index} className="flex items-center space-x-2 mb-2">
                     <input
                       type="number"
-                      className="border w-1/6 p-1 rounded bg-gray-50"
+                      className="border w-[12%] p-1 rounded bg-gray-50"
                       placeholder="Percentage"
                       value={group.percent}
                       onChange={(e) =>
@@ -748,7 +751,7 @@ const BrandStrategy = () => {
                         className="border w-full p-1 rounded bg-gray-50"
                         placeholder="Description"
                         value={date.description}
-                        onResize="none"
+                        re
                         onChange={(e) =>
                           handleDateChange(index, "description", e.target.value)
                         }

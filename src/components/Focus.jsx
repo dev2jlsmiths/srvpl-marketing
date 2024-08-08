@@ -95,19 +95,18 @@ const Focus = () => {
   };
 
   return (
-    <div className="w-56 h-72 bg-white rounded-xl overflow-y-scroll scroll-smooth no-scrollbar border border-gray-300 relative">
+    <div className="w-56 h-72 bg-white border border-gray-300 rounded-xl relative">
       <div className="relative h-full">
-        <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
-        <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">
-          Focus
+        <div className="bg-gray-100 absolute top-0 w-full h-12  rounded-t-xl border-b border-gray-300 flex items-center px-4">
+          <div className="font-semibold text-sm text-gray-800">Focus</div>
+          <button
+            className="ml-auto px-2 py-1 bg-gray-300 text-gray-800 rounded-md text-xs"
+            onClick={handleAddTypeClick}
+          >
+            + Add Focus
+          </button>
         </div>
-        <button
-          className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
-          onClick={handleAddTypeClick}
-        >
-          + Add Focus
-        </button>
-        <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
+        <div className="absolute top-12 bottom-0 left-0 right-0 overflow-y-auto no-scrollbar px-4 py-2">
           {contentTypes.length > 0 ? (
             contentTypes.map((type) => (
               <div
@@ -139,7 +138,7 @@ const Focus = () => {
       </div>
 
       {modalOpen && (
-        <div className="fixed text-xs z-20 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
               {editMode ? "Edit Focus Type" : "Add Focus Type"}

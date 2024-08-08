@@ -1,553 +1,884 @@
 import axios from "axios";
-import { PlusCircle } from "lucide-react";
+import { Facebook, PlusCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import DateAddModal from "./DateAddModal";
-import FileUploadModal from "./FileUploadModal";
+import { useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 const BrandStrategy = () => {
-    const { brand_id } = useParams(); // Fetch brand_id from URL
-    const [platforms, setPlatforms] = useState([]);
-    const [focus, setFocus] = useState([]);
-    const token = localStorage.getItem("access_token");
-    const [focusGroups, setFocusGroups] = useState([
-      { percentage: "", focusType: "Awareness" },
-    ]);
-    const [selectedPlatforms, setSelectedPlatforms] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [fileUploadModal, setFileUploadModal] = useState(false);
-    const [productToFocus, setProductToFocus] = useState("");
-    const [tags, setTags] = useState("");
-    const [budget, setBudget] = useState("");
-    const [campaigns, setCampaigns] = useState("");
-    const [remarks, setRemarks] = useState("");
-    const [importantDates, setImportantDates] = useState([]);
-  
-    const handleAddModal = () => {
-      setShowModal(true);
-    };
-    const handleFileUploadModal = () => {
-      setFileUploadModal(true);
-    };
-    const handleClose = () => {
-      setShowModal(false);
-      setFileUploadModal(false);
-    };
-  
-    const handleAddGroup = () => {
-      setFocusGroups([
-        ...focusGroups,
-        { percentage: "", focusType: "Awareness" },
-      ]);
-    };
-  
-    const months = [
-      { value: 1, label: "January" },
-      { value: 2, label: "February" },
-      { value: 3, label: "March" },
-      { value: 4, label: "April" },
-      { value: 5, label: "May" },
-      { value: 6, label: "June" },
-      { value: 7, label: "July" },
-      { value: 8, label: "August" },
-      { value: 9, label: "September" },
-      { value: 10, label: "October" },
-      { value: 11, label: "November" },
-      { value: 12, label: "December" },
-    ];
-  
-    const years = Array.from(
-      { length: 10 },
-      (_, i) => new Date().getFullYear() - i
-    );
-  
-    const handleInputChange = (index, field, value) => {
-      const updatedGroups = focusGroups.map((group, i) =>
-        i === index ? { ...group, [field]: value } : group
-      );
-      setFocusGroups(updatedGroups);
-    };
-  
-    const handlePlatformChange = (platform) => {
-      setSelectedPlatforms((prevSelected) =>
-        prevSelected.includes(platform)
-          ? prevSelected.filter((p) => p !== platform)
-          : [...prevSelected, platform]
-      );
-    };
-  
-    useEffect(() => {
-      // Fetch platforms from the API
-      const fetchPlatforms = async () => {
-        try {
-          const response = await fetch(
-            `http://192.168.1.38:8000/v1/platform/get`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
-          setPlatforms(data.data); // Assuming the response data is an array of platforms
-        } catch (error) {
-          console.error("Error fetching platforms:", error);
-        }
-      };
-  
-      fetchPlatforms();
-    }, []);
-  
-    useEffect(() => {
-      const fetchFocus = async () => {
-        try {
-          const response = await fetch(
-            `http://192.168.1.38:8000/v1/platform/focus/get?page=1&limit=100`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
-          setFocus(data.data); // Assuming the response data is an array of focus items
-        } catch (error) {
-          console.error("Error fetching focus:", error);
-        }
-      };
-  
-      fetchFocus();
-    }, [token]);
-  
-    const handleSubmit = async () => {
-      const formData = new FormData();
-      formData.append("brand_id", brand_id); // Use the brand_id from URL
-      formData.append("month", `${selectedYear}-${selectedMonth}-01T00:00:00.000Z`);
-      
-      const formattedFocusGroups = focusGroups.map((group) => ({
-        focus_id: group.focusType,
-        percent: group.percentage,
+  const { id } = useParams(); // Fetch brand_id from URL
+  const [platforms, setPlatforms] = useState([]);
+  const [focus, setFocus] = useState([]);
+  const token = localStorage.getItem("access_token");
+  const [focusGroups, setFocusGroups] = useState([]);
+  const [formData, setFormData] = useState({
+    brand_id: id,
+    month: "",
+    focus: [{ percent: "", focus_id: "" }],
+    productToFocus: "",
+    social_post: [],
+    blog_post: [{ time_interval: "Monthly", number: "0" }],
+    email_marketing: [{ time_interval: "Weekly", number: "0" }],
+    sms_marketing: [{ time_interval: "Daily", number: "0" }],
+    new_sletter: [{ time_interval: "Monthly", number: "0" }],
+    tags: "",
+    important_date: [{ date: "", name: "", description: "" }],
+    budget: "",
+    campaigns: "",
+    remark: "",
+    documents: [],
+  });
+  const [selectedPlatforms, setSelectedPlatforms] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [tags, setTags] = useState("");
+  const [fileUri, setFileUri] = useState("");
+
+  useEffect(() => {
+    if (selectedMonth && selectedYear) {
+      const formattedMonth =
+        selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
+      const formattedDate = `${selectedYear}-${formattedMonth}-01`;
+      setFormData((prevData) => ({
+        ...prevData,
+        month: formattedDate,
       }));
-      
-      formData.append("focus", JSON.stringify(formattedFocusGroups));
-      formData.append("producToFocus", productToFocus);
-  
-      const formattedPlatforms = selectedPlatforms.map((platform) => ({
-        focus_id: platform,
-        time_interval: "Weekly", // Adjust this as needed
-        percent: "30", // Adjust this as needed
-      }));
-      
-      formData.append("social_post", JSON.stringify(formattedPlatforms));
-      formData.append("blog_post", JSON.stringify([{ time_interval: "Monthly", number: "4" }]));
-      formData.append("email_marketing", JSON.stringify([{ time_interval: "Weekly", number: "2" }]));
-      formData.append("sms_marketing", JSON.stringify([{ time_interval: "Daily", number: "5" }]));
-      formData.append("new_sletter", JSON.stringify([{ time_interval: "Monthly", number: "1" }]));
-      formData.append("tags", tags);
-  
-      const formattedDates = importantDates.map((date) => ({
-        date: date.date,
-        name: date.name,
-        description: date.description,
-      }));
-  
-      formData.append("important_date", JSON.stringify(formattedDates));
-      formData.append("budget", budget);
-      formData.append("campaigns", campaigns);
-      formData.append("remark", remarks);
-  
+    }
+  }, [selectedMonth, selectedYear]);
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+
+  const [importantDates, setImportantDates] = useState([
+    { date: "", name: "", description: "" },
+  ]);
+  const [file, setFile] = useState(null);
+
+  const timeIntervals = ["Daily", "Weekly", "Monthly"];
+
+  const url = import.meta.env.VITE_END_POINT_API;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const formattedMonth =
+        selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth;
+      const formattedDate = `${selectedYear}-${formattedMonth}-01`;
+
+      console.log("Month", formattedDate);
       try {
-        const response = await axios.post(
-          "http://192.168.1.38:8000/v1/Strategy/add",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response.data);
-        // Handle successful submission
+        // Construct the URL with the parameters
+        const apiurl = `${url}/v1/Strategy/get/${id}/${formattedDate}`;
+
+        // Make the GET request
+        const response = await axios.get(apiurl, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token if required
+          },
+        });
+
+        // Update formData with the response data
+        if (
+          response.data &&
+          response.data.data &&
+          response.data.data.length > 0
+        ) {
+          const data = response.data.data[0];
+          setFormData((prevState) => ({
+            ...prevState,
+            ...data,
+          }));
+        }
+        console.log("Formdata>>??", formData);
       } catch (error) {
-        console.error("Error submitting form:", error);
-        // Handle error
+        console.error(
+          "Error fetching data:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    };
+    fetchData();
+  }, [selectedMonth, selectedYear]);
+
+  const handleAddGroup = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      focus: [...prevFormData.focus, { percent: "", focus_id: "" }],
+    }));
+  };
+
+  const handleInputChange = (e, field) => {
+    const value = e.target.value;
+    if (field === "tags") {
+      // Split the value by commas and trim whitespace from each tag
+      const tagsArray = value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+      setFormData((prevData) => ({
+        ...prevData,
+        tags: tagsArray.join(", "), // Store as comma-separated string
+      }));
+    } else {
+      // Handle other fields as needed
+      setFormData((prevData) => ({
+        ...prevData,
+        [field]: value,
+      }));
+    }
+  };
+
+  const handleFocus = (index, name, value) => {
+    setFormData((prevFormData) => {
+      const updatedFocus = prevFormData.focus.map((item, i) =>
+        i === index ? { ...item, [name]: value } : item
+      );
+      return {
+        ...prevFormData,
+        focus: updatedFocus,
+      };
+    });
+  };
+
+  const handleTimeIntervalChange = (socialId, newInterval) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      social_post: prevFormData.social_post.map((post) =>
+        post.social_id === socialId
+          ? { ...post, time_interval: newInterval }
+          : post
+      ),
+    }));
+  };
+
+  const handlePlatformChange = (
+    platformId,
+    platformlogo,
+    platformname,
+    isChecked
+  ) => {
+    // Create the post object
+    const post = {
+      platform_name: platformname,
+      platform_logo: platformlogo,
+      social_id: platformId,
+      time_interval: "", // Default or set as needed
+      number: "", // Default or set as needed
+    };
+    // Update the formData state
+    setFormData((prevFormData) => {
+      let updatedSocialPosts;
+
+      if (isChecked) {
+        // Add the post if checkbox is selected
+        updatedSocialPosts = [...prevFormData.social_post, post];
+      } else {
+        // Remove the post if checkbox is deselected
+        updatedSocialPosts = prevFormData.social_post.filter(
+          (item) => item.social_id !== platformId
+        );
+      }
+
+      console.log("Updated Social Post Array:", updatedSocialPosts);
+      return {
+        ...prevFormData,
+        social_post: updatedSocialPosts,
+      };
+    });
+  };
+
+  const onDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUri = reader.result;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        documents: [...prevFormData.documents, dataUri],
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const handleDateChange = (index, field, value) => {
+    console.log("Value>>??", index, value, field);
+    const updatedDates = formData.important_date.map((date, i) =>
+      i === index ? { ...date, [field]: value } : date
+    );
+    setFormData((prevData) => ({
+      ...prevData,
+      important_date: updatedDates,
+    }));
+  };
+
+  console.log("Ïmportant Dates", importantDates);
+  const handleAddDate = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      important_date: [
+        ...prevData.important_date,
+        { date: "", name: "", description: "" },
+      ],
+    }));
+  };
+
+  const handleMarketingChange = (index, field, value, type) => {
+    const updateMarketing = (prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+
+    setFormData((prev) => {
+      switch (type) {
+        case "email":
+          return {
+            ...prev,
+            email_marketing: updateMarketing(prev.email_marketing),
+          };
+        case "sms":
+          return {
+            ...prev,
+            sms_marketing: updateMarketing(prev.sms_marketing),
+          };
+        case "newsletter":
+          return {
+            ...prev,
+            new_sletter: updateMarketing(prev.new_sletter),
+          };
+        case "blog":
+          return {
+            ...prev,
+            blog_post: updateMarketing(prev.blog_post),
+          };
+        default:
+          return prev;
+      }
+    });
+  };
+
+  useEffect(() => {
+    // Fetch platforms from the API
+    const fetchPlatforms = async () => {
+      try {
+        const response = await fetch(`${url}/v1/platform/get`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setPlatforms(data.data); // Assuming the response data is an array of platforms
+      } catch (error) {
+        console.error("Error fetching platforms:", error);
       }
     };
 
+    fetchPlatforms();
+  }, [token]);
+
+  useEffect(() => {
+    const fetchFocus = async () => {
+      try {
+        const response = await fetch(
+          `${url}/v1/platform/focus/get?page=1&limit=100`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+        setFocus(data.data); // Assuming the response data is an array of focus items
+      } catch (error) {
+        console.error("Error fetching focus:", error);
+      }
+    };
+
+    fetchFocus();
+  }, [token]);
+
+  const handleNumberChange = (socialId, newNumber) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      social_post: prevFormData.social_post.map((post) =>
+        post.social_id === socialId ? { ...post, number: newNumber } : post
+      ),
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(`${url}/v1/Strategy/add`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.data);
+      const data = response.data;
+
+      // Handle successful submission
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle error
+    }
+  };
+  console.log("Formdata???>>>", formData);
   return (
     <div>
-      <div className="p-4 bg-gray-50">
-        <div className="mb-6">
-          <div className="flex justify-between items-center">
-            <h1 className="text-center font-semibold">Strategy</h1>
-            <div className="mb-6 flex space-x-2">
-              <select
-                className="border p-2 rounded bg-gray-50"
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-              >
-                {months.map((month) => (
-                  <option key={month.value} value={month.value}>
-                    {month.label}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="border p-2 rounded bg-gray-50"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-              >
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="bg-white p-2">
-            <h2 className="text-sm font-bold mb-4 uppercase">Platform</h2>
-            <div className="flex space-x-4">
-              {platforms.map((platform) => (
-                <label
-                  key={platform._id}
-                  className="flex items-center space-x-2"
+      <form onSubmit={handleSubmit}>
+        <div className="p-4 bg-gray-50">
+          <div className="mb-6">
+            <div className="flex justify-between items-center">
+              <h1 className="text-center font-semibold">Strategy</h1>
+              <div className="mb-6 flex space-x-2">
+                <select
+                  className="border p-2 rounded bg-gray-50"
+                  value={selectedMonth}
+                  onChange={handleMonthChange}
                 >
-                  <input
-                    type="checkbox"
-                    checked={selectedPlatforms.includes(platform.platform_name)}
-                    onChange={() =>
-                      handlePlatformChange(platform.platform_name)
-                    }
-                  />
-                  <img
-                    className="w-6 h-6"
-                    src={platform.platform_logo}
-                    alt=""
-                  />
-                  <span>{platform.platform_name}</span>
-                </label>
-              ))}
+                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                    <option key={month} value={month}>
+                      {new Date(0, month - 1).toLocaleString("default", {
+                        month: "long",
+                      })}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="border p-2 rounded bg-gray-50"
+                  value={selectedYear}
+                  onChange={handleYearChange}
+                >
+                  {Array.from(
+                    { length: 10 },
+                    (_, i) => new Date().getFullYear() - i
+                  ).map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-sm font-bold mb-2 uppercase">Focus</h2>
-            <div className="flex flex-wrap">
-              {focusGroups.map((group, index) => (
-                <div key={index} className="flex items-center space-x-2 mb-2">
-                  <input
-                    type="number"
-                    className="border p-1 w-16 rounded bg-gray-50"
-                    placeholder="30"
-                    value={group.percentage}
-                    onChange={(e) =>
-                      handleInputChange(index, "percentage", e.target.value)
-                    }
-                  />
-                  <span>%</span>
-                  <select
-                    className="border p-1 rounded bg-gray-50 text-sm"
-                    value={group.focusType}
-                    onChange={(e) =>
-                      handleInputChange(index, "focusType", e.target.value)
-                    }
+            <div className="bg-white p-2">
+              <h2 className="text-sm font-bold mb-4 uppercase">Platform</h2>
+              <div className="flex space-x-4">
+                {platforms.map((platform) => (
+                  <label
+                    key={platform._id}
+                    className="flex items-center space-x-2"
                   >
-                    {focus.map((item) => (
-                      <option key={item.id} value={item.focus_name}>
-                        {item.focus_name}
-                      </option>
-                    ))}
-                  </select>
-                  <PlusCircle onClick={handleAddGroup} height="18" width="18" />
-                </div>
-              ))}
+                    <input
+                      type="checkbox"
+                      onChange={(e) =>
+                        handlePlatformChange(
+                          platform._id,
+                          platform.platform_logo,
+                          platform.platform_name,
+                          e.target.checked
+                        )
+                      }
+                    />
+                    <img
+                      className="w-6 h-6"
+                      src={platform.platform_logo}
+                      alt=""
+                    />
+                    <span>{platform.platform_name}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="flex justify-center items-center bg-white p-2 mt-2">
-            <label className="text-sm w-1/6 uppercase font-semibold">
-              Product to Focus
-            </label>
-            <input
-              type="text"
-              className="border p-2 w-full mt-2 bg-gray-50 rounded"
-              placeholder="Type Here"
-            />
-          </div>
-        </div>
 
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">Post</h2>
-            <div className="flex flex-col space-y-4">
-              {selectedPlatforms.map((platform) => (
-                <div key={platform} className="flex items-center space-x-4">
-                  <span className="text-sm">{platform}</span>
-                  <div className="flex justify-center items-center gap-x-2">
-                    <label className="text-sm" htmlFor="">
-                      Time interval
-                    </label>
-                    <select className="border bg-gray-50 rounded text-sm p-1">
-                      <option>Daily</option>
-                      <option>Weekly</option>
-                      <option>Monthly</option>
-                    </select>
-                  </div>
-                  <div className="flex justify-center items-center gap-x-4">
-                    <label className="text-center text-sm" htmlFor="">
-                      Number of Posts
-                    </label>
+          <div className="mb-6">
+            <div className="bg-white p-2">
+              <h2 className="text-sm font-bold mb-4 uppercase">Focus</h2>
+              <div>
+                {formData.focus.map((group, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-2">
                     <input
                       type="number"
-                      className="border p-2 w-16 text-xs bg-gray-50"
-                      placeholder="12"
+                      className="border w-1/6 p-1 rounded bg-gray-50"
+                      placeholder="Percentage"
+                      value={group.percent}
+                      onChange={(e) =>
+                        handleFocus(index, "percent", e.target.value)
+                      }
+                    />
+                    <span>%</span>
+                    <select
+                      key={index}
+                      className="border p-1 rounded bg-gray-50"
+                      value={group.focus_id}
+                      onChange={(e) =>
+                        handleFocus(index, "focus_id", e.target.value)
+                      }
+                    >
+                      <option value="">Select a focus</option>
+                      {focus.map((f) => (
+                        <option key={f._id} value={f._id}>
+                          {f.focus_name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <PlusCircle
+                      onClick={handleAddGroup}
+                      height="18"
+                      width="18"
                     />
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">Blogs</h2>
-            <div className="flex items-center space-x-4">
-              <label className="text-sm" htmlFor="">
-                Time interval
-              </label>
-              <select className="border p-1 rounded bg-gray-50">
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
-              </select>
-              <div className="flex items-center justify-center gap-x-2">
-                <label className="text-sm" htmlFor="">
-                  Number of post
-                </label>
-                <input
-                  type="number"
-                  className="border p-1 w-16 rounded bg-gray-50 text-xs"
-                  placeholder="12"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">Email Marketing</h2>
-            <div className="flex items-center space-x-4">
-              <label className="text-sm" htmlFor="">
-                Time interval
-              </label>
-              <select className="border p-1 rounded bg-gray-50">
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
-              </select>
-              <div className="flex items-center justify-center gap-x-2">
-                <label className="text-sm" htmlFor="">
-                  Number of email
-                </label>
-                <input
-                  type="number"
-                  className="border p-1 w-16 rounded bg-gray-50 text-xs"
-                  placeholder="12"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">SMS</h2>
-            <div className="flex items-center space-x-4">
-              <label className="text-sm" htmlFor="">
-                Time interval
-              </label>
-              <select className="border p-1 rounded bg-gray-50">
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
-              </select>
-              <div className="flex items-center justify-center gap-x-2">
-                <label className="text-sm" htmlFor="">
-                  Number of SMS
-                </label>
-                <input
-                  type="number"
-                  className="border p-1 w-16 rounded bg-gray-50 text-xs"
-                  placeholder="12"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">Newsletter</h2>
-            <div className="flex items-center space-x-4">
-              <label className="text-sm" htmlFor="">
-                Time interval
-              </label>
-              <select className="border p-1 rounded bg-gray-50">
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
-              </select>
-              <div className="flex items-center justify-center gap-x-2">
-                <label className="text-sm" htmlFor="">
-                  Number of newsletter
-                </label>
-                <input
-                  type="number"
-                  className="border p-1 w-16 rounded bg-gray-50 text-xs"
-                  placeholder="12"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center items-center bg-white p-2 mt-2">
-          <label className="text-sm w-1/6 uppercase font-semibold">
-            This month #tags
-          </label>
-          <input
-            type="text"
-            className="border p-2 w-full mt-2 bg-gray-50 rounded"
-            placeholder="Type Here"
-          />
-        </div>
-
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <h2 className="text-lg font-bold mb-4 uppercase">Important Date</h2>
-            <div className="flex">
-              {/* <div className="w-1/3 border bg-blue-100 p-4 rounded">
-                <div className="flex items-center mb-4">
-                  <div className="mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+          <div className="mb-6">
+            <div className="bg-white p-2">
+              <h2 className="text-xl font-bold mb-4">Post</h2>
+              <div className="flex flex-col space-y-4">
+                {formData.social_post.map((post) => (
+                  <div
+                    key={post.social_id}
+                    className="flex items-center space-x-4"
+                  >
+                    <img src={post.platform_logo} className="w-6 h-6" alt="" />
+                    <span className="text-sm">{post.platform_name}</span>
+                    <div className="flex justify-center items-center gap-x-2">
+                      <label className="text-sm" htmlFor="">
+                        Time interval
+                      </label>
+                      <select
+                        className="border bg-gray-50 rounded text-sm p-1"
+                        value={post.time_interval}
+                        onChange={(e) =>
+                          handleTimeIntervalChange(
+                            post.social_id,
+                            e.target.value
+                          )
+                        }
+                      >
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                      </select>
+                    </div>
+                    <div className="flex justify-center items-center gap-x-4">
+                      <label className="text-center text-sm" htmlFor="">
+                        Number of Posts
+                      </label>
+                      <input
+                        type="number"
+                        className="border p-2 w-16 text-xs bg-gray-50"
+                        placeholder="12"
+                        value={post.number}
+                        onChange={(e) =>
+                          handleNumberChange(post.social_id, e.target.value)
+                        }
                       />
-                    </svg>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-xl font-bold">12/12/24</p>
-                    <a href="#" className="text-blue-600 hover:underline">
-                      Independence Day
-                    </a>
-                    <p className="text-gray-600 text-sm">
-                      Adipisci maxime eum aliquid aut laborum in delectus quae
-                      eum.
-                    </p>
-                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mb-6">
+            <div className="bg-white p-2 ">
+              <div className="flex justify-center items-center bg-white p-2 mt-2 ">
+                <label className="text-sm w-1/6 uppercase font-semibold">
+                  Products to Focus
+                </label>
+                <input
+                  type="text"
+                  className="border w-5/6 p-1 rounded bg-gray-50"
+                  placeholder="Enter Product to focus"
+                  value={formData.productToFocus}
+                  onChange={(e) => handleInputChange(e, "productToFocus")}
+                />
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="bg-white  mt-2">
+                <h2 className="text-sm font-bold mb-2 uppercase border-b p-2">Blog Post</h2>
+                <div className="flex flex-wrap p-2">
+                  {formData.blog_post.map((blog, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center space-x-8 mb-2"
+                    >
+                      <div className="flex items-center gap-x-2">
+                        <span className="text-sm">Time Interval</span>
+                        <select
+                          className="border p-1 rounded bg-gray-50"
+                          value={blog.time_interval}
+                          onChange={(e) =>
+                            handleMarketingChange(
+                              index,
+                              "time_interval",
+                              e.target.value,
+                              "blog"
+                            )
+                          }
+                        >
+                          <option value="Daily">Daily</option>
+                          <option value="Weekly">Weekly</option>
+                          <option value="Monthly">Monthly</option>
+                        </select>
+                      </div>
+                      <div className="flex items-center gap-x-2">
+                        <span className="text-sm ">Number of Blogs</span>
+                        <input
+                          type="number"
+                          className="border w-1/6 p-1 rounded bg-gray-50 "
+                          placeholder="Number"
+                          value={blog.number}
+                          onChange={(e) =>
+                            handleMarketingChange(
+                              index,
+                              "number",
+                              e.target.value,
+                              "blog"
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div> */}
-              <button
-                className="mt-4 text-blue-600 hover:underline flex justify-end items-end"
-                onClick={handleAddModal}
+              </div>
+            </div>
+
+            <div className="bg-white mt-2">
+              <h2 className="text-sm font-bold border-b p-2 uppercase">
+                Email Marketing
+              </h2>
+              <div className="flex flex-wrap p-2">
+                {formData.email_marketing.map((email, index) => (
+                  <div key={index} className="flex items-center space-x-8 mb-2">
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Time Interval</span>
+                      <select
+                        className="border p-1 rounded bg-gray-50"
+                        value={email.time_interval}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "time_interval",
+                            e.target.value,
+                            "email"
+                          )
+                        }
+                      >
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Number of email</span>
+                      <input
+                        type="number"
+                        className="border w-1/6 p-1 rounded bg-gray-50"
+                        placeholder="Number"
+                        value={email.number}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "number",
+                            e.target.value,
+                            "email"
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white mt-2">
+              <h2 className="text-sm font-bold border-b p-2 uppercase">
+                SMS Marketing
+              </h2>
+              <div className="flex flex-wrap p-2">
+                {formData.sms_marketing.map((sms, index) => (
+                  <div key={index} className="flex items-center space-x-8 mb-2">
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Time Interval</span>
+                      <select
+                        className="border p-1 rounded bg-gray-50"
+                        value={sms.time_interval}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "time_interval",
+                            e.target.value,
+                            "sms"
+                          )
+                        }
+                      >
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Number of sms</span>
+                      <input
+                        type="number"
+                        className="border w-1/6 p-1 rounded bg-gray-50"
+                        placeholder="Number"
+                        value={sms.number}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "number",
+                            e.target.value,
+                            "sms"
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white mt-2">
+              <h2 className="text-sm font-bold p-2  border-b uppercase">Newsletters</h2>
+              <div className="flex flex-wrap p-2">
+                {formData.new_sletter.map((newsletter, index) => (
+                  <div key={index} className="flex items-center space-x-8 mb-2">
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Time Interval</span>
+                      <select
+                        className="border p-1 rounded bg-gray-50"
+                        value={newsletter.time_interval}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "time_interval",
+                            e.target.value,
+                            "newsletter"
+                          )
+                        }
+                      >
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-x-2">
+                      <span className="text-sm">Number of Newsletter</span>
+                      <input
+                        type="number"
+                        className="border w-1/6 p-1 rounded bg-gray-50"
+                        placeholder="Number"
+                        value={newsletter.number}
+                        onChange={(e) =>
+                          handleMarketingChange(
+                            index,
+                            "number",
+                            e.target.value,
+                            "newsletter"
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center bg-white p-2 mt-2">
+              <label className="text-sm w-1/6 uppercase font-semibold">
+                This month #Tags
+              </label>
+              <input
+                type="text"
+                className="border w-full p-1 rounded bg-gray-50"
+                placeholder="Enter tags"
+                value={formData.tags}
+                onChange={(e) => handleInputChange(e, "tags")}
+              />
+            </div>
+
+            <div className="bg-white p-2 mt-2">
+              <h2 className="text-sm font-bold mb-2 uppercase">
+                Important Dates
+              </h2>
+              <div className="flex flex-wrap space-x-3">
+                {formData.important_date.map((date, index) => (
+                  <div className="flex justify-end items-end">
+                    <div
+                      key={index}
+                      className="flex flex-col  items-center space-y-2 mb-2"
+                    >
+                      <div className="flex gap-x-4 ">
+                        <input
+                          type="date"
+                          className="border p-1 rounded bg-gray-50"
+                          value={date.date}
+                          onChange={(e) =>
+                            handleDateChange(index, "date", e.target.value)
+                          }
+                        />
+                        <input
+                          type="text"
+                          className="border p-1 rounded bg-gray-50"
+                          placeholder="Name"
+                          value={date.name}
+                          onChange={(e) =>
+                            handleDateChange(index, "name", e.target.value)
+                          }
+                        />
+                      </div>
+                      <textarea
+                        type="text"
+                        className="border w-full p-1 rounded bg-gray-50"
+                        placeholder="Description"
+                        value={date.description}
+                        onResize="none"
+                        onChange={(e) =>
+                          handleDateChange(index, "description", e.target.value)
+                        }
+                      />
+                    </div>
+                    <PlusCircle
+                      onClick={handleAddDate}
+                      height="18"
+                      width="18"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-6 flex flex-col  ">
+          <div className="flex justify-between">
+              <label className="block text-sm uppercase font-medium text-gray-700">
+                Documents
+              </label>
+            </div>
+            <div className="flex gap-x-4">
+        
+            <div
+              {...getRootProps()}
+              className="w-1/3 border-2 border-dashed border-gray-300 p-8 text-center rounded-lg flex flex-col items-center justify-center h-48"
+            >
+              <input {...getInputProps()} />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-10"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </button>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                />
+              </svg>
+              {file ? (
+              <p>{file.name}</p>
+            ) : (
+              <p className="text-gray-500">
+                Drag 'n' drop a file here, or click to select a file
+              </p>
+            )}
             </div>
-            {showModal && <DateAddModal onClose={handleClose} />}
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <div className="bg-white p-2">
-            <div className="flex justify-between items-center">
-              <h2 className="text-sm font-semibold mb-4 uppercase">File Upload </h2>
-              <button onClick={handleFileUploadModal}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15"
-                  />
-                </svg>
-              </button>
+            <div className="flex flex-wrap items-center gap-x-4">
+              <h1 className="text-sm font-semibold">Preview :</h1>
+              {formData.documents.length > 0 ? (
+                formData.documents.map((file, index) => {
+                  const isImage = file;
+                  return (
+                    <div key={index} className="mt-2">
+                      {isImage ? (
+                        <img
+                          src={file}
+                          alt={file.name}
+                          className="mt-1 max-h-32"
+                        />
+                      ) : (
+                        <a
+                          href={file}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 mt-1"
+                        >
+                          View File
+                        </a>
+                      )}
+                    </div>
+                  );
+                })
+              ) : null}
             </div>
-            <div className="flex"></div>
-            {fileUploadModal && <FileUploadModal onClose={handleClose} />}
+          </div>
+          <div className="mb-6">
+            <div className="flex items-center gap-x-2 bg-white p-2 mt-2">
+              <label className="text-sm  uppercase font-semibold">Budget</label>
+              <input
+                type="text"
+                className="border w-1/6 p-1 rounded bg-gray-50"
+                placeholder="Enter Budget"
+                value={formData.budget}
+                onChange={(e) => handleInputChange(e, "budget")}
+              />
+              <span className="text-sm font-semibold">INR/Month</span>
+            </div>
+          </div>
+          <div className="mb-6">
+            <div className="flex flex-col  bg-white p-2 mt-2">
+              <label className="text-sm w-1/6 uppercase font-semibold">
+                Campaigns
+              </label>
+              <textarea
+                type="text"
+                className="border w-full p-1 rounded bg-gray-50"
+                placeholder="Enter Campaigns"
+                value={formData.campaigns}
+                onChange={(e) => handleInputChange(e, "campaigns")}
+              />
+            </div>
+            <div className="flex flex-col bg-white p-2 ">
+              <label className="text-sm w-1/6 uppercase font-semibold">
+                Remarks
+              </label>
+              <textarea
+                type="text"
+                className="border w-full p-1 rounded bg-gray-50"
+                placeholder="Enter Remarks"
+                value={formData.remark}
+                onChange={(e) => handleInputChange(e, "remark")}
+              />
+            </div>
+          </div>
           </div>
         </div>
-
-        <div className="flex justify-start items-center bg-white gap-x-3 p-2 mt-2">
-          <label className="text-sm  uppercase font-semibold">Budget</label>
-          <input
-            type="text"
-            className="border p-1 w-1/6 mt-2 bg-gray-50 rounded"
-            placeholder="0000"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-          />
-          <p className="text-sm font-semibold">INR/Monthly</p>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-700 text-white px-4 py-2  rounded"
+          >
+            Submit
+          </button>
         </div>
-
-        <div className="mt-6">
-          <div className="bg-white p-2">
-            <h2 className="text-xl font-bold mb-4">Campaign</h2>
-            <textarea
-              className="w-full bg-gray-50 p-3 rounded"
-              placeholder="Type Here"
-              value={campaigns}
-              onChange={(e) => setCampaigns(e.target.value)}
-            />
-          </div>
-          <div className="bg-white p-2 ">
-            <h2 className="text-xl font-bold mb-4 rounded">Remarks</h2>
-            <textarea
-              className="w-full bg-gray-50 p-3"
-              placeholder="Type Here"
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="">
-        <button className="bg-blue-500 text-xs text-white px-4 py-2" onClick={handleSubmit}>
-          Submit
-        </button>
-      </div>
+      </form>
     </div>
   );
 };

@@ -16,6 +16,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Modal from "./Modal"; // Import your custom modal component
 import Sidebar from "./Sidebar"; // Import your sidebar component
+import CustomToolbar from "./CustomToolbar"; // Import the custom toolbar
 
 const locales = {
   "en-US": enUS,
@@ -133,8 +134,9 @@ const CalendarComponent = () => {
               startAccessor="start"
               endAccessor="end"
               style={{ height: "100%" }}
-              className="custom-calendar" // Add this line
+              className="custom-calendar"
               components={{
+                toolbar: CustomToolbar,
                 event: (props) => (
                   <div
                     style={{

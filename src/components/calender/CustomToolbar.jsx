@@ -1,30 +1,67 @@
-// CustomToolbar.js
 import React from "react";
 
-const CustomToolbar = (toolbar) => {
+const CustomToolbar = ({ label, onNavigate, onView }) => {
   const goToBack = () => {
-    toolbar.onNavigate("PREV");
+    onNavigate("PREV");
   };
 
   const goToNext = () => {
-    toolbar.onNavigate("NEXT");
+    onNavigate("NEXT");
   };
 
   const goToCurrent = () => {
-    toolbar.onNavigate("TODAY");
+    onNavigate("TODAY");
   };
 
   return (
-    <div className="rbc-toolbar">
-      {/* <span className="rbc-btn-group">
-        <button type="button" onClick={goToBack}>
+    <div className="rbc-toolbar flex justify-between items-center">
+      <div className="rbc-btn-group">
+        <button
+          onClick={goToBack}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
+        >
           Back
         </button>
-        <button type="button" onClick={goToNext}>
+        <button
+          onClick={goToCurrent}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-2"
+        >
+          Today
+        </button>
+        <button
+          onClick={goToNext}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
+        >
           Next
         </button>
-      </span> */}
-      <span className="rbc-toolbar-label">{toolbar.label}</span>
+      </div>
+      <span className="rbc-toolbar-label">{label}</span>
+      <div className="rbc-btn-group">
+        <button
+          onClick={() => onView("month")}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-1"
+        >
+          Month
+        </button>
+        <button
+          onClick={() => onView("week")}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-1"
+        >
+          Week
+        </button>
+        <button
+          onClick={() => onView("day")}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-1"
+        >
+          Day
+        </button>
+        <button
+          onClick={() => onView("agenda")}
+          className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 mx-1"
+        >
+          Agenda
+        </button>
+      </div>
     </div>
   );
 };

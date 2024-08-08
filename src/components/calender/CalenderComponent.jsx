@@ -11,13 +11,13 @@ import {
 } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./CalenderComponent.css"; // Import the custom styles
+import "./CalenderComponent.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Modal from "./Modal"; // Import your custom modal component
-import NewEventModal from "./NewEventModal"; // Import the new event modal component
-import Sidebar from "./Sidebar"; // Import your sidebar component
-import CustomToolbar from "./CustomToolbar"; // Import the custom toolbar
+import Modal from "./Modal";
+import NewEventModal from "./NewEventModal";
+import Sidebar from "./Sidebar";
+import CustomToolbar from "./CustomToolbar";
 
 const locales = {
   "en-US": enUS,

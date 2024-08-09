@@ -18,6 +18,7 @@ function BrandPage() {
     const fetchBrands = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
+        console.log("Access Token>>??",accessToken)
         const response = await axios.get(`${apiUrl}/v1/brand/profile/get`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,

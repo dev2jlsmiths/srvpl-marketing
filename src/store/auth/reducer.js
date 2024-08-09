@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { login } from "./action";
 import { jwtDecode } from "jwt-decode"; // Note: Changed from "jwt-decode" to "jwtDecode"
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("access_token");
 
 export const authSlice = createSlice({
     name: "auth",
@@ -17,7 +17,7 @@ export const authSlice = createSlice({
     },
     reducers: {
         logout(state) {
-            localStorage.removeItem("token");
+            localStorage.removeItem("access_token");
             state.token = null;
             state.currentUser = null;
             state.error = null;
@@ -31,7 +31,7 @@ export const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, { payload }) => {
                 console.log('payload', payload)
-                localStorage.setItem("token", payload);
+                localStorage.setItem("access_token", payload);
                 state.token = payload;
                 state.currentUser = jwtDecode(payload);
                 state.isLoading = false;
@@ -40,7 +40,7 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = payload;
                 state.token = null;
-                localStorage.removeItem("token");
+                localStorage.removeItem("access_token");
             });
     },
 });

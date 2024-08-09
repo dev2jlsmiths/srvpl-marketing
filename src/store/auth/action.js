@@ -6,8 +6,8 @@ export const login = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
         try {
             const res = await loginRequest(payload);
-            const token = res.data.access_token;
-            return token;
+            const access_token = res.data.access_token;
+            return access_token;
         } catch (err) {
             return rejectWithValue(err.response.data.message);
         }

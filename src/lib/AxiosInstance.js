@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = import.meta.env.VITE_END_POINT_API;
+const url = import.meta.env.VITE_API_URL;
 console.log(url);
 
 const axiosInstance = axios.create({

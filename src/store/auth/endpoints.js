@@ -1,3 +1,4 @@
-import axiosInstance from '../../lib/axiosInstance'
+import axiosInstance from "../../lib/AxiosInstance";
 
-export const loginRequest = (payload) => axiosInstance.post("login", payload);
+
+export const loginRequest = (payload) => axiosInstance.post("/v1/auth/login", payload);

@@ -1,12 +1,12 @@
 import React from "react";
-import { useAuth } from "../hooks/useAuth";
+// import { useAuth } from "../hooks/useAuth";
 
 const UserPage = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
-  if (!user || (user.role !== "user" && user.role !== "admin")) {
-    return <div>You do not have permission to view this page.</div>;
-  }
+  // if (!user || (user.role !== "user" && user.role !== "admin")) {
+  //   return <div>You do not have permission to view this page.</div>;
+  // }
 
   return (
     <div className="p-4">

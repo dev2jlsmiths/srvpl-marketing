@@ -16,7 +16,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     brandName: "",
     brandCompanyName: "",
     websiteLink: "",
-    brandLogo: "",
+    brandLogo: null,
+    brandGuidelines: null,
   });
   const [errors, setErrors] = useState({});
 
@@ -29,17 +30,12 @@ const BrandModal = ({ isOpen, onClose }) => {
   };
 
   const handleFileChange = (e) => {
+    const { name } = e.target;
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({
-          ...prev,
-          brandLogo: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: file,
+    }));
   };
 
   const handlePlatformChange = (id, e) => {
@@ -77,6 +73,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     if (!formData.websiteLink)
       newErrors.websiteLink = "Website Link is required";
     if (!formData.brandLogo) newErrors.brandLogo = "Logo is required";
+    if (!formData.brandGuidelines)
+      newErrors.brandGuidelines = "Brand Guidelines PDF is required";
 
     platforms.forEach((platform, index) => {
       if (!platform.platform)
@@ -99,21 +97,21 @@ const BrandModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const data = {
-      brand_name: formData.brandName,
-      brand_company_name: formData.brandCompanyName,
-      website_link: formData.websiteLink,
-      brand_logo: formData.brandLogo,
-      social_media: platforms,
-    };
+    const data = new FormData();
+    data.append("brand_name", formData.brandName);
+    data.append("brand_company_name", formData.brandCompanyName);
+    data.append("website_link", formData.websiteLink);
+    data.append("brand_logo", formData.brandLogo); // The file is sent directly here
+    data.append("brand_guidelines", formData.brandGuidelines); // The PDF file is sent directly here
+    data.append("social_media", JSON.stringify(platforms));
+
     const accessToken = localStorage.getItem("access_token");
     fetch(`${apiUrl}/v1/brand/profile/add`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(data),
+      body: data, // FormData with files is sent directly here
     })
       .then((response) => response.json())
       .then((result) => {
@@ -163,7 +161,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                 name="brandName"
                 value={formData.brandName}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Brand Name"
               />
               {errors.brandName && (
@@ -179,7 +177,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                 name="brandCompanyName"
                 value={formData.brandCompanyName}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Brand Company Name"
               />
               {errors.brandCompanyName && (
@@ -197,7 +195,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                 name="websiteLink"
                 value={formData.websiteLink}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Website Link"
               />
               {errors.websiteLink && (
@@ -212,16 +210,35 @@ const BrandModal = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="file"
+                name="brandLogo"
                 onChange={handleFileChange}
-                className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
               />
               {formData.brandLogo && (
-                <a href={formData.brandLogo} className="text-blue-500 text-sm">
-                  View Attachment
-                </a>
+                <p className="text-blue-500 text-sm">File Selected</p>
               )}
               {errors.brandLogo && (
                 <p className="text-red-500 text-xs mt-1">{errors.brandLogo}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700">
+                Brand Guidelines (PDF)
+              </label>
+              <input
+                type="file"
+                name="brandGuidelines"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
+              />
+              {formData.brandGuidelines && (
+                <p className="text-blue-500 text-sm">PDF Selected</p>
+              )}
+              {errors.brandGuidelines && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.brandGuidelines}
+                </p>
               )}
             </div>
           </div>
@@ -240,7 +257,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                   name="platform"
                   value={platform.platform}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                   placeholder="Platform"
                 />
                 {errors[`platform_${index}`] && (
@@ -258,7 +275,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                   name="account_id"
                   value={platform.account_id}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                   placeholder="Account ID"
                 />
                 {errors[`account_id_${index}`] && (
@@ -272,11 +289,11 @@ const BrandModal = ({ isOpen, onClose }) => {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type="text"
                   name="password"
                   value={platform.password}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                   placeholder="Password"
                 />
                 {errors[`password_${index}`] && (
@@ -294,7 +311,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                   name="phone_no"
                   value={platform.phone_no}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
                   placeholder="Phone Number"
                 />
                 {errors[`phone_no_${index}`] && (
@@ -305,15 +322,15 @@ const BrandModal = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
-                  Email
+                  Backup Email
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   name="backup_email"
                   value={platform.backup_email}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
-                  className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm"
-                  placeholder="Email"
+                  className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
+                  placeholder="Backup Email"
                 />
                 {errors[`backup_email_${index}`] && (
                   <p className="text-red-500 text-xs mt-1">
@@ -321,50 +338,28 @@ const BrandModal = ({ isOpen, onClose }) => {
                   </p>
                 )}
               </div>
-              <div className="flex items-end">
+              <div className="flex items-end justify-end">
                 <button
                   type="button"
-                  className="ml-2 mb-2 text-red-500 hover:text-red-700"
                   onClick={() => removePlatform(platform.id)}
+                  className="text-red-600 hover:text-red-900"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                    />
-                  </svg>
+                  Remove
                 </button>
               </div>
             </div>
           ))}
-          <div className="text-center mb-4">
-            <button
-              type="button"
-              onClick={addPlatform}
-              className="bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition-colors duration-300"
-            >
-              Add Platform
-            </button>
-          </div>
-          <div className="flex justify-end mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-200 px-4 py-2 rounded-md shadow-md mr-2 hover:bg-gray-300"
-            >
-              Cancel
-            </button>
+          <button
+            type="button"
+            onClick={addPlatform}
+            className="mb-6 inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs  rounded-md text-white bg-blue-500 hover:bg-indigo-700 focus:outline-none"
+          >
+            Add Platform
+          </button>
+          <div className="text-right">
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300"
+              className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none"
             >
               Save
             </button>

@@ -101,8 +101,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     data.append("brand_name", formData.brandName);
     data.append("brand_company_name", formData.brandCompanyName);
     data.append("website_link", formData.websiteLink);
-    data.append("brand_logo", formData.brandLogo); // The file is sent directly here
-    data.append("brand_guidelines", formData.brandGuidelines); // The PDF file is sent directly here
+    data.append("brand_logo", formData.brandLogo);
+    data.append("brand_guidelines", formData.brandGuidelines);
     data.append("social_media", JSON.stringify(platforms));
 
     const accessToken = localStorage.getItem("access_token");
@@ -111,7 +111,7 @@ const BrandModal = ({ isOpen, onClose }) => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: data, // FormData with files is sent directly here
+      body: data, // FormData with file data is sent as-is
     })
       .then((response) => response.json())
       .then((result) => {

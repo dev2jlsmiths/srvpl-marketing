@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const Department = () => {
+const Designation = () => {
   const [departments, setDepartments] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [newDept, setNewDept] = useState("");
@@ -100,7 +100,7 @@ const Department = () => {
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">
-          Department
+         Designation
         </div>
         <button
           className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
@@ -180,4 +180,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default Designation;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
+// import { AuthProvider } from "./contexts/AuthContext";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import UserPage from "./pages/UserPage";
@@ -27,7 +27,7 @@ import CalendarComponent from "./components/calender/CalenderComponent";
 
 function App() {
   return (
-    <AuthProvider>
+   
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -170,7 +170,7 @@ function App() {
 
         </Routes>
       </Router>
-    </AuthProvider>
+    
   );
 }
 

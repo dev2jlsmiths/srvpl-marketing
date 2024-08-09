@@ -1,31 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext"; // Ensure correct path
-import { authService } from "../services/AuthService"; // Ensure correct path
+import { zodResolver } from "@hookform/resolvers/zod";
 import banner from "../../public/banner.svg"; // Ensure correct path
 import logo from "../../public/logo.svg"; // Ensure correct path
+import { useDispatch, useSelector } from "react-redux";
+import { LoginSchema } from "../schemas/auth.schema";
+import { useForm } from "react-hook-form";
+import { Button } from "../components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { toast } from "../components/ui/use-toast";
+import { login } from "../store/auth/action";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const user = await authService.login(email, password);
-      login(user); // Set user in AuthContext
-      if (user.roles.includes("admin")) {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading, token, currentUser } = useSelector((state) => state.auth);
+  const form = useForm({
+    resolver: zodResolver(LoginSchema),
+  });
+
+  useEffect(() => {
+    console.log("Effect running...");
+    if (!isLoading && token && currentUser) {
         navigate("/admin");
-      } else {
-        navigate("/user");
-      }
-    } catch (err) {
-      setError("Invalid email or password");
     }
-  };
+}, [isLoading, token, currentUser, navigate]);
+
+  async function onSubmit(data) {
+    console.log("Form submitted with data: ", data);
+    try {
+      dispatch(login(data)).unwrap();
+    } catch (err) {
+      console.log(err);
+    }
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
 
   return (
     <div className="flex h-screen">
@@ -49,54 +78,49 @@ const LoginPage = () => {
               {error}
             </div>
           )}
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col items-center space-y-4"
-          >
-            <div className="w-full max-w-xs">
-              <label
-                htmlFor="email"
-                className="block text-gray-700 font-medium mb-1 text-left"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="block w-full outline-none py-1 px-4 bg-blue-50 border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="w-full max-w-xs">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 font-medium mb-1 text-left"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="block w-full outline-none py-1 px-4 bg-blue-50 border border-gray-300 rounded-md shadow-sm"
-              />
-            </div>
-            <div className="flex justify-between items-center w-full max-w-xs mb-4">
-              <a href="#" className="text-sm text-indigo-600 hover:underline">
-                Forgot password?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full max-w-xs bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full space-y-6"
             >
-              Sign in
-            </button>
-          </form>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="**********"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-full flex justify-center items-center"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </form>
+          </Form>
           <p className="mt-4 text-center text-gray-600">
             Don't have an account?{" "}
             <a href="#" className="text-indigo-600 hover:underline">

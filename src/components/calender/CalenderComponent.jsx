@@ -20,6 +20,7 @@ import Sidebar from "./Sidebar";
 import CustomToolbar from "./CustomToolbar";
 import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
+import { useParams } from "react-router-dom";
 
 const locales = {
   "en-US": enUS,
@@ -39,12 +40,13 @@ const CalendarComponent = () => {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(startOfToday());
+  const { brandId } = useParams();
 
   // Fetch events from API
   const fetchEvents = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}/v1/brand/profile/get/66a8726c70be898a1587cc7d`
+        `${apiUrl}/v1/brand/profile/get/${brandId}`
       );
       const apiEvents = response.data.map((event) => ({
         id: event.id,

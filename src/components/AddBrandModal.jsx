@@ -4,7 +4,7 @@ const BrandModal = ({ isOpen, onClose }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [platforms, setPlatforms] = useState([
     {
-      id: Date.now(),
+      // id: Date.now(),
       platform: "",
       account_id: "",
       password: "",
@@ -51,7 +51,7 @@ const BrandModal = ({ isOpen, onClose }) => {
     setPlatforms([
       ...platforms,
       {
-        id: Date.now(),
+        // id: Date.now(),
         platform: "",
         account_id: "",
         password: "",

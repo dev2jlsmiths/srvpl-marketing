@@ -35,6 +35,7 @@ const BrandStrategy = () => {
   const [tags, setTags] = useState("");
   const [fileUri, setFileUri] = useState("");
   console.log("Url>>", url);
+  console.log("Url>>", url);
 
   useEffect(() => {
     if (selectedMonth && selectedYear) {
@@ -333,7 +334,7 @@ const BrandStrategy = () => {
   };
   // console.log("Formdata???>>>", formData);
   return (
-    <div>
+    <div className="text-xs">
       <form onSubmit={handleSubmit}>
         <div className="p-4 bg-gray-50">
           <div className="mb-6">
@@ -370,7 +371,7 @@ const BrandStrategy = () => {
               </div>
             </div>
             <div className="bg-white p-2">
-              <h2 className="text-sm font-bold mb-4 uppercase">Platform</h2>
+              <h2 className="text-xs font-bold mb-4 uppercase">Platform</h2>
               <div className="flex space-x-4">
                 {platforms.map((platform) => (
                   <label
@@ -452,13 +453,13 @@ const BrandStrategy = () => {
                     className="flex items-center space-x-4"
                   >
                     <img src={post.platform_logo} className="w-6 h-6" alt="" />
-                    <span className="text-sm">{post.platform_name}</span>
+                    <span className="text-xs">{post.platform_name}</span>
                     <div className="flex justify-center items-center gap-x-2">
-                      <label className="text-sm" htmlFor="">
+                      <label className="text-xs" htmlFor="">
                         Time interval
                       </label>
                       <select
-                        className="border bg-gray-50 rounded text-sm p-1"
+                        className="border bg-gray-50 rounded text-xs p-1"
                         value={post.time_interval}
                         onChange={(e) =>
                           handleTimeIntervalChange(
@@ -473,7 +474,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex justify-center items-center gap-x-4">
-                      <label className="text-center text-sm" htmlFor="">
+                      <label className="text-center text-xs" htmlFor="">
                         Number of Posts
                       </label>
                       <input
@@ -494,7 +495,7 @@ const BrandStrategy = () => {
           <div className="mb-6">
             <div className="bg-white p-2 ">
               <div className="flex justify-center items-center bg-white p-2 mt-2 ">
-                <label className="text-sm w-1/6 uppercase font-semibold">
+                <label className="text-xs w-1/6 uppercase font-semibold">
                   Products to Focus
                 </label>
                 <input
@@ -509,7 +510,7 @@ const BrandStrategy = () => {
 
             <div className="mb-6">
               <div className="bg-white  mt-2">
-                <h2 className="text-sm font-bold mb-2 uppercase border-b p-2">
+                <h2 className="text-xs font-bold mb-2 uppercase border-b p-2">
                   Blog Post
                 </h2>
                 <div className="flex flex-wrap p-2">
@@ -519,7 +520,7 @@ const BrandStrategy = () => {
                       className="flex items-center space-x-8 mb-2"
                     >
                       <div className="flex items-center gap-x-2">
-                        <span className="text-sm">Time Interval</span>
+                        <span className="text-xs">Time Interval</span>
                         <select
                           className="border p-1 rounded bg-gray-50"
                           value={blog.time_interval}
@@ -538,7 +539,7 @@ const BrandStrategy = () => {
                         </select>
                       </div>
                       <div className="flex items-center gap-x-2">
-                        <span className="text-sm ">Number of Blogs</span>
+                        <span className="text-xs ">Number of Blogs</span>
                         <input
                           type="number"
                           className="border w-1/6 p-1 rounded bg-gray-50 "
@@ -561,14 +562,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold border-b p-2 uppercase">
+              <h2 className="text-xs font-bold border-b p-2 uppercase">
                 Email Marketing
               </h2>
               <div className="flex flex-wrap p-2">
                 {formData.email_marketing.map((email, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={email.time_interval}
@@ -587,7 +588,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of email</span>
+                      <span className="text-xs">Number of email</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -609,14 +610,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold border-b p-2 uppercase">
+              <h2 className="text-xs font-bold border-b p-2 uppercase">
                 SMS Marketing
               </h2>
               <div className="flex flex-wrap p-2">
                 {formData.sms_marketing.map((sms, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={sms.time_interval}
@@ -635,7 +636,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of sms</span>
+                      <span className="text-xs">Number of sms</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -657,14 +658,14 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white mt-2">
-              <h2 className="text-sm font-bold p-2  border-b uppercase">
+              <h2 className="text-xs font-bold p-2  border-b uppercase">
                 Newsletters
               </h2>
               <div className="flex flex-wrap p-2">
                 {formData.new_sletter.map((newsletter, index) => (
                   <div key={index} className="flex items-center space-x-8 mb-2">
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Time Interval</span>
+                      <span className="text-xs">Time Interval</span>
                       <select
                         className="border p-1 rounded bg-gray-50"
                         value={newsletter.time_interval}
@@ -683,7 +684,7 @@ const BrandStrategy = () => {
                       </select>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <span className="text-sm">Number of Newsletter</span>
+                      <span className="text-xs">Number of Newsletter</span>
                       <input
                         type="number"
                         className="border w-1/6 p-1 rounded bg-gray-50"
@@ -705,7 +706,7 @@ const BrandStrategy = () => {
             </div>
 
             <div className="flex items-center bg-white p-2 mt-2">
-              <label className="text-sm w-1/6 uppercase font-semibold">
+              <label className="text-xs w-1/6 uppercase font-semibold">
                 This month #Tags
               </label>
               <input
@@ -718,7 +719,7 @@ const BrandStrategy = () => {
             </div>
 
             <div className="bg-white p-2 mt-2">
-              <h2 className="text-sm font-bold mb-2 uppercase">
+              <h2 className="text-xs font-bold mb-2 uppercase">
                 Important Dates
               </h2>
               <div className="flex flex-wrap space-x-3">
@@ -771,7 +772,7 @@ const BrandStrategy = () => {
 
           <div className="mb-6 flex flex-col  ">
             <div className="flex justify-between">
-              <label className="block text-sm uppercase font-medium text-gray-700">
+              <label className="block text-xs uppercase font-medium text-gray-700">
                 Documents
               </label>
             </div>

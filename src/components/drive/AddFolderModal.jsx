@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const AddFolderModal = ({
-  isOpen,
-  onClose,
-
-  onFolderAdded,
-}) => {
+const AddFolderModal = ({ isOpen, onClose, onFolderAdded }) => {
   const [folderName, setFolderName] = useState("");
   const params = useParams();
-  console.log("params", params);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFolderName("");
+    }
+  }, [isOpen]);
+
   const handleAddFolder = async () => {
     const body = {
       name: folderName,

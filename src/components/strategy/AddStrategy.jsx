@@ -31,11 +31,11 @@ const AddStrategy = () => {
   }, [accessToken]);
 
   const handleEditClick = () => {
-    navigate(`/strategy/${brandid}`)
-  }
+    navigate(`/strategy/${brandid}`);
+  };
 
   return (
-    <div className="w-72 h-72 bg-white rounded-xl overflow-hidden border border-gray-300 relative">
+    <div className="w-72 h-72 bg-white text-xs rounded-xl overflow-hidden border border-gray-300 relative">
       <div className="relative h-full">
         <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">

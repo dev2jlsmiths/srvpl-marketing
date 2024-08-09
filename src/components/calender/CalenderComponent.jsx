@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
+import {
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  addMonths,
+  subMonths,
+  startOfToday,
+} from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-datepicker/dist/react-datepicker.css";
 import "./CalenderComponent.css";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Modal from "./Modal";
+import NewEventModal from "./NewEventModal";
+import Sidebar from "./Sidebar";
+import CustomToolbar from "./CustomToolbar";
 
 const locales = {
   "en-US": enUS,
@@ -23,237 +32,146 @@ const localizer = dateFnsLocalizer({
 });
 
 const CalendarComponent = () => {
-  const [events, setEvents] = useState([
-    {
-      id: 0,
-      title: "Sample Event",
-      start: new Date(),
-      end: new Date(),
-      color: "#FFEBCC", // Pastel shade
-    },
-  ]);
-  const [title, setTitle] = useState("");
-  const [start, setStart] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
-  const [showModal, setShowModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [eventId, setEventId] = useState(null);
-  const [eventRows, setEventRows] = useState([
-    { work: "", kind: "", type: "", description: "" },
-  ]);
-  const [miniDate, setMiniDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showNewEventModal, setShowNewEventModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentDate, setCurrentDate] = useState(startOfToday());
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setShowEditModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowEditModal(false);
+    setShowNewEventModal(false);
+    setSelectedEvent(null);
+  };
+
+  const handleEventChange = (e) => {
+    setSelectedEvent({ ...selectedEvent, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveEvent = () => {
+    if (selectedEvent.id) {
+      setEvents(
+        events.map((event) =>
+          event.id === selectedEvent.id ? selectedEvent : event
+        )
+      );
+    } else {
+      setEvents([...events, selectedEvent]);
+    }
+    handleModalClose();
+  };
+
+  const handleDeleteEvent = () => {
+    setEvents(events.filter((event) => event.id !== selectedEvent.id));
+    handleModalClose();
+  };
 
   const handleSelectSlot = ({ start, end }) => {
-    setTitle("");
-    setStart(start);
-    setEnd(end);
-    setShowModal(true);
-    setIsEditing(false);
-    setEventRows([{ work: "", kind: "", type: "", description: "" }]);
+    setSelectedEvent({
+      id: null,
+      title: "",
+      start,
+      end,
+      color: "#FFEBCC",
+    });
+    setShowNewEventModal(true);
   };
 
-  const handleSelectEvent = (event) => {
-    setTitle(event.title);
-    setStart(event.start);
-    setEnd(event.end);
-    setShowModal(true);
-    setIsEditing(true);
-    setEventId(event.id);
-    setEventRows([{ work: "", kind: "", type: "", description: event.title }]);
+  const moveEvent = ({ event, start, end }) => {
+    const updatedEvent = { ...event, start, end };
+    setEvents(events.map((e) => (e.id === event.id ? updatedEvent : e)));
   };
 
-  const handleAddEvent = () => {
-    const newEvent = {
-      id: events.length,
-      title,
-      start: new Date(start),
-      end: new Date(end),
-      color: getRandomPastelColor(),
-    };
-    setEvents([...events, newEvent]);
-    resetModal();
+  const handleDateClick = (date) => {
+    setCurrentDate(date);
   };
 
-  const handleEditEvent = () => {
-    const updatedEvents = events.map((event) =>
-      event.id === eventId
-        ? { ...event, title, start: new Date(start), end: new Date(end) }
-        : event
-    );
-    setEvents(updatedEvents);
-    resetModal();
+  const handleTodayClick = () => {
+    setCurrentDate(startOfToday());
   };
 
-  const resetModal = () => {
-    setTitle("");
-    setStart(new Date());
-    setEnd(new Date());
-    setShowModal(false);
-    setIsEditing(false);
-    setEventId(null);
-    setEventRows([{ work: "", kind: "", type: "", description: "" }]);
+  const handleBackClick = () => {
+    setCurrentDate(subMonths(currentDate, 1));
   };
 
-  const getRandomPastelColor = () => {
-    const colors = [
-      "#FFEBCC",
-      "#CCFFEB",
-      "#CCE5FF",
-      "#EBCCFF",
-      "#FFCCE5",
-      "#FFFFCC",
-      "#D5CCFF",
-      "#CCE5CC",
-      "#FFE5CC",
-      "#FFD5CC",
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
-  const addEventRow = () => {
-    setEventRows([
-      ...eventRows,
-      { work: "", kind: "", type: "", description: "" },
-    ]);
-  };
-
-  const handleEventRowChange = (index, field, value) => {
-    const newEventRows = [...eventRows];
-    newEventRows[index][field] = value;
-    setEventRows(newEventRows);
+  const handleNextClick = () => {
+    setCurrentDate(addMonths(currentDate, 1));
   };
 
   return (
-    <div className="p-6 w-full rounded-lg shadow-lg bg-white flex">
-      <div className="w-1/4 p-4 border-r border-gray-200">
-        <DatePicker
-          selected={miniDate}
-          onChange={(date) => setMiniDate(date)}
-          inline
-          className="custom-datepicker text-xs"
-        />
-      </div>
-      <div className="w-3/4 p-1">
-        <h2 className="text-2xl font-semibold mb-6">Calendar</h2>
-        <BigCalendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500 }}
-          selectable
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={handleSelectEvent}
-          className="custom-calendar" // Add custom class for styling
-          eventPropGetter={(event) => ({
-            style: {
-              backgroundColor: event.color,
-            },
-          })}
-        />
-        {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 z-10">
-              <h3 className="text-xl font-semibold mb-6 text-center">
-                {isEditing ? "Edit Event" : "Add Event"}
-              </h3>
-              {eventRows.map((row, index) => (
-                <div className="grid grid-cols-3 gap-4 mb-4" key={index}>
-                  <div className="col-span-1">
-                    <label className="block mb-2">Scheduled Time:</label>
-                    <input
-                      type="datetime-local"
-                      className="border p-2 rounded w-full"
-                      value={format(start, "yyyy-MM-dd'T'HH:mm")}
-                      onChange={(e) => setStart(new Date(e.target.value))}
-                    />
-                  </div>
-                  <div className="col-span-2 flex items-end">
-                    <div className="w-full">
-                      <label className="block mb-2">Work:</label>
-                      <select
-                        className="border p-2 rounded w-full"
-                        value={row.work}
-                        onChange={(e) =>
-                          handleEventRowChange(index, "work", e.target.value)
-                        }
-                      >
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                      </select>
-                    </div>
-                    <div className="w-full mx-2">
-                      <label className="block mb-2">Kind:</label>
-                      <select
-                        className="border p-2 rounded w-full"
-                        value={row.kind}
-                        onChange={(e) =>
-                          handleEventRowChange(index, "kind", e.target.value)
-                        }
-                      >
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                      </select>
-                    </div>
-                    <div className="w-full">
-                      <label className="block mb-2">Type:</label>
-                      <select
-                        className="border p-2 rounded w-full"
-                        value={row.type}
-                        onChange={(e) =>
-                          handleEventRowChange(index, "type", e.target.value)
-                        }
-                      >
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                      </select>
-                    </div>
-                    {index === eventRows.length - 1 && (
-                      <button
-                        type="button"
-                        className="bg-blue-500 text-white p-2 rounded ml-2"
-                        onClick={addEventRow}
-                      >
-                        +
-                      </button>
-                    )}
-                  </div>
-                  <div className="col-span-3">
-                    <label className="block mb-2">Description:</label>
-                    <textarea
-                      className="border p-2 rounded w-full"
-                      rows="3"
-                      value={row.description}
-                      onChange={(e) =>
-                        handleEventRowChange(
-                          index,
-                          "description",
-                          e.target.value
-                        )
-                      }
-                    ></textarea>
-                  </div>
-                </div>
-              ))}
-              <div className="flex justify-end space-x-2">
-                <button
-                  className="bg-gray-500 text-white p-2 rounded"
-                  onClick={resetModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 text-white p-2 rounded"
-                  onClick={isEditing ? handleEditEvent : handleAddEvent}
-                >
-                  {isEditing ? "Edit Event" : "Add Event"}
-                </button>
-              </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className="flex h-screen">
+        <Sidebar onDateClick={handleDateClick} />
+        <div className="flex-1 p-4">
+          <div className="flex justify-between ">
+            <button onClick={handleTodayClick} className="button">
+              Today
+            </button>
+            <div className="flex">
+              <button onClick={handleBackClick} className="button mr-2">
+                Back
+              </button>
+              <button onClick={handleNextClick} className="button">
+                Next
+              </button>
             </div>
           </div>
-        )}
+          <div style={{ height: "calc(100vh - 4rem)" }}>
+            <BigCalendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: "98%" }}
+              className="custom-calendar"
+              components={{
+                toolbar: CustomToolbar,
+                event: (props) => (
+                  <div
+                    style={{
+                      backgroundColor: props.event.color,
+                      padding: "5px",
+                      borderRadius: "3px",
+                    }}
+                    onClick={() => handleEventClick(props.event)}
+                  >
+                    {props.event.title}
+                  </div>
+                ),
+              }}
+              onEventDrop={({ event, start, end }) =>
+                moveEvent({ event, start, end })
+              }
+              resizable
+              selectable
+              onSelectSlot={handleSelectSlot}
+              date={currentDate}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+
+      <NewEventModal
+        show={showNewEventModal}
+        onClose={handleModalClose}
+        onSave={handleSaveEvent}
+        onChange={handleEventChange}
+        event={selectedEvent}
+      />
+      <Modal
+        show={showEditModal}
+        onClose={handleModalClose}
+        onSave={handleSaveEvent}
+        onDelete={handleDeleteEvent}
+        event={selectedEvent}
+        onChange={handleEventChange}
+      />
+    </DndProvider>
   );
 };
 

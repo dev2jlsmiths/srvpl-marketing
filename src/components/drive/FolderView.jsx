@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { FaFileAlt, FaFilePdf, FaImage } from "react-icons/fa"; // Import icons from react-icons
 import AddFolderButton from "./AddFolderButton";
-import Folder from "./Folder";
 import AddCollateralButton from "./AddCollateralButton";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const FolderView = () => {
-  const { brandId, parentId } = useParams(); // Retrieve parentId from URL parameters
+  const { brandId, parentId } = useParams();
   const [currentFolder, setCurrentFolder] = useState(null);
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
@@ -78,11 +78,28 @@ const FolderView = () => {
 
   const renderPath = (path) => {
     const pathParts = path.split("/");
-    // Removing the first part if it's an ID
     if (/^[a-f0-9]{24}$/.test(pathParts[0])) {
       pathParts.shift();
     }
     return pathParts.join("/");
+  };
+
+  const renderFilePreview = (file) => {
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif"].includes(extension)) {
+      return (
+        <img
+          src={file.path}
+          alt={file.name}
+          className="h-16 w-16 mb-4 object-cover"
+        />
+      );
+    } else if (extension === "pdf") {
+      return <FaFilePdf className="h-16 w-16 mb-4 text-red-600" />;
+    } else {
+      return <FaFileAlt className="h-16 w-16 mb-4 text-gray-500" />;
+    }
   };
 
   return (
@@ -115,7 +132,7 @@ const FolderView = () => {
                   className="flex flex-col items-center justify-center"
                 >
                   <img
-                    src="https://i.redd.it/cglk1r8sbyf71.png" // Placeholder image
+                    src="https://i.redd.it/cglk1r8sbyf71.png"
                     alt={folder.name}
                     className="h-16 w-16 mb-4"
                   />
@@ -129,12 +146,7 @@ const FolderView = () => {
                 className="flex flex-col items-center justify-center rounded-lg bg-white cursor-pointer"
               >
                 <a href={file.path} target="_blank" rel="noopener noreferrer">
-                  <img
-                    src={file.path} // Assuming the file path is a URL to the image
-                    alt={file.name}
-                    className="h-16 w-16 mb-4"
-                  />
-                  {/* <h3 className="font-semibold">{file.name}</h3> */}
+                  {renderFilePreview(file)}
                 </a>
               </div>
             ))}

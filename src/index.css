@@ -92,3 +92,12 @@ button:focus-visible {
     /* Firefox */
   }
 }
+
+/* In your global CSS file or Tailwind configuration */
+.react-calendar {
+  border: none;
+}
+
+.react-calendar__tile {
+  padding: 0.5rem;
+}

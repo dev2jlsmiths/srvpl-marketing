@@ -76,19 +76,6 @@ const BrandModal = ({ isOpen, onClose }) => {
     if (!formData.brandGuidelines)
       newErrors.brandGuidelines = "Brand Guidelines PDF is required";
 
-    platforms.forEach((platform, index) => {
-      if (!platform.platform)
-        newErrors[`platform_${index}`] = "Platform is required";
-      if (!platform.account_id)
-        newErrors[`account_id_${index}`] = "Account ID is required";
-      if (!platform.password)
-        newErrors[`password_${index}`] = "Password is required";
-      if (!platform.phone_no)
-        newErrors[`phone_no_${index}`] = "Phone Number is required";
-      if (!platform.backup_email)
-        newErrors[`backup_email_${index}`] = "Email is required";
-    });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -105,8 +92,10 @@ const BrandModal = ({ isOpen, onClose }) => {
     data.append("brand_guidelines", formData.brandGuidelines);
     data.append("social_media", JSON.stringify(platforms));
 
+    console.log(data);
+
     const accessToken = localStorage.getItem("access_token");
-    fetch(`${apiUrl}/v1/brand/profile/add`, {
+    fetch(`http://192.168.1.38:8000/v1/brand/profile/add`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

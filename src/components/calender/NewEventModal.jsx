@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const NewEventModal = ({ show, onClose, onSave, event }) => {
+const NewEventModal = ({ show, onClose, onSave, event, brandId }) => {
   const [eventData, setEventData] = useState({
     title: "",
     date: new Date().toISOString().split("T")[0],
@@ -10,6 +11,8 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
     taskList: "My Tasks",
     allDay: false,
   });
+
+  const [platformData, setPlatformData] = useState([]); // State to store the API data
 
   useEffect(() => {
     if (event) {
@@ -28,6 +31,25 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
       });
     }
   }, [event]);
+
+  // Fetch data from API when the date changes
+  useEffect(() => {
+    if (eventData.date && brandId) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `https://api.21genx.com:5000/v1/task/current/platfrom/${brandId}/${eventData.date}`
+          );
+          if (response.data.success) {
+            setPlatformData(response.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching platform data:", error);
+        }
+      };
+      fetchData();
+    }
+  }, [eventData.date, brandId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +110,28 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
               className="mt-1 block w-full rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 text-xs py-1 px-3 border-none"
             />
           </label>
+          {/* Display fetched platform data */}
+          <div className="space-y-4">
+            {platformData.map((platform, index) => (
+              <div key={index}>
+                <img
+                  src={platform.social_post[0].platform_logo}
+                  alt={platform.social_post[0].platform_name}
+                />
+                <p>{platform.social_post[0].platform_name}</p>
+                <p>
+                  {platform.social_post[0].number} Posts -{" "}
+                  {platform.social_post[0].time_interval}
+                </p>
+                {platform.social_post[0].types.map((type, i) => (
+                  <div key={i}>
+                    <p>Content Type: {type.content_type}</p>
+                    <p>Size: {type.size}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
           <div className="flex w-1/2 items-center space-x-4">
             <label className="block text-gray-700 flex-1">
               Date

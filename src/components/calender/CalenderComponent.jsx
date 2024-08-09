@@ -19,6 +19,7 @@ import NewEventModal from "./NewEventModal";
 import Sidebar from "./Sidebar";
 import CustomToolbar from "./CustomToolbar";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const locales = {
   "en-US": enUS,
@@ -38,8 +39,6 @@ const CalendarComponent = () => {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(startOfToday());
-
-  const apiUrl = "YOUR_API_BASE_URL";
 
   // Fetch events from API
   const fetchEvents = async () => {
@@ -71,7 +70,7 @@ const CalendarComponent = () => {
       // Update existing event
       try {
         await axios.put(
-          `${apiUrl}/v1/events/${selectedEvent.id}`,
+          `${apiUrl}/v1/task/add/${selectedEvent.id}`,
           selectedEvent
         );
         setEvents(
@@ -85,7 +84,10 @@ const CalendarComponent = () => {
     } else {
       // Create new event
       try {
-        const response = await axios.post(`${apiUrl}/v1/events`, selectedEvent);
+        const response = await axios.post(
+          `${apiUrl}/v1/task/add`,
+          selectedEvent
+        );
         setEvents([...events, { ...selectedEvent, id: response.data.id }]);
       } catch (error) {
         console.error("Error creating event:", error);

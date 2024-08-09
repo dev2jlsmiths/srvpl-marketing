@@ -16,8 +16,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     brandName: "",
     brandCompanyName: "",
     websiteLink: "",
-    brandLogo: null,
-    brandGuidelines: null,
+    brand_logo_dataURI: null,
+    brand_guidelines_dataURI: null,
   });
   const [errors, setErrors] = useState({});
 
@@ -77,9 +77,10 @@ const BrandModal = ({ isOpen, onClose }) => {
       newErrors.brandCompanyName = "Brand Company Name is required";
     if (!formData.websiteLink)
       newErrors.websiteLink = "Website Link is required";
-    if (!formData.brandLogo) newErrors.brandLogo = "Logo is required";
-    if (!formData.brandGuidelines)
-      newErrors.brandGuidelines = "Brand Guidelines PDF is required";
+    if (!formData.brand_logo_dataURI)
+      newErrors.brand_logo_dataURI = "Logo is required";
+    if (!formData.brand_guidelines_dataURI)
+      newErrors.brand_guidelines_dataURI = "Brand Guidelines PDF is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -93,8 +94,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     data.append("brand_name", formData.brandName);
     data.append("brand_company_name", formData.brandCompanyName);
     data.append("website_link", formData.websiteLink);
-    data.append("brand_logo", formData.brandLogo);
-    data.append("brand_guidelines", formData.brandGuidelines);
+    data.append("brand_logo_dataURI", formData.brand_logo_dataURI);
+    data.append("brand_guidelines_dataURI", formData.brand_guidelines_dataURI);
     data.append("social_media", JSON.stringify(platforms));
 
     console.log(data);
@@ -204,15 +205,17 @@ const BrandModal = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="file"
-                name="brandLogo"
+                name="brand_logo_dataURI"
                 onChange={handleFileChange}
                 className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
               />
-              {formData.brandLogo && (
+              {formData.brand_logo_dataURI && (
                 <p className="text-blue-500 text-sm">File Selected</p>
               )}
-              {errors.brandLogo && (
-                <p className="text-red-500 text-xs mt-1">{errors.brandLogo}</p>
+              {errors.brand_logo_dataURI && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.brand_logo_dataURI}
+                </p>
               )}
             </div>
             <div>
@@ -221,17 +224,17 @@ const BrandModal = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="file"
-                name="brandGuidelines"
+                name="brand_guidelines_dataURI"
                 accept="application/pdf"
                 onChange={handleFileChange}
                 className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
               />
-              {formData.brandGuidelines && (
+              {formData.brand_guidelines_dataURI && (
                 <p className="text-blue-500 text-sm">PDF Selected</p>
               )}
-              {errors.brandGuidelines && (
+              {errors.brand_guidelines_dataURI && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.brandGuidelines}
+                  {errors.brand_guidelines_dataURI}
                 </p>
               )}
             </div>

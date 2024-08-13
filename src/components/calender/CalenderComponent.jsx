@@ -48,9 +48,13 @@ const CalendarComponent = () => {
   // Fetch events from API
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`/v1/brand/profile/get/${brandId}`);
-      const apiEvents = response.data.map((event) => ({
-        id: event.id,
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Format month as two digits
+      const response = await axios.get(
+        `https://api.21genx.com:5000/v1/task/currect/month?brand_id=${brandId}&year=${year}&month=${month}`
+      );
+      const apiEvents = response.data.data.map((event) => ({
+        id: event._id,
         title: event.title,
         start: new Date(event.start_date),
         end: new Date(event.end_date),
@@ -66,7 +70,7 @@ const CalendarComponent = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [currentDate]);
 
   const handleSaveEvent = async () => {
     if (selectedEvent.id) {
@@ -181,9 +185,9 @@ const CalendarComponent = () => {
                 event: (props) => (
                   <div
                     style={{
-                      backgroundColor: props.event.color,
-                      padding: "5px",
-                      borderRadius: "3px",
+                      // backgroundColor: props.event.color,
+                      padding: "1px",
+                      borderRadius: "1px",
                     }}
                     onClick={() => handleEventClick(props.event)}
                   >
@@ -210,7 +214,7 @@ const CalendarComponent = () => {
         onChange={handleEventChange}
         event={selectedEvent}
       />
-      <Modal
+      <NewEventModal
         show={showEditModal}
         onClose={handleModalClose}
         onSave={handleSaveEvent}

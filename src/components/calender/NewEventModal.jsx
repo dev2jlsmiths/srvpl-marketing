@@ -118,7 +118,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed text-xs inset-0 flex items-center justify-center z-50">
       <div
         className="fixed inset-0 bg-gray-900 opacity-50"
         onClick={onClose}
@@ -197,7 +197,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <label className="block text-gray-700 flex-1">
+            <label className="block  text-gray-700 flex-1">
               Date
               <input
                 type="date"
@@ -261,7 +261,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
         <div className="flex justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button
             onClick={onClose}
-            className="inline-flex justify-center py-1 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300"
+            className="mr-2 inline-flex justify-center py-1 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300"
           >
             Cancel
           </button>

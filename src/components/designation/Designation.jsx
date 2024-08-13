@@ -3,7 +3,7 @@ import axios from "axios";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Designation = () => {
-  const [departments, setDepartments] = useState([]);
+  const [designations, setdesignations] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [newDept, setNewDept] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -11,23 +11,23 @@ const Designation = () => {
   const accessToken = localStorage.getItem("access_token");
 
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchdesignations = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/v1/platform/department/get?page=1&limit=10`,
+          `${apiUrl}/v1/platform/designation/get?page=1&limit=100`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
-        setDepartments(response.data.data);
+        setdesignations(response.data.data);
       } catch (error) {
-        console.error("Error fetching departments:", error);
+        console.error("Error fetching designations:", error);
       }
     };
 
-    fetchDepartments();
+    fetchdesignations();
   }, [accessToken]);
 
   const handleAddDeptClick = () => {
@@ -52,8 +52,8 @@ const Designation = () => {
     try {
       if (editMode && currentDeptId) {
         await axios.put(
-          `${apiUrl}/v1/platform/department/edit/${currentDeptId}`,
-          { department_name: newDept },
+          `${apiUrl}/v1/platform/edit/designation/${currentDeptId}`,
+          { designation_name: newDept },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -62,8 +62,8 @@ const Designation = () => {
         );
       } else {
         await axios.post(
-          `${apiUrl}/v1/platform/department/add`,
-          { department_name: newDept },
+          `${apiUrl}/v1/platform/designation`,
+          { designation_name: newDept },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -73,16 +73,16 @@ const Designation = () => {
       }
       setNewDept("");
       setModalOpen(false);
-      // Refresh the departments list
+      // Refresh the designations list
       const response = await axios.get(
-        `${apiUrl}/v1/platform/department/get?page=1&limit=10`,
+        `${apiUrl}/v1/platform/designation/get?page=1&limit=100`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-      setDepartments(response.data.data);
+      setdesignations(response.data.data);
     } catch (error) {
       console.error("Error adding/updating department:", error);
     }
@@ -91,7 +91,7 @@ const Designation = () => {
   const handleEditClick = (dept) => {
     setEditMode(true);
     setCurrentDeptId(dept._id);
-    setNewDept(dept.department_name);
+    setNewDept(dept.designation_name);
     setModalOpen(true);
   };
 
@@ -109,14 +109,14 @@ const Designation = () => {
           + Add 
         </button>
         <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
-          {departments.length > 0 ? (
-            departments.map((dept) => (
+          {designations.length > 0 ? (
+            designations.map((dept) => (
               <div
                 key={dept._id}
                 className="flex items-center justify-between gap-2 px-3 py-1 border-b border-gray-300"
               >
                 <div className="text-dark-gray text-sm">
-                  {dept?.department_name}
+                  {dept?.designation_name}
                 </div>
                 <svg
                   onClick={() => handleEditClick(dept)}

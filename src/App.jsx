@@ -17,13 +17,16 @@ import AddCollateral from "./components/drive/AddCollateralModal";
 import FolderView from "./components/drive/FolderView";
 
 import BrandStrategy from "./components/strategy/BrandStrategy";
-import Calendar from "./components/Calendar";
+
 import { Toaster } from "react-hot-toast";
 import AddStrategy from "./components/strategy/AddStrategy";
 
 import CalendarComponent from "./components/calender/CalenderComponent";
+
 import StrategyDashboard from "./components/strategy/StrategyDashboard";
 import KeywordTags from "./components/strategy/KeywordTags";
+
+
 
 function App() {
   return (
@@ -100,6 +103,7 @@ function App() {
           path="/add-strategy/:brandid"
           element={
             <Layout>
+
               <StrategyDashboard />
             </Layout>
           }
@@ -109,6 +113,8 @@ function App() {
           element={
             <Layout>
               <KeywordTags />
+
+
             </Layout>
           }
         />
@@ -123,14 +129,7 @@ function App() {
         />
 
         <Route
-          path="/calendar"
-          element={
-            <Layout>
-              <Calendar />
-            </Layout>
-          }
-        />
-        <Route
+
           path="/originalcollateral/:brandId"
           element={
             <Layout>
@@ -172,7 +171,8 @@ function App() {
             }
           /> */}
 
-        <Route path="/calender" element={<CalendarComponent />} />
+        <Route path="/calendar/:id" element={<CalendarComponent />} />
+
       </Routes>
     </Router>
   );

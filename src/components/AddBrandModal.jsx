@@ -4,7 +4,7 @@ const BrandModal = ({ isOpen, onClose }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [platforms, setPlatforms] = useState([
     {
-      // id: Date.now(),
+      id: Date.now(),
       platform: "",
       account_id: "",
       password: "",
@@ -16,8 +16,8 @@ const BrandModal = ({ isOpen, onClose }) => {
     brandName: "",
     brandCompanyName: "",
     websiteLink: "",
-    brandLogo: null,
-    brandGuidelines: null,
+    brand_logo_dataURI: null,
+    brand_guidelines_dataURI: null,
   });
   const [errors, setErrors] = useState({});
 
@@ -32,10 +32,15 @@ const BrandModal = ({ isOpen, onClose }) => {
   const handleFileChange = (e) => {
     const { name } = e.target;
     const file = e.target.files[0];
-    setFormData((prev) => ({
-      ...prev,
-      [name]: file,
-    }));
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: reader.result, // Convert file to base64 URI
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handlePlatformChange = (id, e) => {
@@ -51,7 +56,7 @@ const BrandModal = ({ isOpen, onClose }) => {
     setPlatforms([
       ...platforms,
       {
-        // id: Date.now(),
+        id: Date.now(), // Unique ID for each platform
         platform: "",
         account_id: "",
         password: "",
@@ -72,9 +77,10 @@ const BrandModal = ({ isOpen, onClose }) => {
       newErrors.brandCompanyName = "Brand Company Name is required";
     if (!formData.websiteLink)
       newErrors.websiteLink = "Website Link is required";
-    if (!formData.brandLogo) newErrors.brandLogo = "Logo is required";
-    if (!formData.brandGuidelines)
-      newErrors.brandGuidelines = "Brand Guidelines PDF is required";
+    if (!formData.brand_logo_dataURI)
+      newErrors.brand_logo_dataURI = "Logo is required";
+    if (!formData.brand_guidelines_dataURI)
+      newErrors.brand_guidelines_dataURI = "Brand Guidelines PDF is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,19 +94,19 @@ const BrandModal = ({ isOpen, onClose }) => {
     data.append("brand_name", formData.brandName);
     data.append("brand_company_name", formData.brandCompanyName);
     data.append("website_link", formData.websiteLink);
-    data.append("brand_logo", formData.brandLogo);
-    data.append("brand_guidelines", formData.brandGuidelines);
+    data.append("brand_logo_dataURI", formData.brand_logo_dataURI);
+    data.append("brand_guidelines_dataURI", formData.brand_guidelines_dataURI);
     data.append("social_media", JSON.stringify(platforms));
 
     console.log(data);
 
     const accessToken = localStorage.getItem("access_token");
-    fetch(`http://192.168.1.38:8000/v1/brand/profile/add`, {
+    fetch(`${apiUrl}/v1/brand/profile/add`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: data, // FormData with file data is sent as-is
+      body: data,
     })
       .then((response) => response.json())
       .then((result) => {
@@ -199,15 +205,17 @@ const BrandModal = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="file"
-                name="brandLogo"
+                name="brand_logo_dataURI"
                 onChange={handleFileChange}
                 className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
               />
-              {formData.brandLogo && (
+              {formData.brand_logo_dataURI && (
                 <p className="text-blue-500 text-sm">File Selected</p>
               )}
-              {errors.brandLogo && (
-                <p className="text-red-500 text-xs mt-1">{errors.brandLogo}</p>
+              {errors.brand_logo_dataURI && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.brand_logo_dataURI}
+                </p>
               )}
             </div>
             <div>
@@ -216,17 +224,17 @@ const BrandModal = ({ isOpen, onClose }) => {
               </label>
               <input
                 type="file"
-                name="brandGuidelines"
+                name="brand_guidelines_dataURI"
                 accept="application/pdf"
                 onChange={handleFileChange}
                 className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
               />
-              {formData.brandGuidelines && (
+              {formData.brand_guidelines_dataURI && (
                 <p className="text-blue-500 text-sm">PDF Selected</p>
               )}
-              {errors.brandGuidelines && (
+              {errors.brand_guidelines_dataURI && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.brandGuidelines}
+                  {errors.brand_guidelines_dataURI}
                 </p>
               )}
             </div>
@@ -293,7 +301,7 @@ const BrandModal = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700">
-                  Phone Number
+                  Phone No.
                 </label>
                 <input
                   type="text"
@@ -301,7 +309,7 @@ const BrandModal = ({ isOpen, onClose }) => {
                   value={platform.phone_no}
                   onChange={(e) => handlePlatformChange(platform.id, e)}
                   className="mt-1 p-2 block w-full border-none rounded-md shadow-sm focus:ring-0"
-                  placeholder="Phone Number"
+                  placeholder="Phone No."
                 />
                 {errors[`phone_no_${index}`] && (
                   <p className="text-red-500 text-xs mt-1">
@@ -327,30 +335,45 @@ const BrandModal = ({ isOpen, onClose }) => {
                   </p>
                 )}
               </div>
-              <div className="flex items-end justify-end">
+              <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={() => removePlatform(platform.id)}
                   className="text-red-600 hover:text-red-900"
                 >
-                  Remove
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
           ))}
-          <button
-            type="button"
-            onClick={addPlatform}
-            className="mb-6 inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs  rounded-md text-white bg-blue-500 hover:bg-indigo-700 focus:outline-none"
-          >
-            Add Platform
-          </button>
-          <div className="text-right">
+          <div className="flex justify-start">
+            <button
+              type="button"
+              onClick={addPlatform}
+              className="text-white px-2 py-1 bg-blue-400 hover:text-blue-900 mb-4"
+            >
+              Add Platform
+            </button>
+          </div>
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="inline-flex items-center px-2 py-1 border border-transparent shadow-sm text-xs rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none"
+              className="px-6 py-2 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
             >
-              Save
+              Save Brand Profile
             </button>
           </div>
         </form>

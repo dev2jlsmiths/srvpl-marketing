@@ -19,8 +19,11 @@ import NewEventModal from "./NewEventModal";
 import Sidebar from "./Sidebar";
 import CustomToolbar from "./CustomToolbar";
 import axios from "axios";
-const apiUrl = import.meta.env.VITE_API_URL;
 import { useParams } from "react-router-dom";
+import setupAxiosInterceptors from "../../AxiosInterceptor";
+
+// Initialize the Axios interceptors
+setupAxiosInterceptors();
 
 const locales = {
   "en-US": enUS,
@@ -40,14 +43,12 @@ const CalendarComponent = () => {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(startOfToday());
-  const { brandId } = useParams();
+  const { id: brandId } = useParams();
 
   // Fetch events from API
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}/v1/brand/profile/get/${brandId}`
-      );
+      const response = await axios.get(`/v1/brand/profile/get/${brandId}`);
       const apiEvents = response.data.map((event) => ({
         id: event.id,
         title: event.title,
@@ -71,10 +72,7 @@ const CalendarComponent = () => {
     if (selectedEvent.id) {
       // Update existing event
       try {
-        await axios.put(
-          `${apiUrl}/v1/task/add/${selectedEvent.id}`,
-          selectedEvent
-        );
+        await axios.put(`/v1/task/add/${selectedEvent.id}`, selectedEvent);
         setEvents(
           events.map((event) =>
             event.id === selectedEvent.id ? selectedEvent : event
@@ -86,10 +84,7 @@ const CalendarComponent = () => {
     } else {
       // Create new event
       try {
-        const response = await axios.post(
-          `${apiUrl}/v1/task/add`,
-          selectedEvent
-        );
+        const response = await axios.post(`/v1/task/add`, selectedEvent);
         setEvents([...events, { ...selectedEvent, id: response.data.id }]);
       } catch (error) {
         console.error("Error creating event:", error);
@@ -100,7 +95,7 @@ const CalendarComponent = () => {
 
   const handleDeleteEvent = async () => {
     try {
-      await axios.delete(`${apiUrl}/v1/events/${selectedEvent.id}`);
+      await axios.delete(`/v1/events/${selectedEvent.id}`);
       setEvents(events.filter((event) => event.id !== selectedEvent.id));
     } catch (error) {
       console.error("Error deleting event:", error);

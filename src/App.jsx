@@ -23,6 +23,11 @@ import AddStrategy from "./components/strategy/AddStrategy";
 
 import CalendarComponent from "./components/calender/CalenderComponent";
 
+import StrategyDashboard from "./components/strategy/StrategyDashboard";
+import KeywordTags from "./components/strategy/KeywordTags";
+
+
+
 function App() {
   return (
     <Router>
@@ -98,7 +103,18 @@ function App() {
           path="/add-strategy/:brandid"
           element={
             <Layout>
-              <AddStrategy />
+
+              <StrategyDashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/keyword-tags"
+          element={
+            <Layout>
+              <KeywordTags />
+
+
             </Layout>
           }
         />
@@ -113,6 +129,7 @@ function App() {
         />
 
         <Route
+
           path="/originalcollateral/:brandId"
           element={
             <Layout>
@@ -155,6 +172,7 @@ function App() {
           /> */}
 
         <Route path="/calendar/:id" element={<CalendarComponent />} />
+
       </Routes>
     </Router>
   );

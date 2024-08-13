@@ -5,10 +5,10 @@ import Navbar from "./Navbar";
 const Layout = ({ children }) => {
   return (
     <div className="flex">
-      <div className="h-screen border-right">
+      <div className="h-screen border-right top-0 sticky">
         <Sidebar />
       </div>
-      <div className="w-full pt-2 border-l">
+      <div className="w-full pt-2 border-l ">
         <Navbar />
         <div className="flex-1 p-2">{children}</div>
       </div>

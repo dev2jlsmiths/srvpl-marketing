@@ -98,7 +98,7 @@ const Designation = () => {
   return (
     <div className="w-56 h-72 bg-white rounded-xl overflow-y-scroll scroll-smooth no-scrollbar border border-gray-300 relative">
       <div className="relative h-full">
-        <div className="absolute top-0 w-full h-15 bg-white rounded-t-xl border-b border-gray-300"></div>
+        <div className="absolute top-12 w-full h-15 bg-gray-100 rounded-t-xl border-b border-gray-300"></div>
         <div className="absolute top-4 left-4 font-semibold text-sm text-gray-800">
          Designation
         </div>
@@ -106,7 +106,7 @@ const Designation = () => {
           className="absolute top-3 right-4 px-2 py-1 bg-gray-100 text-gray-800 rounded-md text-xs"
           onClick={handleAddDeptClick}
         >
-          + Add Dept
+          + Add 
         </button>
         <div className="flex flex-col gap-1 absolute top-16 left-0 w-full px-4">
           {departments.length > 0 ? (
@@ -137,7 +137,7 @@ const Designation = () => {
             ))
           ) : (
             <div className="text-center text-gray-500">
-              No departments available.
+              No designation available.
             </div>
           )}
         </div>
@@ -146,8 +146,8 @@ const Designation = () => {
       {modalOpen && (
         <div className="fixed text-xs z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-lg shadow-lg w-1/4 max-w-sm">
-            <h2 className="text-lg font-semibold mb-4">
-              {editMode ? "Edit Department" : "Add New Department"}
+            <h2 className="text-sm font-semibold mb-4">
+              {editMode ? "Edit Designation" : "Add New Designation"}
             </h2>
             <form onSubmit={handleFormSubmit}>
               <input
@@ -169,7 +169,7 @@ const Designation = () => {
                   type="submit"
                   className="px-2 py-1 bg-blue-700 text-white rounded-md"
                 >
-                  {editMode ? "Update Dept" : "Add Dept"}
+                  {editMode ? "Add Designation" : "Add Designation"}
                 </button>
               </div>
             </form>

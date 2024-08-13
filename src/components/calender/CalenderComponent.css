@@ -54,10 +54,7 @@
     border-spacing: 0;
 }
 
-.custom-calendar .rbc-month-row {
-    border: 1px solid #e0e0e0;
-    /* Light gray border for month rows */
-}
+
 
 .custom-calendar .rbc-event {
     font-size: 0.50rem;

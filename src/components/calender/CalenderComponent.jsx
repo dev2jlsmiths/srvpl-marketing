@@ -14,7 +14,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./CalenderComponent.css";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Modal from "./Modal";
 import NewEventModal from "./NewEventModal";
 import Sidebar from "./Sidebar";
 import CustomToolbar from "./CustomToolbar";
@@ -58,7 +57,7 @@ const CalendarComponent = () => {
         title: event.title,
         start: new Date(event.start_date),
         end: new Date(event.end_date),
-        color: event.color,
+        color: event.color, // Include color in event data
         description: event.description,
         eventType: event.event_type,
       }));
@@ -185,9 +184,12 @@ const CalendarComponent = () => {
                 event: (props) => (
                   <div
                     style={{
-                      // backgroundColor: props.event.color,
-                      padding: "1px",
-                      borderRadius: "1px",
+                      // backgroundColor: props.event.color, // Use color from API
+                      padding: "2px",
+                      borderRadius: "2px",
+                      color: "#fff", // Ensure text is visible against the background color
+                      border: "none", // Remove border
+                      outline: "none", // Remove outline
                     }}
                     onClick={() => handleEventClick(props.event)}
                   >

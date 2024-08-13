@@ -5,6 +5,8 @@ import setupAxiosInterceptors from "../../AxiosInterceptor";
 
 setupAxiosInterceptors();
 
+const colorOptions = ["#FF8D6F", "#66FF8E", "#66A3FF", "#F4D76D", "#B88CC7"];
+
 const NewEventModal = ({ show, onClose, onSave, event }) => {
   const [eventData, setEventData] = useState({
     title: "",
@@ -12,7 +14,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
     time: "",
     description: "",
     repeat: "Does not repeat",
-    taskList: "My Tasks",
+    color: colorOptions[0], // Default color
   });
   const { id: brandId } = useParams();
 
@@ -32,7 +34,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
           : "",
         description: event.description || "",
         repeat: event.repeat || "Does not repeat",
-        taskList: event.taskList || "My Tasks",
+        color: event.color || colorOptions[0], // Set color from event if available
       });
     }
   }, [event]);
@@ -63,6 +65,13 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
     }));
   };
 
+  const handleColorSelect = (color) => {
+    setEventData((prevData) => ({
+      ...prevData,
+      color: color,
+    }));
+  };
+
   const handlePlatformSelect = (platformId) => {
     setSelectedPlatformIds((prevIds) =>
       prevIds.includes(platformId)
@@ -86,13 +95,19 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
   const handleSave = async () => {
     const startDatetime = new Date(`${eventData.date}T${eventData.time}`);
 
+    // Determine the event_type based on the repeat value
+    const eventType =
+      eventData.repeat === "Does not repeat"
+        ? "all_day"
+        : eventData.repeat.toLowerCase();
+
     const requestBody = {
       brand_id: brandId,
       start_date: startDatetime.toISOString(),
       title: eventData.title,
       description: eventData.description,
-      color: "#FF5733", // You can customize the color or make it part of the form.
-      event_type: eventData.repeat.toLowerCase(), // Assuming event type corresponds to the repeat value.
+      color: eventData.color, // Use the selected color here
+      event_type: eventType,
       platforms: selectedPlatformIds.map((platformId) => ({
         platfrom_id: platformId,
         type_id: selectedTypes[platformId],
@@ -124,12 +139,28 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
         onClick={onClose}
       ></div>
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md z-10">
-        <div className="px-4 py-5 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <h3 className="text-sm font-medium text-gray-900">
             {event ? "Edit Task" : "Add New Task"}
           </h3>
         </div>
         <div className="px-4 py-5 space-y-4">
+          <label className="block text-gray-700">
+            <div className="flex space-x-2 mt-1">
+              {colorOptions.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => handleColorSelect(color)}
+                  className={`w-4 h-4 rounded-full border-1 ${
+                    eventData.color === color
+                      ? "border-indigo-300"
+                      : "border-gray-300"
+                  }`}
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+          </label>
           <label className="block text-gray-700">
             Title
             <input
@@ -197,7 +228,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
             )}
           </div>
           <div className="flex items-center space-x-4">
-            <label className="block  text-gray-700 flex-1">
+            <label className="block text-gray-700 flex-1">
               Date
               <input
                 type="date"
@@ -242,20 +273,6 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 text-xs py-1 px-3 border-none"
             ></textarea>
-          </label>
-          <label className="block text-gray-700">
-            Task List
-            <select
-              name="taskList"
-              value={eventData.taskList}
-              onChange={handleInputChange}
-              className="mt-1 block w-full text-xs rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 py-1 px-3 border-none"
-            >
-              <option>My Tasks</option>
-              <option>Personal</option>
-              <option>Work</option>
-              <option>Travel</option>
-            </select>
           </label>
         </div>
         <div className="flex justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">

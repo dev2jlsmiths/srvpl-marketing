@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-const apiUrl = import.meta.env.VITE_API_URL;
+import setupAxiosInterceptors from "../../AxiosInterceptor";
+
 
 const Designation = () => {
   const [designations, setdesignations] = useState([]);
@@ -8,18 +9,14 @@ const Designation = () => {
   const [newDept, setNewDept] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [currentDeptId, setCurrentDeptId] = useState(null);
-  const accessToken = localStorage.getItem("access_token");
+  
+  setupAxiosInterceptors()
 
   useEffect(() => {
     const fetchdesignations = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/v1/platform/designation/get?page=1&limit=100`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `/v1/platform/designation/get?page=1&limit=100`,
         );
         setdesignations(response.data.data);
       } catch (error) {
@@ -28,7 +25,7 @@ const Designation = () => {
     };
 
     fetchdesignations();
-  }, [accessToken]);
+  }, []);
 
   const handleAddDeptClick = () => {
     setEditMode(false);
@@ -52,35 +49,20 @@ const Designation = () => {
     try {
       if (editMode && currentDeptId) {
         await axios.put(
-          `${apiUrl}/v1/platform/edit/designation/${currentDeptId}`,
+          `/v1/platform/edit/designation/${currentDeptId}`,
           { designation_name: newDept },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
         );
       } else {
         await axios.post(
-          `${apiUrl}/v1/platform/designation`,
+          `/v1/platform/designation`,
           { designation_name: newDept },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
         );
       }
       setNewDept("");
       setModalOpen(false);
       // Refresh the designations list
       const response = await axios.get(
-        `${apiUrl}/v1/platform/designation/get?page=1&limit=100`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        `/v1/platform/designation/get?page=1&limit=100`,
       );
       setdesignations(response.data.data);
     } catch (error) {

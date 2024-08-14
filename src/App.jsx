@@ -27,6 +27,8 @@ import StrategyDashboard from "./components/strategy/StrategyDashboard";
 import KeywordTags from "./components/strategy/KeywordTags";
 import People from "./components/people/People";
 import Teams from "./components/teams/Teams";
+import TeamProfile from "./components/teams/TeamProfile";
+import TeamManager from "./components/teams/TeamManager";
 
 function App() {
   return (
@@ -68,7 +70,7 @@ function App() {
           }
         />
         <Route
-          path="/people"
+          path="/team/people"
           element={
             <Layout>
               <People />
@@ -81,6 +83,14 @@ function App() {
           element={
             <Layout>
               <Teams />
+            </Layout>
+          }
+        />
+        <Route
+          path="/team/teams/team-profile"
+          element={
+            <Layout>
+              <TeamManager />
             </Layout>
           }
         />

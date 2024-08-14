@@ -15,9 +15,9 @@ const AddTeamModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex text-xs items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Add People</h2>
+      <div className="bg-white rounded-lg shadow-lg  w-full max-w-md">
+        <div className="flex justify-between items-center mb-4 border-b p-4">
+          <h2 className="text-2xl font-semibold">Add Team</h2>
           <button
             onClick={onClose}
             className="text-gray-600 hover:text-gray-900"
@@ -39,20 +39,20 @@ const AddTeamModal = ({ onClose }) => {
           </button>
         </div>
         <form>
-          <div className="flex flex-col text-left gap-4 mb-6">
+          <div className="flex flex-col text-left gap-4 mb-6 p-4">
             <div className="flex items-center gap-x-2">
-              <label className="block text-xs font-medium text-gray-700">
+              <label className="block text-xs w-1/5 font-medium text-gray-700">
                 Team Name
               </label>
               <input
                 type="text"
                 name="Name"
-                className="mt-1 p-2 w-3/4 block bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
+                className="mt-1 p-2 block grow bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Name"
               />
             </div>
-            <div className="flex items-center gap-x-2">
-              <label className="block text-xs font-medium text-gray-700">
+            <div className="flex items-center gap-x-6">
+              <label className="block w-1/5 text-xs font-medium text-gray-700">
                 Description
               </label>
               <textarea
@@ -62,22 +62,28 @@ const AddTeamModal = ({ onClose }) => {
               />
             </div>
             <div className="flex items-center gap-x-2">
-              <label className="block text-xs font-medium text-gray-700">
+              <label className="block w-1/5 text-xs font-medium text-gray-700">
                 Team Manager
               </label>
               <input
                 type="text"
                 name="Name"
-                className="mt-1 p-2 w-3/4 block bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
+                className="mt-1 p-2 grow block bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Name"
               />
+            </div>
+            <div className="flex gap-x-36">
+            <label className="block text-xs font-medium text-gray-700">
+                    Add People
+                  </label>
+                  <label className="block text-xs font-medium text-gray-700">
+                    Reporting
+                  </label>
             </div>
             {people.map((person, index) => (
               <div key={index} className="flex justify-between items-center gap-2">
                 <div className="flex flex-col w-1/2">
-                  <label className="block text-xs font-medium text-gray-700">
-                    Add People
-                  </label>
+               
                   <input
                     type="text"
                     value={person.name}
@@ -87,9 +93,7 @@ const AddTeamModal = ({ onClose }) => {
                   />
                 </div>
                 <div className="flex flex-col w-1/2">
-                  <label className="block text-xs font-medium text-gray-700">
-                    Reporting
-                  </label>
+                
                   <input
                     type="text"
                     value={person.reporting}
@@ -124,7 +128,7 @@ const AddTeamModal = ({ onClose }) => {
             ))}
           </div>
 
-          <div className="flex justify-center gap-x-3">
+          <div className="flex justify-center gap-x-3 pb-4">
             <button
               type="button"
               onClick={onClose}

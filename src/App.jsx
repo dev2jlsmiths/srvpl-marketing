@@ -25,8 +25,8 @@ import CalendarComponent from "./components/calender/CalenderComponent";
 
 import StrategyDashboard from "./components/strategy/StrategyDashboard";
 import KeywordTags from "./components/strategy/KeywordTags";
-
-
+import People from "./components/people/People";
+import Teams from "./components/teams/Teams";
 
 function App() {
   return (
@@ -68,6 +68,23 @@ function App() {
           }
         />
         <Route
+          path="/people"
+          element={
+            <Layout>
+              <People />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/team/teams"
+          element={
+            <Layout>
+              <Teams />
+            </Layout>
+          }
+        />
+        <Route
           path="/brand/:id"
           element={
             <Layout>
@@ -103,7 +120,6 @@ function App() {
           path="/add-strategy/:brandid"
           element={
             <Layout>
-
               <StrategyDashboard />
             </Layout>
           }
@@ -113,8 +129,6 @@ function App() {
           element={
             <Layout>
               <KeywordTags />
-
-
             </Layout>
           }
         />
@@ -129,7 +143,6 @@ function App() {
         />
 
         <Route
-
           path="/originalcollateral/:brandId"
           element={
             <Layout>
@@ -172,7 +185,6 @@ function App() {
           /> */}
 
         <Route path="/calendar/:id" element={<CalendarComponent />} />
-
       </Routes>
     </Router>
   );

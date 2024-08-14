@@ -165,16 +165,16 @@ const Sidebar = () => {
         {isTeamOpen && (
           <div id="team-menu" className="pl-8 mt-2">
             <Link
-              to="/team/members"
+              to="/team/teams"
               className="block p-2 hover:bg-gray-200 rounded"
             >
-              Members
+              Teams
             </Link>
             <Link
-              to="/team/projects"
+              to="/team/people"
               className="block p-2 hover:bg-gray-200 rounded"
             >
-              Projects
+              People
             </Link>
           </div>
         )}

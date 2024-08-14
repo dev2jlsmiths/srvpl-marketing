@@ -90,23 +90,23 @@ const BrandModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const data = new FormData();
-    data.append("brand_name", formData.brandName);
-    data.append("brand_company_name", formData.brandCompanyName);
-    data.append("website_link", formData.websiteLink);
-    data.append("brand_logo_dataURI", formData.brand_logo_dataURI);
-    data.append("brand_guidelines_dataURI", formData.brand_guidelines_dataURI);
-    data.append("social_media", JSON.stringify(platforms));
-
-    console.log(data);
+    const data = {
+      brand_name: formData.brandName,
+      brand_company_name: formData.brandCompanyName,
+      website_link: formData.websiteLink,
+      brand_logo_dataURI: formData.brand_logo_dataURI,
+      brand_guidelines_dataURI: formData.brand_guidelines_dataURI,
+      social_media: platforms,
+    };
 
     const accessToken = localStorage.getItem("access_token");
     fetch(`${apiUrl}/v1/brand/profile/add`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: data,
+      body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((result) => {

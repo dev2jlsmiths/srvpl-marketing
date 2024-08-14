@@ -270,16 +270,16 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
               value={eventData.description}
               onChange={handleInputChange}
               placeholder="Description"
-              className="mt-1 block w-full rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 text-xs py-1 px-3 border-none"
+              className="mt-1  min-h-16 block w-full rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 text-xs py-1 px-3 border-none"
             />
           </label>
         </div>
-        <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-200">
+        <div className="px-4 py-3 sm:px-6 sm:flex  sm:flex-row-reverse border-t border-gray-200">
           <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
             <button
               onClick={handleSave}
               type="button"
-              className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+              className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-1 bg-indigo-600 text-xs  text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 "
             >
               Save
             </button>
@@ -288,7 +288,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
             <button
               onClick={onClose}
               type="button"
-              className="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+              className="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-1 bg-white text-xs  text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150"
             >
               Cancel
             </button>

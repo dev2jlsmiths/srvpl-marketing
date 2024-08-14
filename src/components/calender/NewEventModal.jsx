@@ -85,10 +85,10 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
     });
   };
 
-  const handleTypeSelect = (platformId, typeId) => {
+  const handleTypeSelect = (platformId, type) => {
     setSelectedTypes((prevTypes) => ({
       ...prevTypes,
-      [platformId]: typeId,
+      [platformId]: type,
     }));
   };
 
@@ -110,7 +110,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
       event_type: eventType,
       platforms: selectedPlatformIds.map((platformId) => ({
         platfrom_id: platformId,
-        type_id: selectedTypes[platformId],
+        type_id: selectedTypes[platformId], // This now contains the 'type' value instead of '_id'
       })),
     };
 
@@ -203,10 +203,12 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
                             type="radio"
                             id={`type-${type._id}`}
                             name={`type-${post.social_id}`}
-                            value={type._id}
-                            checked={selectedTypes[post.social_id] === type._id}
+                            value={type.type} // Use 'type.type' instead of 'type._id'
+                            checked={
+                              selectedTypes[post.social_id] === type.type
+                            }
                             onChange={() =>
-                              handleTypeSelect(post.social_id, type._id)
+                              handleTypeSelect(post.social_id, type.type)
                             }
                             className="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
                           />
@@ -265,26 +267,32 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
             Description
             <textarea
               name="description"
-              rows="3"
               value={eventData.description}
               onChange={handleInputChange}
+              placeholder="Description"
               className="mt-1 block w-full rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 text-xs py-1 px-3 border-none"
-            ></textarea>
+            />
           </label>
         </div>
-        <div className="flex justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
-          <button
-            onClick={onClose}
-            className="mr-2 inline-flex justify-center py-1 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="inline-flex justify-center py-1 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          >
-            Save
-          </button>
+        <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-200">
+          <span className="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+            <button
+              onClick={handleSave}
+              type="button"
+              className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+            >
+              Save
+            </button>
+          </span>
+          <span className="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+            <button
+              onClick={onClose}
+              type="button"
+              className="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+            >
+              Cancel
+            </button>
+          </span>
         </div>
       </div>
     </div>

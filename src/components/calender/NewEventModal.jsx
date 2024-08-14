@@ -260,6 +260,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
                 <option>Weekly</option>
                 <option>Monthly</option>
                 <option>Yearly</option>
+                <option>Custom</option>
               </select>
             </label>
           </div>

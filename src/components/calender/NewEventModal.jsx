@@ -44,7 +44,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            `https://api.21genx.com:5000/v1/task/current/platfrom/${brandId}/${eventData.date}`
+            `/v1/task/current/platfrom/${brandId}/${eventData.date}`
           );
           if (response.data.success) {
             setPlatformData(response.data.data);
@@ -115,10 +115,7 @@ const NewEventModal = ({ show, onClose, onSave, event }) => {
     };
 
     try {
-      const response = await axios.post(
-        "https://api.21genx.com:5000/v1/task/add",
-        requestBody
-      );
+      const response = await axios.post(`/v1/task/add`, requestBody);
       if (response.data.success) {
         onSave(response.data.event); // Pass the saved event back to the parent component.
         onClose(); // Close the modal.

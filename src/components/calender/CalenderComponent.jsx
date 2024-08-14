@@ -8,6 +8,10 @@ import {
   addMonths,
   subMonths,
   startOfToday,
+  addWeeks,
+  subWeeks,
+  addDays,
+  subDays,
 } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -42,6 +46,7 @@ const CalendarComponent = () => {
   const [showNewEventModal, setShowNewEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(startOfToday());
+  const [view, setView] = useState("month");
   const { id: brandId } = useParams();
 
   // Fetch events from API
@@ -50,7 +55,7 @@ const CalendarComponent = () => {
       const year = currentDate.getFullYear();
       const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Format month as two digits
       const response = await axios.get(
-        `https://api.21genx.com:5000/v1/task/currect/month?brand_id=${brandId}&year=${year}&month=${month}`
+        `/v1/task/currect/month?brand_id=${brandId}&year=${year}&month=${month}`
       );
       const apiEvents = response.data.data.map((event) => ({
         id: event._id,
@@ -69,7 +74,7 @@ const CalendarComponent = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, [currentDate]);
+  }, [currentDate, view]);
 
   const handleSaveEvent = async () => {
     if (selectedEvent.id) {
@@ -145,12 +150,37 @@ const CalendarComponent = () => {
     setCurrentDate(startOfToday());
   };
 
+  const handleNavigationClick = (type, direction) => {
+    let newDate;
+    if (type === "day") {
+      newDate =
+        direction === "next"
+          ? addDays(currentDate, 1)
+          : subDays(currentDate, 1);
+    } else if (type === "week") {
+      newDate =
+        direction === "next"
+          ? addWeeks(currentDate, 1)
+          : subWeeks(currentDate, 1);
+    } else if (type === "month") {
+      newDate =
+        direction === "next"
+          ? addMonths(currentDate, 1)
+          : subMonths(currentDate, 1);
+    }
+    setCurrentDate(newDate);
+  };
+
   const handleBackClick = () => {
-    setCurrentDate(subMonths(currentDate, 1));
+    handleNavigationClick(view, "back");
   };
 
   const handleNextClick = () => {
-    setCurrentDate(addMonths(currentDate, 1));
+    handleNavigationClick(view, "next");
+  };
+
+  const handleViewChange = (newView) => {
+    setView(newView);
   };
 
   return (
@@ -180,16 +210,28 @@ const CalendarComponent = () => {
               style={{ height: "98%" }}
               className="custom-calendar"
               components={{
-                toolbar: CustomToolbar,
+                toolbar: (props) => (
+                  <CustomToolbar
+                    label={props.label}
+                    onNavigate={(direction) => {
+                      props.onNavigate(direction);
+                      if (direction === "NEXT") handleNextClick();
+                      if (direction === "PREV") handleBackClick();
+                    }}
+                    onView={(newView) => {
+                      props.onView(newView);
+                      handleViewChange(newView);
+                    }}
+                  />
+                ),
                 event: (props) => (
                   <div
                     style={{
-                      // backgroundColor: props.event.color, // Use color from API
                       padding: "2px",
                       borderRadius: "2px",
-                      color: "#fff", // Ensure text is visible against the background color
-                      border: "none", // Remove border
-                      outline: "none", // Remove outline
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
                     }}
                     onClick={() => handleEventClick(props.event)}
                   >
@@ -204,6 +246,8 @@ const CalendarComponent = () => {
               selectable
               onSelectSlot={handleSelectSlot}
               date={currentDate}
+              view={view}
+              onView={setView}
             />
           </div>
         </div>

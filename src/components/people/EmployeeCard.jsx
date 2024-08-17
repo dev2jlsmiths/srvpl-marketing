@@ -1,13 +1,14 @@
 import React from "react";
 
-const EmployeeCard = () => {
+const EmployeeCard = ({person}) => {
+  const {avatar,department_name,designation_name,sub_deprtment_name,email,emp_id,mobile,name} = person
   return (
     <div className="max-w-xs rounded-lg shadow-lg p-4 bg-white flex flex-col justify-start ">
       {/* Image Section */}
       <div className="flex gap-52">
         <div className="w-16 h-16 rounded overflow-hidden">
           <img
-            src="https://via.placeholder.com/150" // Replace with the actual image URL
+            src={avatar} // Replace with the actual image URL
             alt="Lindsey Stroud"
             className="object-cover w-full h-full"
           />
@@ -31,8 +32,8 @@ const EmployeeCard = () => {
       </div>
       {/* Employee Info */}
       <div className="text-start mt-4">
-        <h2 className="text-sm font-semibold text-gray-800">Lindsey Stroud</h2>
-        <p className="text-xs text-gray-500">lindsey.stroud@gmail.com</p>
+        <h2 className="text-sm font-semibold text-gray-800">{name}</h2>
+        <p className="text-xs text-gray-500">{email}</p>
       </div>
       {/* Divider */}
       <div className="border-t border-gray-200 my-4 w-full"></div>
@@ -40,11 +41,11 @@ const EmployeeCard = () => {
       <div className="flex justify-between w-full text-sm text-gray-600">
         <div className="flex flex-col items-start">
           <span className="text-sm font-medium">EMPLOYEE ID</span>
-          <span className="text-xs">ID083543</span>
+          <span className="text-xs">{emp_id}</span>
         </div>
         <div className="flex flex-col items-end">
           <span className="text-sm font-medium">DESIGNATION</span>
-          <span className="text-xs">Head of Technology</span>
+          <span className="text-xs">{designation_name}</span>
         </div>
       </div>
     </div>

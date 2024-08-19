@@ -52,17 +52,18 @@ const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-      <div className="max-w-xs w-full p-6 bg-white shadow-lg rounded-lg">
-        <div className="flex justify-end">
+      <div className="max-w-xs w-full  bg-white shadow-lg rounded-lg">
+        <div className="flex justify-between border-b p-4">
+            <p className='text-sm font-semibold'>Login Access</p>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             &#10005;
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 p-4">
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-xs font-medium text-gray-700"
             >
               Username/Employee ID
             </label>
@@ -79,7 +80,7 @@ const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-xs font-medium text-gray-700"
             >
               Password
             </label>
@@ -96,7 +97,7 @@ const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-xs font-medium text-gray-700"
             >
               Confirm Password
             </label>

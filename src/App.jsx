@@ -29,6 +29,7 @@ import People from "./components/people/People";
 import Teams from "./components/teams/Teams";
 import TeamProfile from "./components/teams/TeamProfile";
 import TeamManager from "./components/teams/TeamManager";
+import RoleAccess from "./components/role-and-access/RoleAccess";
 
 function App() {
   return (
@@ -83,6 +84,14 @@ function App() {
           element={
             <Layout>
               <Teams />
+            </Layout>
+          }
+        />
+        <Route
+          path="/team/role-access"
+          element={
+            <Layout>
+              <RoleAccess />
             </Layout>
           }
         />

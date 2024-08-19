@@ -2,10 +2,10 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const AddPeopleModal = ({ onClose }) => {
+const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
   const [subdepartments, setSubDepartments] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [designations, setdesignations] = useState([]);
+  const [designations, setDesignations] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     emp_id: "",
@@ -69,7 +69,7 @@ const AddPeopleModal = ({ onClose }) => {
             },
           }
         );
-        setdesignations(response.data.data);
+        setDesignations(response.data.data);
       } catch (error) {
         console.error("Error fetching designations:", error);
       }
@@ -77,6 +77,25 @@ const AddPeopleModal = ({ onClose }) => {
 
     fetchDesignations();
   }, [accessToken]);
+
+  useEffect(() => {
+    if (emp_id && modal_name === "edit") {
+      const fetchPersonDetails = async () => {
+        try {
+          const response = await axios.get(`${apiUrl}/v1/people/get/${emp_id}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setFormData(response.data.data); // Prefill the form with the fetched data
+        } catch (error) {
+          console.error("Error fetching person details:", error);
+        }
+      };
+
+      fetchPersonDetails();
+    }
+  }, [emp_id, modal_name, accessToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,32 +112,36 @@ const AddPeopleModal = ({ onClose }) => {
       const dataUri = reader.result;
       setFormData((prevFormData) => ({
         ...prevFormData,
-        avatar: dataUri,  // Store the image data URI in the avatar field
+        avatar: dataUri,
       }));
     };
     reader.readAsDataURL(file);
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formDataToSend = new FormData();
-      for (let key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
-      console.log("FormData ??>>>",formData)
-    const body = JSON.stringify(formData) 
-      await axios.post(`${apiUrl}/v1/people/add`, body, {
+      const method = modal_name === "edit" ? "put" : "post";
+      const url =
+        modal_name === "edit"
+          ? `${apiUrl}/v1/people/edit/${emp_id}`
+          : `${apiUrl}/v1/people/add`;
+
+          const { _id,designation_name,sub_department_name, department_name, ...dataToSubmit } = formData;
+
+          const body = JSON.stringify(dataToSubmit);
+      
+      await axios[method](url, body, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
       });
-      alert("Person added successfully!");
+
+      alert(`Person ${modal_name === "edit" ? "updated" : "added"} successfully!`);
       onClose();
     } catch (error) {
-      console.error("Error adding person:", error);
+      console.error(`Error ${modal_name === "edit" ? "updating" : "adding"} person:`, error);
     }
   };
 
@@ -126,7 +149,7 @@ const AddPeopleModal = ({ onClose }) => {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex text-xs items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Add People</h2>
+          <h2 className="text-2xl font-semibold">{modal_name === "edit" ? "Edit Person" : "Add Person"}</h2>
           <button
             onClick={onClose}
             className="text-gray-600 hover:text-gray-900"

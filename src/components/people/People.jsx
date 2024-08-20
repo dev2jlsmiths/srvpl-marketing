@@ -57,7 +57,7 @@ const People = () => {
                     />
                 )}
             </div>
-            <div className="grid grid-cols-3 gap-8 mt-2">
+            <div className="grid grid-cols-4 gap-4 mt-2">
                 {people.length > 0 ? (
                     people.map((person) => (
                         <EmployeeCard 

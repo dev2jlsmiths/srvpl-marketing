@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
+  const navigate = useNavigate()
   const [subdepartments, setSubDepartments] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
@@ -138,8 +141,9 @@ const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
         },
       });
 
-      alert(`Person ${modal_name === "edit" ? "updated" : "added"} successfully!`);
+      toast.success(`Person ${modal_name === "edit" ? "updated" : "added"} successfully!`);
       onClose();
+      navigate(0)
     } catch (error) {
       console.error(`Error ${modal_name === "edit" ? "updating" : "adding"} person:`, error);
     }
@@ -229,7 +233,7 @@ const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
               <input
                 type="email"
                 name="email"
-                className="mt-1 p-2 block bg-gray-50 w-full border-none rounded-md shadow-sm focus:ring-0"
+                className="-mt-1 p-2 block bg-gray-50 w-full border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleChange}

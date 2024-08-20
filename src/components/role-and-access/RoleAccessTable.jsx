@@ -116,7 +116,7 @@ const RoleAccessTable = () => {
                     {person.mobile}
                   </td>
                   <td className="px-2 py-3 whitespace-nowrap bg-white">
-                    <div className="flex justify-center items-center gap-x-2">
+                    <div className="flex items-center gap-x-2 ml-2">
                       <button onClick={() => handleRoleAccessModal(person)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

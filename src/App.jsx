@@ -34,6 +34,7 @@ import RoleAccess from "./components/role-and-access/RoleAccess";
 function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route

@@ -2,6 +2,7 @@ import axios from 'axios';
 import setupAxiosInterceptors from '../../AxiosInterceptor';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
     setupAxiosInterceptors()
@@ -17,7 +18,7 @@ const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
     e.preventDefault();
   
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
   
@@ -32,19 +33,19 @@ const RoleAccessModal = ({ isOpen, onClose, emp_id, people }) => {
   
       // Check if the response is within the successful range
       if (response.status >= 200 && response.status < 300) {
-        alert("Login Credentials Created");
+        toast.success("Login Credentials Created");
         onClose();
         navigate(0);
         console.log('Success:', response.data);
       } else {
         // Handle cases where the response is not in the successful range
         console.log("Response>>???",response.data)
-        alert(`Something went wrong!`);
+        toast.error(`Something went wrong!`);
         console.error('Error:', response.data);
       }
     } catch (error) {
       // Handle network or other errors
-      alert(`Error: ${error.response ? error.response.data.message : error.message}`);
+      toast.error(`${error.response.data.msg ? error.response.data.msg : error.msg}`);
       console.error('Error:', error.response ? error.response.data : error.message);
     }
   };

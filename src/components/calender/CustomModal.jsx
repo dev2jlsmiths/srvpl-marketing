@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
+const CustomModal = ({ show, onClose, onSave }) => {
   const [repeatEvery, setRepeatEvery] = useState(1);
   const [repeatUnit, setRepeatUnit] = useState("week");
-  const [selectedDay, setSelectedDay] = useState("W");
+  const [selectedDays, setSelectedDays] = useState([]);
   const [ends, setEnds] = useState("never");
   const [endDate, setEndDate] = useState("");
   const [occurrences, setOccurrences] = useState(13);
@@ -12,11 +12,23 @@ const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
   if (!show) return null;
 
   const handleSave = () => {
-    if (onSave) onSave(event);
+    const recurrence = {
+      frequency: repeatUnit,
+      daysOfWeek: selectedDays,
+      interval: repeatEvery,
+      endDate: ends === "on" ? endDate : undefined,
+      occurrences: ends === "after" ? occurrences : undefined,
+    };
+    if (onSave) onSave(recurrence);
+    onClose();
   };
 
-  const handleDelete = () => {
-    if (onDelete) onDelete();
+  const toggleDaySelection = (day) => {
+    setSelectedDays((prevSelectedDays) =>
+      prevSelectedDays.includes(day)
+        ? prevSelectedDays.filter((d) => d !== day)
+        : [...prevSelectedDays]
+    );
   };
 
   return ReactDOM.createPortal(
@@ -45,7 +57,7 @@ const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
               <input
                 type="number"
                 value={repeatEvery}
-                onChange={(e) => setRepeatEvery(e.target.value)}
+                onChange={(e) => setRepeatEvery(Number(e.target.value))}
                 className="w-16 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
               />
               <select
@@ -61,22 +73,22 @@ const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block mb-2  font-medium text-gray-700">
+            <label className="block mb-2 font-medium text-gray-700">
               Repeat on:
             </label>
             <div className="flex text-xs space-x-2">
-              {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
+              {["S1", "M", "T1", "W", "T2", "F", "S2"].map((day) => (
                 <button
                   key={day}
                   type="button"
-                  onClick={() => setSelectedDay(day)}
+                  onClick={() => toggleDaySelection(day)}
                   className={`w-5 h-5 text-xs rounded-full ${
-                    selectedDay === day
+                    selectedDays.includes(day)
                       ? "bg-blue-500 text-white"
                       : "bg-gray-200 text-gray-700"
                   }`}
                 >
-                  {day}
+                  {day[0]}
                 </button>
               ))}
             </div>
@@ -131,7 +143,7 @@ const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
                 <input
                   type="number"
                   value={occurrences}
-                  onChange={(e) => setOccurrences(e.target.value)}
+                  onChange={(e) => setOccurrences(Number(e.target.value))}
                   disabled={ends !== "after"}
                   className="ml-2 w-16 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs"
                 />
@@ -145,7 +157,7 @@ const CustomModal = ({ show, onClose, onSave, event, onDelete }) => {
               onClick={handleSave}
               className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              Done
+              Save
             </button>
           </div>
         </form>

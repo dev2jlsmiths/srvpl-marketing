@@ -22,7 +22,7 @@ const People = () => {
             const response = await axios.get(`/v1/people/get`, {
                 params: {
                     page: 1,
-                    limit: 10,
+                    limit: 100,
                     order: 'desc',
                     sort: 'createdAt'
                 }
@@ -42,7 +42,7 @@ const People = () => {
     }, []);
 
     return (
-        <div className='w-full bg-gray-100 h-screen p-2'>
+        <div className='w-full bg-gray-100 h-fit p-2'>
             <div className="flex justify-between">
                 <div className="flex flex-col">
                     <h1 className='text-sm font-bold'>People</h1>

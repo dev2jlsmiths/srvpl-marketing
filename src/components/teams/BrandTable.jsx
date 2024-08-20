@@ -21,7 +21,7 @@ const BrandTable = () => {
 
     fetchBrands();
   }, []); // Empty dependency array to run the effect only once on mount
-  console.log("Brands>>>", brands);
+  
 
   return (
     <div>

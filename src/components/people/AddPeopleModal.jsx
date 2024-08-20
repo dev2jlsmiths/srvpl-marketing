@@ -151,8 +151,8 @@ const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex text-xs items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white rounded-lg shadow-lg  w-full max-w-4xl">
+        <div className="flex justify-between items-center mb-4 border-b p-4">
           <h2 className="text-2xl font-semibold">{modal_name === "edit" ? "Edit Person" : "Add Person"}</h2>
           <button
             onClick={onClose}
@@ -175,7 +175,7 @@ const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
           </button>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-4 text-left gap-6 mb-6">
+          <div className="grid grid-cols-4 text-left gap-6 mb-6 p-4">
             <div>
               <label className="block text-xs font-medium text-gray-700">
                 Profile Image
@@ -307,7 +307,7 @@ const AddPeopleModal = ({ emp_id, modal_name, onClose }) => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-x-3">
+          <div className="flex justify-center gap-x-3 p-4">
             <button
               type="button"
               onClick={onClose}

@@ -4,7 +4,7 @@ import AddMemberModal from "./AddMemberModal";
 import { useNavigate } from "react-router-dom";
 
 const TeamCard = ({team}) => {
-  const {team_name, team_desc} = team
+  const {team_name, team_desc, _id} = team
   const router = useNavigate();
   const [showModal, setShowModal] = useState(false);
     
@@ -19,7 +19,7 @@ const TeamCard = ({team}) => {
       <div className="max-w-xs rounded-lg shadow-lg p-4 bg-white flex flex-col justify-start ">
         {/* Image Section */}
         <div className="flex justify-between" >
-          <div className="flex flex-col" onClick={() => router(`/team/teams/team-profile`)}>
+          <div className="flex flex-col" onClick={() => router(`/team/teams/team-profile/${_id}`)}>
             <h1 className="text-sm font-semibold">{team_name}</h1>
             <p className="text-xs font-medium text-gray-400">23 Employees</p>
           </div>
@@ -50,6 +50,7 @@ const TeamCard = ({team}) => {
       </div>
       {showModal && (
         <AddMemberModal 
+          team={team}
           onClose={handleClose}
         />
       )}

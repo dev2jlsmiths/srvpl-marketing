@@ -97,7 +97,7 @@ function App() {
           }
         />
         <Route
-          path="/team/teams/team-profile"
+          path="/team/teams/team-profile/:id"
           element={
             <Layout>
               <TeamManager />

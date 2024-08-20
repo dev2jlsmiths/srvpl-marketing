@@ -1,23 +1,43 @@
+import setupAxiosInterceptors from "../../AxiosInterceptor";
+import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const AddTeamModal = ({ onClose }) => {
-  const [people, setPeople] = useState([{ name: "", reporting: "" }]);
+  setupAxiosInterceptors()
+  const [teamName, setTeamName] = useState("");
+  const [teamDesc, setTeamDesc] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleAddPerson = () => {
-    setPeople([...people, { name: "", reporting: "" }]);
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post("/v1/team/add", {
+        team_name: teamName,
+        team_desc: teamDesc,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Team added successfully:", response.data);
+      toast.success(response.data.message)
+      onClose(); // Close the modal on success
+    } catch (error) {
+      console.error("Error adding team:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePersonChange = (index, field, value) => {
-    const updatedPeople = [...people];
-    updatedPeople[index][field] = value;
-    setPeople(updatedPeople);
-  };
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex text-xs items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Add People</h2>
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+        <div className="flex justify-between items-center border-b p-4">
+          <h2 className="text-2xl font-semibold">Add Team</h2>
           <button
             onClick={onClose}
             className="text-gray-600 hover:text-gray-900"
@@ -38,105 +58,52 @@ const AddTeamModal = ({ onClose }) => {
             </svg>
           </button>
         </div>
-        <form>
-          <div className="flex flex-col text-left gap-4 mb-6">
-            <div className="flex items-center gap-x-2">
+        <form onSubmit={handleSave}>
+          <div className="flex flex-col text-left mb-3 p-4 gap-y-4">
+            <div>
               <label className="block text-xs font-medium text-gray-700">
                 Team Name
               </label>
               <input
                 type="text"
                 name="Name"
-                className="mt-1 p-2 w-3/4 block bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
+                className="w-full mt-1 p-2 block grow bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
                 placeholder="Name"
+                required
               />
             </div>
-            <div className="flex items-center gap-x-2">
+            <div>
               <label className="block text-xs font-medium text-gray-700">
                 Description
               </label>
               <textarea
                 name="Description"
+                value={teamDesc}
+                onChange={(e) => setTeamDesc(e.target.value)}
                 className="mt-1 p-2 bg-gray-50 block w-full border-none rounded-md shadow-sm focus:ring-0 resize-none"
                 placeholder="Type Here ...."
+                required
               />
             </div>
-            <div className="flex items-center gap-x-2">
-              <label className="block text-xs font-medium text-gray-700">
-                Team Manager
-              </label>
-              <input
-                type="text"
-                name="Name"
-                className="mt-1 p-2 w-3/4 block bg-gray-50 border-none rounded-md shadow-sm focus:ring-0"
-                placeholder="Name"
-              />
-            </div>
-            {people.map((person, index) => (
-              <div key={index} className="flex justify-between items-center gap-2">
-                <div className="flex flex-col w-1/2">
-                  <label className="block text-xs font-medium text-gray-700">
-                    Add People
-                  </label>
-                  <input
-                    type="text"
-                    value={person.name}
-                    onChange={(e) => handlePersonChange(index, "name", e.target.value)}
-                    className="mt-1 p-2 bg-gray-50 block w-full border-none rounded-md shadow-sm focus:ring-0"
-                    placeholder="Person Name"
-                  />
-                </div>
-                <div className="flex flex-col w-1/2">
-                  <label className="block text-xs font-medium text-gray-700">
-                    Reporting
-                  </label>
-                  <input
-                    type="text"
-                    value={person.reporting}
-                    onChange={(e) => handlePersonChange(index, "reporting", e.target.value)}
-                    className="mt-1 p-2 bg-gray-50 block w-full border-none rounded-md shadow-sm focus:ring-0"
-                    placeholder="Reporting To"
-                  />
-                </div>
-                {index === people.length - 1 && (
-                  <button
-                    type="button"
-                    onClick={handleAddPerson}
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            ))}
           </div>
 
-          <div className="flex justify-center gap-x-3">
+          <div className="flex justify-center gap-x-3 pb-4">
             <button
               type="button"
               onClick={onClose}
               className="px-6 py-2 bg-white rounded-lg shadow-md hover:bg-gray-200 focus:outline-none"
+              disabled={loading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
+              className={`px-6 py-2 text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none ${loading ? "opacity-50" : ""}`}
+              disabled={loading}
             >
-              Save
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const apiUrl = import.meta.env.VITE_API_URL;
+import setupAxiosInterceptors from "../../AxiosInterceptor";
 
 const SubDepartment = () => {
   const navigate = useNavigate()
@@ -12,19 +12,15 @@ const SubDepartment = () => {
   const [editMode, setEditMode] = useState(false);
   const [currentDeptId, setCurrentDeptId] = useState(null);
   const [selectedDeptId, setSelectedDeptId] = useState("");
-  const accessToken = localStorage.getItem("access_token");
 
 
+  setupAxiosInterceptors()
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/v1/platform/department/get?page=1&limit=100`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `/v1/platform/department/get?page=1&limit=100`,
+
         );
         setDepartments(response.data.data);
       } catch (error) {
@@ -33,18 +29,13 @@ const SubDepartment = () => {
     };
 
     fetchDepartments();
-  }, [accessToken]);
+  }, []);
 
   useEffect(() => {
     const fetchSubDepartments = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/v1/platform/get/sub/department?page=1&limit=10`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `/v1/platform/get/sub/department?page=1&limit=10`,
         );
         setSubDepartments(response.data.data);
       } catch (error) {
@@ -53,7 +44,7 @@ const SubDepartment = () => {
     };
 
     fetchSubDepartments();
-  }, [accessToken]);
+  }, []);
 
   const handleAddDeptClick = () => {
     setEditMode(false);
@@ -81,26 +72,17 @@ const SubDepartment = () => {
     try {
       if (editMode && currentDeptId) {
         await axios.put(
-          `${apiUrl}/v1/platform/edit/sub/department/${currentDeptId}`,
+          `/v1/platform/edit/sub/department/${currentDeptId}`,
           { sub_department_name: newDept },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
         );
       } else {
         await axios.post(
-          `${apiUrl}/v1/platform/sub/department`,
+          `/v1/platform/sub/department`,
           { 
             department_id: selectedDeptId,
             sub_department_name: newDept
           },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+     
         );
       }
       setNewDept("");
@@ -108,12 +90,7 @@ const SubDepartment = () => {
       navigate(0)
       // Refresh the departments list
       const response = await axios.get(
-        `${apiUrl}/v1/platform/get/sub/department?page=1&limit=10`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        `/v1/platform/get/sub/department?page=1&limit=10`,
       );
       setDepartments(response.data.data);
     } catch (error) {

@@ -27,10 +27,14 @@ import StrategyDashboard from "./components/strategy/StrategyDashboard";
 import KeywordTags from "./components/strategy/KeywordTags";
 import People from "./components/people/People";
 import Teams from "./components/teams/Teams";
+import TeamProfile from "./components/teams/TeamProfile";
+import TeamManager from "./components/teams/TeamManager";
+import RoleAccess from "./components/role-and-access/RoleAccess";
 
 function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -68,7 +72,7 @@ function App() {
           }
         />
         <Route
-          path="/people"
+          path="/team/people"
           element={
             <Layout>
               <People />
@@ -81,6 +85,22 @@ function App() {
           element={
             <Layout>
               <Teams />
+            </Layout>
+          }
+        />
+        <Route
+          path="/team/role-access"
+          element={
+            <Layout>
+              <RoleAccess />
+            </Layout>
+          }
+        />
+        <Route
+          path="/team/teams/team-profile/:id"
+          element={
+            <Layout>
+              <TeamManager />
             </Layout>
           }
         />
